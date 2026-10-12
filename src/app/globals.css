@@ -1,0 +1,58 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+
+  /* KOKKIRI Brand Identity */
+  --color-kokkiri-deep: #173F30;
+  --color-kokkiri-primary: #477B56;
+  --color-kokkiri-surface: #F8F8F4;
+  --color-kokkiri-charcoal: #202622;
+  --color-kokkiri-accent: #65A377;
+
+  /* KOTO Technical & Facility Identity */
+  --color-koto-navy: #243A50;
+  --color-koto-slate: #526B80;
+  --color-koto-gray: #F2F5F7;
+  --color-koto-accent: #3E82B8;
+
+  /* CHOKO Eco & Product Identity */
+  --color-choko-brown: #8C6C43;
+  --color-choko-cream: #F4EFE5;
+  --color-choko-botanical: #5E7652;
+  --color-choko-accent: #B89366;
+}
+
+:root {
+  --background: #F8F8F4;
+  --foreground: #202622;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-sans);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: #173F30;
+  color: #F8F8F4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

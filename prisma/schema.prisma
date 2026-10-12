@@ -1,0 +1,259 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  passwordHash String
+  name         String
+  role         String        @default("STAFF")
+  phone        String?
+  isActive     Boolean       @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  assignedInquiries   Inquiry[]           @relation("AssignedManager")
+  inquiryNotes        InquiryNote[]
+  inquiryAssignments  InquiryAssignment[]
+  auditLogs           AuditLog[]
+}
+
+model Brand {
+  id             String    @id @default(cuid())
+  slug           String    @unique
+  name           String
+  nameKo         String
+  slogan         String
+  description    String
+  primaryColor   String
+  secondaryColor String
+  surfaceColor   String
+  isActive       Boolean   @default(true)
+  order          Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  services       Service[]
+  projects       Project[]
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  brandId     String
+  brand       Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  slug        String   @unique
+  title       String
+  subtitle    String?
+  summary     String
+  description String
+  icon        String?
+  imageUrl    String?
+  features    String?
+  isFeatured  Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Project {
+  id            String   @id @default(cuid())
+  brandId       String
+  brand         Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  title         String
+  category      String
+  client        String?
+  location      String?
+  completedDate String?
+  summary       String
+  description   String
+  coverImage    String
+  galleryImages String?
+  isFeatured    Boolean  @default(false)
+  isVisible     Boolean  @default(true)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ProductCategory {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  order       Int       @default(0)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Product {
+  id             String           @id @default(cuid())
+  slug           String           @unique
+  name           String
+  summary        String
+  description    String
+  categoryId     String?
+  category       ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  mainImage      String
+  galleryImages  String?
+  detailsJson    Json?
+  isFeatured     Boolean          @default(false)
+  isVisible      Boolean          @default(true)
+  naverUrl       String?
+  coupangUrl     String?
+  outboundClicks Int              @default(0)
+  metaTitle      String?
+  metaDesc       String?
+  order          Int              @default(0)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model Customer {
+  id        String    @id @default(cuid())
+  name      String
+  company   String?
+  email     String
+  phone     String
+  notes     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  inquiries Inquiry[]
+}
+
+model Inquiry {
+  id                     String        @id @default(cuid())
+  customerId             String
+  customer               Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  inquiryType            String
+  serviceCategory        String?
+  location               String?
+  message                String
+  preferredContactMethod String?
+  consentGiven           Boolean       @default(true)
+  status                 String        @default("NEW")
+  assignedUserId         String?
+  assignedUser           User?         @relation("AssignedManager", fields: [assignedUserId], references: [id], onDelete: SetNull)
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+
+  notes                  InquiryNote[]
+  assignments            InquiryAssignment[]
+  notificationJobs       NotificationJob[]
+}
+
+model InquiryNote {
+  id        String   @id @default(cuid())
+  inquiryId String
+  inquiry   Inquiry  @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model InquiryAssignment {
+  id         String   @id @default(cuid())
+  inquiryId  String
+  inquiry    Inquiry  @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignedAt DateTime @default(now())
+  notes      String?
+}
+
+model NotificationJob {
+  id             String              @id @default(cuid())
+  channel        String
+  inquiryId      String?
+  inquiry        Inquiry?            @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  recipient      String
+  subject        String?
+  payload        Json
+  status         String              @default("PENDING")
+  retryCount     Int                 @default(0)
+  maxRetries     Int                 @default(3)
+  errorMessage   String?
+  idempotencyKey String              @unique
+  nextAttemptAt  DateTime            @default(now())
+  sentAt         DateTime?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  logs           NotificationLog[]
+}
+
+model NotificationLog {
+  id        String          @id @default(cuid())
+  jobId     String
+  job       NotificationJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  channel   String
+  status    String
+  details   String?
+  createdAt DateTime        @default(now())
+}
+
+model Post {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  excerpt     String
+  content     String
+  category    String
+  coverImage  String?
+  isPublished Boolean   @default(true)
+  publishedAt DateTime  @default(now())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model SeoMetadata {
+  id           String   @id @default(cuid())
+  path         String   @unique
+  title        String
+  description  String
+  keywords     String?
+  ogImage      String?
+  canonicalUrl String?
+  updatedAt    DateTime @updatedAt
+}
+
+model SiteSetting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  category    String   @default("general")
+  description String?
+  updatedAt   DateTime @updatedAt
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action     String
+  targetType String?
+  targetId   String?
+  ipAddress  String?
+  details    Json?
+  createdAt  DateTime @default(now())
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  eventType String
+  targetUrl String?
+  referrer  String?
+  ipAddress String?
+  userAgent String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+}

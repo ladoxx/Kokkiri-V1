@@ -1,0 +1,47 @@
+{
+  "hero": {
+    "pillBadge": "KOKKIRI · KOTO · CHOKO 통합 비즈니스 플랫폼",
+    "titleLine1": "공간의 가치를 높이는",
+    "titleLine2Highlight": "새로운 기준",
+    "subtitle": "청소부터 AI 스마트 보안·시설 솔루션까지, 더 나은 공간과 지속 가능한 가치를 만들어갑니다. 기업 맞춤형 위생 케어, 딥러닝 AI CCTV 구축 및 시설 솔루션을 하나의 플랫폼에서 경험하세요.",
+    "primaryCtaText": "무료 견적 문의하기",
+    "primaryCtaHref": "/request-quote",
+    "secondaryCtaText": "시공 전후 비교 보기",
+    "secondaryCtaHref": "/projects#before-after",
+    "stat1Label": "누적 관리 면적",
+    "stat1Value": "1,200,000㎡+",
+    "stat2Label": "고객 재계약률",
+    "stat2Value": "98.6%",
+    "stat3Label": "시설 무재해 기록",
+    "stat3Value": "600일+"
+  },
+  "brandSectionTitle": "전문 영역별 3대 브랜드 솔루션",
+  "brandSectionSubtitle": "클리닝 전문 코끼리, AI 스마트 보안 & 시설 KOTO, 지속 가능한 에코 라이프케어 CHOKO가 상호 시너지를 발휘합니다.",
+  "brands": {
+    "kokkiri": {
+      "title": "프리미엄 클리닝 코끼리",
+      "categoryBadge": "KOKKIRI CLEANING",
+      "subtitle": "사옥 · 오피스 · 상업공간 딥 케어",
+      "description": "인체 무해 친환경 약품과 특수 집진 장비를 활용하여 눈에 보이지 않는 미세 오염까지 완벽히 제거하는 기업 전문 클리닝 솔루션입니다.",
+      "buttonText": "클리닝 솔루션 둘러보기",
+      "buttonHref": "/cleaning"
+    },
+    "koto": {
+      "title": "AI 보안 & 스마트 시설 솔루션",
+      "categoryBadge": "KOTO AI SECURITY",
+      "subtitle": "4K AI 지능형 CCTV · 보안 경비 · 조경 · 펜스",
+      "description": "딥러닝 이상 감지 AI CCTV부터 24시간 보안 경비, 기업 정원 수목 관리, 산업용 펜스 시공까지 기업 시설의 안전과 가치를 지킵니다.",
+      "buttonText": "KOTO 시설 솔루션 둘러보기",
+      "buttonHref": "/koto"
+    },
+    "choko": {
+      "title": "지속 가능한 에코 라이프케어",
+      "categoryBadge": "CHOKO ECO LIFECARE",
+      "subtitle": "대나무 롤 화장지 · 비건 펫푸드 · 자연 탈취제",
+      "description": "100% 천연 대나무 섬유 생활용품과 비건 펫푸드로 일상에 건강한 친환경 가치를 전하는 코끼리의 친환경 소비재 브랜드입니다.",
+      "buttonText": "CHOKO 공식 스토어 가기",
+      "buttonHref": "/choko"
+    }
+  },
+  "updatedAt": "2026-10-11T09:40:54.128Z"
+}

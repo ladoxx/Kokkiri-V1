@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kokkiri-web
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DATABASE_URL=file:/app/prisma/kokkiri.db
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-http://localhost:3001}
+      - JWT_SECRET=${JWT_SECRET:-kokkiri-super-secret-jwt-key-production-change-this}
+      - ADMIN_INIT_EMAIL=${ADMIN_INIT_EMAIL:-admin@kokkiri.com}
+      - ADMIN_INIT_NAME=${ADMIN_INIT_NAME:-최고 관리자}
+      - ADMIN_INIT_PASSWORD=${ADMIN_INIT_PASSWORD:-KokkiriAdmin2026!#}
+      # Email Notifications (SMTP)
+      - SMTP_HOST=${SMTP_HOST:-smtp.mailtrap.io}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_SECURE=${SMTP_SECURE:-false}
+      - SMTP_USER=${SMTP_USER:-}
+      - SMTP_PASS=${SMTP_PASS:-}
+      - SMTP_FROM=${SMTP_FROM:-코끼리 비즈니스 플랫폼 <no-reply@kokkiri.com>}
+      - NOTIFICATION_RECEIVER_EMAILS=${NOTIFICATION_RECEIVER_EMAILS:-admin@kokkiri.com}
+      # KakaoTalk Alimtalk Provider
+      - KAKAO_API_URL=${KAKAO_API_URL:-https://api.bizmessage.kakao.com/v1}
+      - KAKAO_API_KEY=${KAKAO_API_KEY:-}
+      - KAKAO_SENDER_KEY=${KAKAO_SENDER_KEY:-}
+      - KAKAO_TEST_MODE=${KAKAO_TEST_MODE:-true}
+    volumes:
+      # Persistent SQLite database storage (database persists across rebuilds)
+      - ./prisma:/app/prisma
+      # Persistent CMS content (menus, headlines, products)
+      - ./data:/app/data
+      # Persistent uploaded media files
+      - ./public/uploads:/app/public/uploads

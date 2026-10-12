@@ -1,0 +1,195 @@
+[
+  {
+    "id": "prod-vegan-dog-food",
+    "slug": "vegan-dog-food",
+    "name": "초코 퓨어 플랜트 비건 도그 사료 (1.8kg)",
+    "category": "비건 펫푸드",
+    "summary": "육류 알레르기 걱정 없는 100% 식물성 단백질과 유기농 슈퍼푸드로 설계된 프리미엄 비건 사료",
+    "description": "눈물 자국, 식이 알레르기, 피부 가려움으로 고민하는 반려견을 위해 수의 영양학 전문가와 함께 완성했습니다. GMO Free 렌틸콩, 완두콩, 귀리, 유기농 아마씨를 황금 비율로 배합하여 균형 잡힌 아미노산과 필수 오메가 지방산을 공급합니다.",
+    "features": [
+      "100% 식물성 클린 포뮬러 (동물성 원료 0%)",
+      "AAFCO(미국사료협회) 전 연령 영양 기준 충족",
+      "눈물 자국 및 알레르기 유발 물질 철저 배제",
+      "소화 흡수를 돕는 생유산균 5종 및 프리바이오틱스 함유"
+    ],
+    "specs": [
+      {
+        "label": "원산지",
+        "value": "대한민국"
+      },
+      {
+        "label": "중량",
+        "value": "1.8kg (300g 소포장 x 6팩)"
+      },
+      {
+        "label": "주원료",
+        "value": "완두단백, 발아귀리, 렌틸콩, 아마씨유, 맥주효모"
+      },
+      {
+        "label": "조단백질",
+        "value": "24.0% 이상"
+      },
+      {
+        "label": "조지방",
+        "value": "12.0% 이상"
+      }
+    ],
+    "mainImage": "/uploads/1791030857233_1000095953.png",
+    "galleryImages": [
+      "/images/products/choko-vegan-dog-food-1.jpg",
+      "/images/products/choko-vegan-dog-food-2.jpg"
+    ],
+    "naverUrl": "https://smartstore.naver.com/kokkiri/products/choko-dog-food",
+    "coupangUrl": "https://www.coupang.com/vp/products/choko-dog-food",
+    "isFeatured": true
+  },
+  {
+    "id": "prod-bamboo-toilet-paper",
+    "slug": "bamboo-toilet-paper",
+    "name": "초코 포레스트 무형광 100% 대나무 롤 화장지 (30롤)",
+    "category": "친환경 위생용품",
+    "summary": "나무를 베지 않는 100% 대나무 펄프로 만든 무형광·무표백·무먼지 3겹 프리미엄 화장지",
+    "description": "하루 1미터씩 자라는 대나무만을 사용하여 산림을 보호합니다. 화학 표백제, 인공 색소, 합성 향료, 포름알데히드를 일체 사용하지 않아 민감한 아기와 피부 질환이 있는 분도 안심하고 사용할 수 있습니다.",
+    "features": [
+      "FSC 인증 100% 천연 대나무 펄프 사용",
+      "먼지 날림 제로 공법으로 비염 환자 안심",
+      "형광증백제, 인공향료, 표백제 무첨가 (4-FREE)",
+      "엠보싱 3겹 원단으로 도톰하고 부드러운 흡수력"
+    ],
+    "specs": [
+      {
+        "label": "규격",
+        "value": "3겹 30m x 30롤"
+      },
+      {
+        "label": "원료",
+        "value": "천연 대나무 펄프 100%"
+      },
+      {
+        "label": "안전 인증",
+        "value": "KC 위생용품 안전기준 적합"
+      },
+      {
+        "label": "특징",
+        "value": "물에 잘 녹는 친환경 생분해성"
+      }
+    ],
+    "mainImage": "https://images.unsplash.com/photo-1584556812952-905ffd0c611a?auto=format&fit=crop&w=800&q=80",
+    "galleryImages": [
+      "/images/products/choko-bamboo-paper-1.jpg",
+      "/images/products/choko-bamboo-paper-2.jpg"
+    ],
+    "naverUrl": "https://smartstore.naver.com/kokkiri/products/choko-bamboo-paper",
+    "coupangUrl": "https://www.coupang.com/vp/products/choko-bamboo-paper",
+    "isFeatured": true
+  },
+  {
+    "id": "prod-bamboo-towels",
+    "slug": "bamboo-towels",
+    "name": "초코 에코 프리미엄 대나무 일회용 타월 (80매)",
+    "category": "친환경 위생용품",
+    "summary": "세균 번식 걱정 없는 위생적인 페이셜 & 바디 케어를 위한 초극세 대나무 섬유 일회용 타월",
+    "description": "습한 욕실의 젖은 수건에서 번식하는 세균 문제를 해결합니다. 대나무 고유의 천연 항균성을 유지한 두툼한 엠보싱 원단으로 피부 마찰 자극 없이 물기를 산뜻하게 흡수합니다.",
+    "features": [
+      "자연 항균 및 소취 기능을 지닌 대나무 섬유",
+      "도톰한 80gsm 고중량 원단으로 찢어짐 없는 흡수력",
+      "비건 및 오코텍스 1등급(OEKO-TEX) 섬유 인증",
+      "자연에서 100% 생분해되는 에코 프렌들리"
+    ],
+    "specs": [
+      {
+        "label": "수량",
+        "value": "80매입 (롤형/박스형)"
+      },
+      {
+        "label": "크기",
+        "value": "200mm x 200mm"
+      },
+      {
+        "label": "평량",
+        "value": "80g/m²"
+      },
+      {
+        "label": "용도",
+        "value": "세안 후 물기 제거, 여행 및 헬스장 휴대용"
+      }
+    ],
+    "mainImage": "/images/products/choko-bamboo-towel.jpg",
+    "galleryImages": [
+      "/images/products/choko-bamboo-towel-1.jpg"
+    ],
+    "naverUrl": "https://smartstore.naver.com/kokkiri/products/choko-bamboo-towel",
+    "coupangUrl": "https://www.coupang.com/vp/products/choko-bamboo-towel",
+    "isFeatured": true
+  },
+  {
+    "id": "prod-wet-wipes",
+    "slug": "wet-wipes",
+    "name": "초코 마일드 센서티브 대나무 생분해 물티슈 (70매 x 10팩)",
+    "category": "친환경 위생용품",
+    "summary": "플라스틱 프리 원단과 7단계 정제수로 만든 아기와 반려동물 모두를 위한 안심 물티슈",
+    "description": "미세플라스틱을 방출하는 합성 폴리에스터 원단 대신 100% 대나무 원사로 직조하여 흙으로 돌아갑니다. 마시는 물 수준의 7단계 카본 정제수만을 담아 연약한 피부에도 부드럽게 작용합니다.",
+    "features": [
+      "플라스틱 원사 0% 생분해 대나무 원단",
+      "식품의약품안전처 CGMP 적합 시설 제조",
+      "피부 저자극 테스트 무자극 판정 (독일 더마테스트 Excellent)",
+      "제주 편백잎 추출물 함유로 은은한 자연 진정 효과"
+    ],
+    "specs": [
+      {
+        "label": "용량",
+        "value": "70매 x 10팩 (캡형)"
+      },
+      {
+        "label": "원단",
+        "value": "100% 대나무 레이온 원단 (75gsm)"
+      },
+      {
+        "label": "주요 성분",
+        "value": "초순수 7단계 정제수, 편백수, 유기농 글리세린"
+      }
+    ],
+    "mainImage": "/images/products/choko-wet-wipes.jpg",
+    "galleryImages": [
+      "/images/products/choko-wet-wipes-1.jpg"
+    ],
+    "naverUrl": "https://smartstore.naver.com/kokkiri/products/choko-wet-wipes",
+    "coupangUrl": "https://www.coupang.com/vp/products/choko-wet-wipes",
+    "isFeatured": false
+  },
+  {
+    "id": "prod-odor-control",
+    "slug": "odor-control",
+    "name": "초코 클린스페이스 피톤치드 자연유래 다목적 탈취제 (500ml)",
+    "category": "생활 케어",
+    "summary": "인공 향료로 냄새를 덮지 않고 악취 분자를 근본적으로 분해하는 친환경 공간 탈취 스프레이",
+    "description": "강원도 편백 피톤치드 오일과 감 추출 탄닌 성분이 암모니아, 트리메틸아민 등 악취 원인을 99% 이상 탈취합니다. 반려동물 배변 구역, 신발장, 패브릭 소파 및 차량 실내에 안심하고 분사하세요.",
+    "features": [
+      "국가공인기관 99.6% 탈취력 검증",
+      "유해 화학물질 12종 불검출 (가습기 살균제 성분 등 ZERO)",
+      "알코올 프리 제형으로 가죽이나 고급 섬유 손상 방지",
+      "반려동물 후각 스트레스 없는 은은한 자연 숲 향"
+    ],
+    "specs": [
+      {
+        "label": "용량",
+        "value": "500ml 스프레이형"
+      },
+      {
+        "label": "성분",
+        "value": "편백오일, 감추출물, 감초추출물, 정제수"
+      },
+      {
+        "label": "안전 확인",
+        "value": "안전확인대상생활화학제품 승인완료"
+      }
+    ],
+    "mainImage": "/images/products/choko-odor-control.jpg",
+    "galleryImages": [
+      "/images/products/choko-odor-control-1.jpg"
+    ],
+    "naverUrl": "https://smartstore.naver.com/kokkiri/products/choko-odor-control",
+    "coupangUrl": "https://www.coupang.com/vp/products/choko-odor-control",
+    "isFeatured": true
+  }
+]
