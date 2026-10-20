@@ -1,15 +1,24 @@
-# Multi-stage production Dockerfile for KOKKIRI Platform with SQLite
-FROM node:22-alpine AS base
+# Multi-stage production Dockerfile for KOKKIRI Business Platform (Next.js 16 + SQLite + Standalone)
+# Optimized for Coolify and Docker Compose deployments
+
+# -----------------------------------------------------------------------------
+# Base stage
+# -----------------------------------------------------------------------------
+FROM node:20-alpine AS base
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
-# Stage 1: Install Dependencies
+# -----------------------------------------------------------------------------
+# Stage 1: Dependencies
+# -----------------------------------------------------------------------------
 FROM base AS deps
 COPY package.json package-lock.json* ./
 COPY prisma ./prisma/
 RUN npm ci
 
+# -----------------------------------------------------------------------------
 # Stage 2: Build Application
+# -----------------------------------------------------------------------------
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
@@ -24,37 +33,52 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 RUN npm run build
 
+# -----------------------------------------------------------------------------
 # Stage 3: Production Runner
+# -----------------------------------------------------------------------------
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV PORT=3001
+ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 ENV DATABASE_URL="file:/app/prisma/kokkiri.db"
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Install curl for healthcheck & su-exec for secure permission handling
+RUN apk add --no-cache curl su-exec
 
-# Copy static assets and standalone build artifacts
+# Create non-root system user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+# Copy static assets and standalone artifacts
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+
+# Copy initial templates for volume auto-hydration
+COPY --from=builder --chown=nextjs:nodejs /app/data ./data-template
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma-template
+
+# Copy working data and prisma directories
 COPY --from=builder --chown=nextjs:nodejs /app/data ./data
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
 
-# Ensure directories exist and have proper permissions for SQLite writing and uploads
-RUN mkdir -p /app/prisma /app/data /app/public/uploads && \
-    chown -R nextjs:nodejs /app/prisma /app/data /app/public/uploads
+# Copy entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-USER nextjs
+# Ensure storage directories exist with write permissions
+RUN mkdir -p /app/data /app/prisma /app/public/uploads && \
+    chown -R nextjs:nodejs /app/data /app/prisma /app/public/uploads
 
-EXPOSE 3001
+EXPOSE 3000
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3001/ || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD curl -f http://127.0.0.1:3000/ || exit 1
 
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["node", "server.js"]

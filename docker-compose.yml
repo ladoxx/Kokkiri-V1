@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   web:
     build:
@@ -8,12 +6,13 @@ services:
     container_name: kokkiri-web
     restart: unless-stopped
     ports:
-      - "3001:3001"
+      - "${PORT:-3000}:3000"
     environment:
       - NODE_ENV=production
-      - PORT=3001
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
       - DATABASE_URL=file:/app/prisma/kokkiri.db
-      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-http://localhost:3001}
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-https://kokkiri.com}
       - JWT_SECRET=${JWT_SECRET:-kokkiri-super-secret-jwt-key-production-change-this}
       - ADMIN_INIT_EMAIL=${ADMIN_INIT_EMAIL:-admin@kokkiri.com}
       - ADMIN_INIT_NAME=${ADMIN_INIT_NAME:-최고 관리자}
@@ -33,8 +32,16 @@ services:
       - KAKAO_TEST_MODE=${KAKAO_TEST_MODE:-true}
     volumes:
       # Persistent SQLite database storage (database persists across rebuilds)
-      - ./prisma:/app/prisma
+      - kokkiri_prisma:/app/prisma
       # Persistent CMS content (menus, headlines, products)
-      - ./data:/app/data
+      - kokkiri_data:/app/data
       # Persistent uploaded media files
-      - ./public/uploads:/app/public/uploads
+      - kokkiri_uploads:/app/public/uploads
+
+volumes:
+  kokkiri_prisma:
+    name: kokkiri_prisma
+  kokkiri_data:
+    name: kokkiri_data
+  kokkiri_uploads:
+    name: kokkiri_uploads

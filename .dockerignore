@@ -12,3 +12,6 @@ dist
 build
 .system_generated
 .agents
+cloudflared.exe
+cloudflare_tunnel.log
+*.log

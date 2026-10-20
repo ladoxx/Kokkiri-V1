@@ -1,5 +1,28 @@
 [
   {
+    "id": "prod-1792426747731",
+    "slug": "123",
+    "name": "zc",
+    "category": "친환경 위생용품zczxqwe",
+    "summary": "1231k",
+    "description": "kjanfa",
+    "features": [
+      "친환경 프리미엄 원료",
+      "생분해성 포장"
+    ],
+    "specs": [
+      {
+        "label": "원산지",
+        "value": "대한민국"
+      }
+    ],
+    "mainImage": "/images/products/choko-bamboo-paper.jpg",
+    "galleryImages": [],
+    "naverUrl": "",
+    "coupangUrl": "",
+    "isFeatured": true
+  },
+  {
     "id": "prod-vegan-dog-food",
     "slug": "vegan-dog-food",
     "name": "초코 퓨어 플랜트 비건 도그 사료 (1.8kg)",

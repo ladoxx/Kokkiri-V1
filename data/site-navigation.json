@@ -190,9 +190,9 @@
       "id": "contact",
       "label": "문의하기",
       "href": "/contact",
-      "visible": true,
+      "visible": false,
       "items": []
     }
   ],
-  "updatedAt": "2026-10-11T09:40:54.116Z"
+  "updatedAt": "2026-10-20T14:21:05.246Z"
 }
