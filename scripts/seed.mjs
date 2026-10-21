@@ -1,6 +1,13 @@
-import { PrismaClient, RoleType } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { BRANDS, SERVICES, PROJECTS, PRODUCTS, NEWS_LIST, COMPANY_INFO } from "../src/lib/data/initial-data.ts";
+
+const RoleType = {
+  SUPER_ADMIN: "SUPER_ADMIN",
+  ADMIN: "ADMIN",
+  MANAGER: "MANAGER",
+  STAFF: "STAFF",
+};
 
 const prisma = new PrismaClient();
 

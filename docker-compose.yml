@@ -3,7 +3,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: kokkiri-web:latest
     container_name: kokkiri-web
     restart: unless-stopped
     ports:
@@ -39,12 +38,6 @@ services:
       - kokkiri_data:/app/data
       # Persistent uploaded media files
       - kokkiri_uploads:/app/public/uploads
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://127.0.0.1:3000/ || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 25s
 
 volumes:
   kokkiri_prisma:
