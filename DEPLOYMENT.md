@@ -63,14 +63,28 @@
 2. 위의 `필수 환경 변수 체크리스트`에 해당하는 항목을 입력
 3. 저장 후 적용
 
-### 단계 5: 도메인 및 Cloudflare 연동
-1. **Domains** 설정에 `https://kokkiri.com` 등록
+### 단계 5: 도메인 또는 직접 IP 접속 설정 (Flexible IP Setup)
+
+#### 옵션 A: 도메인 없이 직접 IP 주소로 접속하는 경우 (Coolify Flexible IP)
+1. **Domains (FQDN) 설정**:
+   - Coolify 대시보드의 **Domains** 입력란을 **완전히 비워두거나** (또는 `http://<서버IP>:3000` 입력).
+2. **Port Mappings (포트 포워딩)** 설정:
+   - Coolify의 **Configuration** -> **Network / General** 탭으로 이동.
+   - **Port Mappings** 항목에 `3000:3000` 입력.
+   - 이렇게 하면 Traefik 도메인 라우팅을 거치지 않고, 서버 공인 IP (`http://<서버IP>:3000`)로 즉시 웹사이트와 관리자 페이지에 접속할 수 있습니다.
+3. **환경 변수 확인**:
+   - `COOKIE_SECURE=false` (HTTP 접속 시 브라우저가 관리자 쿠키를 정상 저장하도록 설정)
+   - `NEXT_PUBLIC_SITE_URL=http://<서버IP>:3000`
+
+#### 옵션 B: 정식 도메인 및 Cloudflare 연동 시
+1. **Domains** 설정에 `https://your-domain.com` 등록
 2. Cloudflare DNS 설정:
    - Type: `A`
    - Name: `@` (또는 서브도메인)
    - Content: 서버 공인 IP
    - Proxy status: `Proxied (오렌지 구름 활성화)`
 3. Cloudflare SSL/TLS 암호화 모드: **Full (strict)** 설정
+4. 환경 변수: `COOKIE_SECURE=true`, `NEXT_PUBLIC_SITE_URL=https://your-domain.com`
 
 ### 단계 6: 데이터베이스 마이그레이션 및 초기 시드
 Coolify 애플리케이션 콘솔(Terminal) 또는 배포 스크립트에서 다음 명령을 실행합니다:

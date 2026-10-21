@@ -3,19 +3,27 @@ import type { NextRequest } from "next/server";
 
 const COOKIE_NAME = "kokkiri_admin_token";
 
-// Define security headers for all responses
-const securityHeaders = {
+// Define base security headers for all responses
+const baseSecurityHeaders: Record<string, string> = {
   "X-DNS-Prefetch-Control": "on",
   "X-Frame-Options": "SAMEORIGIN",
   "X-Content-Type-Options": "nosniff",
   "Referrer-Policy": "strict-origin-when-cross-origin",
   "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
-  "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
 };
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get(COOKIE_NAME)?.value || req.headers.get("authorization")?.replace("Bearer ", "");
+
+  const isHttps =
+    req.nextUrl.protocol === "https:" ||
+    req.headers.get("x-forwarded-proto") === "https";
+
+  const securityHeaders = {
+    ...baseSecurityHeaders,
+    ...(isHttps ? { "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload" } : {}),
+  };
 
   // 1. Protect Admin API routes: /api/admin/*
   if (pathname.startsWith("/api/admin")) {

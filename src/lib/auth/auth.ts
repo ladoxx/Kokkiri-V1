@@ -46,11 +46,21 @@ export async function getSession(): Promise<TokenPayload | null> {
 }
 
 export function getCookieOptions() {
-  const isProd = process.env.NODE_ENV === "production";
+  // Only enforce secure cookies if explicitly enabled or if running over HTTPS
+  // This allows seamless login on direct IP addresses without SSL/domains in Coolify/Docker
+  const cookieSecureEnv = process.env.COOKIE_SECURE;
+  const isExplicitlySecure = cookieSecureEnv === "true";
+  const isExplicitlyInsecure = cookieSecureEnv === "false";
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+  const isHttpsSite = siteUrl.startsWith("https://");
+
+  const secure = isExplicitlySecure ? true : isExplicitlyInsecure ? false : isHttpsSite;
+
   return {
     name: COOKIE_NAME,
     httpOnly: true,
-    secure: isProd,
+    secure,
     sameSite: "lax" as const,
     path: "/",
     maxAge: 60 * 60 * 24 * 7, // 7 days
