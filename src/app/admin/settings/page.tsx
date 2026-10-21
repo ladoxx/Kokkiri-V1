@@ -262,7 +262,7 @@ function AdminSettingsContent() {
             }`}
           >
             <Mail className="w-3.5 h-3.5 text-[#477B56]" />
-            <span>스마트 이메일 라우팅</span>
+            <span>통합 이메일 알림 설정</span>
           </button>
 
           <button
@@ -307,7 +307,7 @@ function AdminSettingsContent() {
       </div>
 
       {/* ========================================================================= */}
-      {/* TAB 0: SMART LEAD ROUTING & MULTI-RECIPIENT NOTIFICATIONS */}
+      {/* TAB 0: UNIFIED NOTIFICATION EMAIL (전 브랜드 단일 이메일 통합 수신) */}
       {/* ========================================================================= */}
       {activeTab === "routing" && (
         <form onSubmit={handleSaveRouting} className="space-y-6">
@@ -318,13 +318,13 @@ function AdminSettingsContent() {
             <div className="relative z-10 max-w-xl">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-[#86efac] text-[11px] font-bold mb-3 backdrop-blur-xs border border-white/10">
                 <Mail className="w-3.5 h-3.5" />
-                <span>Smart Multi-Recipient Lead Routing</span>
+                <span>Unified Notification Email System</span>
               </div>
               <h2 className="text-lg sm:text-xl font-black tracking-tight mb-2">
-                스마트 이메일 라우팅 & 다중 수신자 분기
+                전 브랜드 통합 이메일 알림 설정
               </h2>
               <p className="text-xs text-white/80 leading-relaxed">
-                단일 대표 총괄 체제에서 3대 사업 부문(클리닝, KOTO AI보안, CHOKO/일반) 문의를 담당 실무진에게 자동 배분하고, 대표님(Master BCC)에게 100% 실시간 사본을 전달합니다.
+                모든 브랜드(코끼리 프리미엄 클리닝, KOTO AI 보안 & 시설, CHOKO 에코 라이프케어)의 신규 고객 문의를 별도의 분기 없이 단 하나의 대표 이메일 주소로 일원화하여 실시간 통합 수신합니다.
               </p>
             </div>
 
@@ -373,464 +373,244 @@ function AdminSettingsContent() {
             </div>
           )}
 
-          {/* SECTION 1: MASTER BOSS CONTROL (대표님 단일 총괄 관리) */}
-          <div className="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-gray-200/80 space-y-5">
+          {/* SECTION 1: PRIMARY UNIFIED EMAIL SETTINGS */}
+          <div className="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-gray-200/80 space-y-6">
             <div className="flex items-center justify-between border-b border-gray-100 pb-4">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-[#173F30]/10 flex items-center justify-center text-[#173F30]">
-                  <Shield className="w-4 h-4" />
+                <div className="w-9 h-9 rounded-xl bg-[#173F30]/10 flex items-center justify-center text-[#173F30]">
+                  <Mail className="w-5 h-5" />
                 </div>
                 <div>
                   <h3 className="font-extrabold text-sm text-gray-900">
-                    대표님 마스터 관리 (Master Follow-up & BCC)
+                    통합 알림 수신 이메일 주소 (단일 주소 설정)
                   </h3>
                   <p className="text-[11px] text-gray-500">
-                    단일 대표 체제에서 모든 부서의 인입 문의를 100% 누락 없이 모니터링합니다.
+                    어떤 브랜드의 페이지에서 문의가 들어오더라도 모두 아래의 단일 메일 주소로 즉시 전송됩니다.
                   </p>
                 </div>
               </div>
-              <span className="px-2.5 py-1 rounded-full bg-[#173F30]/10 text-[#173F30] font-bold text-[10px]">
-                최고 권한
+              <span className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                단일 수신 모드 활성화됨
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Master Email Input */}
-              <div className="space-y-1.5 sm:col-span-2">
-                <label className="block text-xs font-bold text-gray-700">
-                  대표님 총괄 이메일 주소 (Master Boss Email)
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">
+                  대표 알림 수신 이메일 (필수)
                 </label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-3" />
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                    <AtSign className="w-4 h-4" />
+                  </div>
                   <input
                     type="email"
-                    value={routingData.masterBossEmail}
+                    required
+                    value={routingData.unifiedNotificationEmail || ""}
                     onChange={(e) =>
                       setRoutingData({
                         ...routingData,
+                        unifiedNotificationEmail: e.target.value,
                         masterBossEmail: e.target.value,
                       })
                     }
-                    placeholder="admin@kokkiri.com"
-                    className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#173F30] font-medium"
+                    placeholder="contact@kokkiri.com"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-[#173F30] focus:border-[#173F30] transition-colors"
                   />
                 </div>
-                <p className="text-[11px] text-gray-400">
-                  어떤 부서로 문의가 접수되든 대표님께 자동 참조되어 직원의 응대 누락을 방지합니다.
+                <p className="text-[11px] text-gray-500 mt-1.5">
+                  고객이 코끼리 클리닝, KOTO AI보안, CHOKO 에코 상품 견적 및 문의를 등록하면 실시간 알림이 이 메일로 도착합니다.
                 </p>
               </div>
 
-              {/* Master BCC Switch */}
-              <div className="p-4 rounded-2xl bg-gray-50 border border-gray-200/70 flex items-center justify-between gap-4">
-                <div>
-                  <div className="font-bold text-xs text-gray-900">
-                    전체 문의 자동 숨은 참조(BCC)
-                  </div>
-                  <div className="text-[11px] text-gray-500 mt-0.5">
-                    모든 부서의 고객 견적 접수 메일을 대표님 메일로 항상 복사 수신합니다.
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() =>
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">
+                  참조(CC) 추가 수신 이메일 (선택사항)
+                </label>
+                <input
+                  type="text"
+                  value={routingData.additionalRecipients || ""}
+                  onChange={(e) =>
                     setRoutingData({
                       ...routingData,
-                      masterBccEnabled: !routingData.masterBccEnabled,
+                      additionalRecipients: e.target.value,
                     })
                   }
-                  className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-                    routingData.masterBccEnabled ? "bg-[#173F30]" : "bg-gray-300"
-                  }`}
-                >
-                  <div
-                    className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
-                      routingData.masterBccEnabled ? "translate-x-6" : "translate-x-0"
-                    }`}
-                  />
-                </button>
+                  placeholder="manager@kokkiri.com, alert@kokkiri.com (쉼표로 구분)"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#173F30] focus:border-[#173F30] transition-colors"
+                />
+                <p className="text-[11px] text-gray-500 mt-1.5">
+                  대표 메일 외에 추가로 함께 알림을 받아야 하는 팀원이나 관리자가 있다면 쉼표(,)로 구분하여 입력하세요. (비워둘 수 있습니다)
+                </p>
               </div>
 
-              {/* Reply-To Switch */}
-              <div className="p-4 rounded-2xl bg-gray-50 border border-gray-200/70 flex items-center justify-between gap-4">
-                <div>
-                  <div className="font-bold text-xs text-gray-900">
-                    고객 직접 답장 지원 (Reply-To)
-                  </div>
-                  <div className="text-[11px] text-gray-500 mt-0.5">
-                    이메일에서 [답장] 클릭 시 문의 고객의 이메일로 바로 회신됩니다.
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() =>
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">
+                  알림 이메일 제목 템플릿
+                </label>
+                <input
+                  type="text"
+                  value={
+                    routingData.unifiedSubjectTemplate ||
+                    "[{brandName}] {customerName}님의 문의가 접수되었습니다"
+                  }
+                  onChange={(e) =>
                     setRoutingData({
                       ...routingData,
-                      enableCustomerReplyTo: !routingData.enableCustomerReplyTo,
+                      unifiedSubjectTemplate: e.target.value,
                     })
                   }
-                  className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer transition-colors ${
-                    routingData.enableCustomerReplyTo ? "bg-[#173F30]" : "bg-gray-300"
-                  }`}
-                >
-                  <div
-                    className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
-                      routingData.enableCustomerReplyTo ? "translate-x-6" : "translate-x-0"
-                    }`}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#173F30]"
+                />
+                <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                  <span className="text-[10px] text-gray-500 font-semibold">사용 가능한 변수 치환자:</span>
+                  <span className="px-2 py-0.5 rounded bg-gray-100 text-gray-700 font-mono text-[10px]">
+                    {"{brandName}"} (브랜드명 자동표시)
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-gray-100 text-gray-700 font-mono text-[10px]">
+                    {"{customerName}"} (고객명)
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-gray-100 text-gray-700 font-mono text-[10px]">
+                    {"{inquiryType}"} (문의유형)
+                  </span>
+                </div>
+              </div>
+
+              {/* Reply-To Direct Customer */}
+              <div className="pt-2 border-t border-gray-100">
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={routingData.enableCustomerReplyTo ?? true}
+                    onChange={(e) =>
+                      setRoutingData({
+                        ...routingData,
+                        enableCustomerReplyTo: e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 mt-0.5 rounded text-[#173F30] focus:ring-[#173F30] cursor-pointer"
                   />
-                </button>
+                  <div>
+                    <span className="text-xs font-bold text-gray-800 group-hover:text-[#173F30]">
+                      고객 이메일로 원클릭 바로 답장(Reply-To) 활성화
+                    </span>
+                    <p className="text-[11px] text-gray-500">
+                      수신된 알림 메일에서 메일 프로그램의 [답장] 버튼을 누르면 고객의 이메일 주소로 즉시 답장을 보낼 수 있도록 Reply-To 헤더를 설정합니다.
+                    </p>
+                  </div>
+                </label>
               </div>
             </div>
           </div>
 
-          {/* SECTION 2: 3-DIVISION ROUTING RULES (3개 사업 부문별 분기) */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between px-1">
+          {/* SECTION 2: BRAND INTEGRATION STATUS & INSTANT TEST */}
+          <div className="bg-white rounded-3xl p-5 sm:p-7 shadow-sm border border-gray-200/80 space-y-5">
+            <div className="border-b border-gray-100 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h3 className="font-extrabold text-sm text-gray-900">
-                  3대 사업 부문별 라우팅 규칙
+                <h3 className="font-extrabold text-sm text-gray-900 flex items-center gap-2">
+                  <span>통합 수신 상태 및 브랜드별 테스트 발송</span>
                 </h3>
-                <p className="text-[11px] text-gray-500">
-                  문의 카테고리에 따라 담당 실무진의 이메일(쉼표로 여러 명)로 분기 발송됩니다.
+                <p className="text-[11px] text-gray-500 mt-0.5">
+                  아래 세 개 브랜드의 모든 문의가 위의 단일 이메일로 통합 전달됩니다. 브랜드별 샘플 메일을 발송해 테스트해보세요.
                 </p>
               </div>
-            </div>
-
-            {/* Division 1: KOKKIRI Cleaning */}
-            <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-emerald-100 hover:border-emerald-300 transition-all space-y-4">
-              <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#173F30]" />
-                  <span className="font-extrabold text-xs sm:text-sm text-gray-900">
-                    KOKKIRI 프리미엄 클리닝
-                  </span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
-                    오피스 · 사옥 · 상업시설 · 준공 특수
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleTestDivision("cleaning")}
-                    disabled={testingDivision === "cleaning"}
-                    className="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[11px] font-bold transition-all border border-emerald-200 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
-                  >
-                    {testingDivision === "cleaning" ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : (
-                      <Send className="w-3 h-3" />
-                    )}
-                    <span>클리닝 테스트 발송</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-1">
-                    수신 담당자 이메일 (쉼표로 구분하여 여러 명 입력 가능)
-                  </label>
-                  <input
-                    type="text"
-                    value={routingData.cleaning.recipients.join(", ")}
-                    onChange={(e) =>
-                      setRoutingData({
-                        ...routingData,
-                        cleaning: {
-                          ...routingData.cleaning,
-                          recipients: e.target.value
-                            .split(",")
-                            .map((s) => s.trim())
-                            .filter(Boolean),
-                        },
-                      })
-                    }
-                    placeholder="cleaning@kokkiri.com, admin@kokkiri.com"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#173F30]"
-                  />
-                  <div className="flex flex-wrap gap-1.5 mt-2">
-                    {routingData.cleaning.recipients.map((em, idx) => (
-                      <span
-                        key={idx}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-900 text-[11px] font-semibold border border-emerald-200"
-                      >
-                        <Mail className="w-3 h-3 text-emerald-600" />
-                        {em}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">
-                      이메일 제목 템플릿
-                    </label>
-                    <input
-                      type="text"
-                      value={routingData.cleaning.subjectTemplate}
-                      onChange={(e) =>
-                        setRoutingData({
-                          ...routingData,
-                          cleaning: {
-                            ...routingData.cleaning,
-                            subjectTemplate: e.target.value,
-                          },
-                        })
-                      }
-                      className="w-full px-3.5 py-2 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#173F30]"
-                    />
-                    <p className="text-[10px] text-gray-400 mt-1">
-                      사용 가능 변수: &#123;customerName&#125;, &#123;serviceCategory&#125;, &#123;company&#125;
-                    </p>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">
-                      내부 배정 메모 (메일 상단 노출)
-                    </label>
-                    <input
-                      type="text"
-                      value={routingData.cleaning.customHeaderNote || ""}
-                      onChange={(e) =>
-                        setRoutingData({
-                          ...routingData,
-                          cleaning: {
-                            ...routingData.cleaning,
-                            customHeaderNote: e.target.value,
-                          },
-                        })
-                      }
-                      className="w-full px-3.5 py-2 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#173F30]"
-                    />
-                  </div>
-                </div>
+              <div className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 self-start sm:self-auto">
+                모든 브랜드 100% 단일 수신 연동됨
               </div>
             </div>
 
-            {/* Division 2: KOTO AI Security */}
-            <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-sky-100 hover:border-sky-300 transition-all space-y-4">
-              <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#243A50]" />
-                  <span className="font-extrabold text-xs sm:text-sm text-gray-900">
-                    KOTO AI 보안 & 시설 솔루션
-                  </span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-sky-50 text-sky-800 border border-sky-200">
-                    4K AI CCTV · 24H 보안 경비 · 조경 · 펜스
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleTestDivision("koto")}
-                    disabled={testingDivision === "koto"}
-                    className="px-3 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 text-[11px] font-bold transition-all border border-sky-200 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
-                  >
-                    {testingDivision === "koto" ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : (
-                      <Send className="w-3 h-3" />
-                    )}
-                    <span>KOTO 테스트 발송</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Card 1: Kokkiri Cleaning */}
+              <div className="p-4 rounded-2xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
                 <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-1">
-                    수신 담당자 이메일 (쉼표로 구분하여 여러 명 입력 가능)
-                  </label>
-                  <input
-                    type="text"
-                    value={routingData.koto.recipients.join(", ")}
-                    onChange={(e) =>
-                      setRoutingData({
-                        ...routingData,
-                        koto: {
-                          ...routingData.koto,
-                          recipients: e.target.value
-                            .split(",")
-                            .map((s) => s.trim())
-                            .filter(Boolean),
-                        },
-                      })
-                    }
-                    placeholder="koto@kokkiri.com, security@kokkiri.com, admin@kokkiri.com"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#243A50]"
-                  />
-                  <div className="flex flex-wrap gap-1.5 mt-2">
-                    {routingData.koto.recipients.map((em, idx) => (
-                      <span
-                        key={idx}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-sky-50 text-sky-900 text-[11px] font-semibold border border-sky-200"
-                      >
-                        <Mail className="w-3 h-3 text-sky-600" />
-                        {em}
-                      </span>
-                    ))}
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-bold text-xs text-gray-900">1. KOKKIRI 클리닝</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#173F30]/10 text-[#173F30]">
+                      통합 연결됨
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-gray-600 mb-2">
+                    오피스/사옥 정기 관리, 준공 및 입주 청소 견적 문의
+                  </p>
+                  <div className="text-[10px] font-mono text-gray-500 bg-white p-2 rounded-lg border border-gray-200 break-all mb-3">
+                    수신: {routingData.unifiedNotificationEmail || "설정 필요"}
                   </div>
                 </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">
-                      이메일 제목 템플릿
-                    </label>
-                    <input
-                      type="text"
-                      value={routingData.koto.subjectTemplate}
-                      onChange={(e) =>
-                        setRoutingData({
-                          ...routingData,
-                          koto: {
-                            ...routingData.koto,
-                            subjectTemplate: e.target.value,
-                          },
-                        })
-                      }
-                      className="w-full px-3.5 py-2 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#243A50]"
-                    />
-                    <p className="text-[10px] text-gray-400 mt-1">
-                      사용 가능 변수: &#123;customerName&#125;, &#123;serviceCategory&#125;, &#123;company&#125;
-                    </p>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">
-                      내부 배정 메모 (메일 상단 노출)
-                    </label>
-                    <input
-                      type="text"
-                      value={routingData.koto.customHeaderNote || ""}
-                      onChange={(e) =>
-                        setRoutingData({
-                          ...routingData,
-                          koto: {
-                            ...routingData.koto,
-                            customHeaderNote: e.target.value,
-                          },
-                        })
-                      }
-                      className="w-full px-3.5 py-2 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#243A50]"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Division 3: CHOKO & General */}
-            <div className="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-amber-100 hover:border-amber-300 transition-all space-y-4">
-              <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#8C6C43]" />
-                  <span className="font-extrabold text-xs sm:text-sm text-gray-900">
-                    CHOKO 에코 라이프케어 & 본사 일반 문의
-                  </span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200">
-                    대나무 화장지 · 펫푸드 제휴 · 채용 · 일반 문의
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleTestDivision("chokoAndGeneral")}
-                    disabled={testingDivision === "chokoAndGeneral"}
-                    className="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-[11px] font-bold transition-all border border-amber-200 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
-                  >
-                    {testingDivision === "chokoAndGeneral" ? (
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : (
-                      <Send className="w-3 h-3" />
-                    )}
-                    <span>CHOKO/일반 테스트 발송</span>
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => handleTestDivision("kokkiri")}
+                  disabled={testingDivision !== null}
+                  className="w-full py-2 px-3 rounded-xl bg-white hover:bg-gray-100 border border-gray-300 text-gray-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  {testingDivision === "kokkiri" ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Send className="w-3.5 h-3.5" />
+                  )}
+                  <span>클리닝 테스트 발송</span>
+                </button>
               </div>
 
-              <div className="space-y-3">
+              {/* Card 2: KOTO Security */}
+              <div className="p-4 rounded-2xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
                 <div>
-                  <label className="block text-xs font-bold text-gray-700 mb-1">
-                    수신 담당자 이메일 (쉼표로 구분하여 여러 명 입력 가능)
-                  </label>
-                  <input
-                    type="text"
-                    value={routingData.chokoAndGeneral.recipients.join(", ")}
-                    onChange={(e) =>
-                      setRoutingData({
-                        ...routingData,
-                        chokoAndGeneral: {
-                          ...routingData.chokoAndGeneral,
-                          recipients: e.target.value
-                            .split(",")
-                            .map((s) => s.trim())
-                            .filter(Boolean),
-                        },
-                      })
-                    }
-                    placeholder="choko@kokkiri.com, admin@kokkiri.com"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#8C6C43]"
-                  />
-                  <div className="flex flex-wrap gap-1.5 mt-2">
-                    {routingData.chokoAndGeneral.recipients.map((em, idx) => (
-                      <span
-                        key={idx}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 text-[11px] font-semibold border border-amber-200"
-                      >
-                        <Mail className="w-3 h-3 text-amber-600" />
-                        {em}
-                      </span>
-                    ))}
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-bold text-xs text-gray-900">2. KOTO AI 보안</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#1B365D]/10 text-[#1B365D]">
+                      통합 연결됨
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-gray-600 mb-2">
+                    지능형 4K AI CCTV, 24시간 관제 및 보안 시설 견적 문의
+                  </p>
+                  <div className="text-[10px] font-mono text-gray-500 bg-white p-2 rounded-lg border border-gray-200 break-all mb-3">
+                    수신: {routingData.unifiedNotificationEmail || "설정 필요"}
                   </div>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => handleTestDivision("koto")}
+                  disabled={testingDivision !== null}
+                  className="w-full py-2 px-3 rounded-xl bg-white hover:bg-gray-100 border border-gray-300 text-gray-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  {testingDivision === "koto" ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Send className="w-3.5 h-3.5" />
+                  )}
+                  <span>AI보안 테스트 발송</span>
+                </button>
+              </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">
-                      이메일 제목 템플릿
-                    </label>
-                    <input
-                      type="text"
-                      value={routingData.chokoAndGeneral.subjectTemplate}
-                      onChange={(e) =>
-                        setRoutingData({
-                          ...routingData,
-                          chokoAndGeneral: {
-                            ...routingData.chokoAndGeneral,
-                            subjectTemplate: e.target.value,
-                          },
-                        })
-                      }
-                      className="w-full px-3.5 py-2 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#8C6C43]"
-                    />
-                    <p className="text-[10px] text-gray-400 mt-1">
-                      사용 가능 변수: &#123;customerName&#125;, &#123;serviceCategory&#125;, &#123;company&#125;
-                    </p>
+              {/* Card 3: CHOKO & General */}
+              <div className="p-4 rounded-2xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-bold text-xs text-gray-900">3. CHOKO 라이프케어</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#8C6C43]/10 text-[#8C6C43]">
+                      통합 연결됨
+                    </span>
                   </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">
-                      내부 배정 메모 (메일 상단 노출)
-                    </label>
-                    <input
-                      type="text"
-                      value={routingData.chokoAndGeneral.customHeaderNote || ""}
-                      onChange={(e) =>
-                        setRoutingData({
-                          ...routingData,
-                          chokoAndGeneral: {
-                            ...routingData.chokoAndGeneral,
-                            customHeaderNote: e.target.value,
-                          },
-                        })
-                      }
-                      className="w-full px-3.5 py-2 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#8C6C43]"
-                    />
+                  <p className="text-[11px] text-gray-600 mb-2">
+                    100% 대나무 화장지, 비건 펫푸드 B2B 공급 및 제휴 문의
+                  </p>
+                  <div className="text-[10px] font-mono text-gray-500 bg-white p-2 rounded-lg border border-gray-200 break-all mb-3">
+                    수신: {routingData.unifiedNotificationEmail || "설정 필요"}
                   </div>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => handleTestDivision("choko")}
+                  disabled={testingDivision !== null}
+                  className="w-full py-2 px-3 rounded-xl bg-white hover:bg-gray-100 border border-gray-300 text-gray-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  {testingDivision === "choko" ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Send className="w-3.5 h-3.5" />
+                  )}
+                  <span>CHOKO 테스트 발송</span>
+                </button>
               </div>
             </div>
           </div>
@@ -849,7 +629,7 @@ function AdminSettingsContent() {
               ) : (
                 <Save className="w-4 h-4" />
               )}
-              <span>{savedRouting ? "설정 저장 완료!" : "전체 라우팅 설정 저장하기"}</span>
+              <span>{savedRouting ? "설정 저장 완료!" : "통합 이메일 알림 설정 저장하기"}</span>
             </button>
           </div>
         </form>

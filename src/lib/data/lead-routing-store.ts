@@ -10,12 +10,23 @@ export function getLeadRoutingSettings(): LeadRoutingSettings {
     if (fs.existsSync(ROUTING_FILE)) {
       const data = fs.readFileSync(ROUTING_FILE, "utf-8");
       const parsed = JSON.parse(data);
+      const unifiedEmail =
+        parsed.unifiedNotificationEmail ||
+        parsed.masterBossEmail ||
+        parsed.cleaning?.recipients?.[0] ||
+        DEFAULT_LEAD_ROUTING.unifiedNotificationEmail;
+
       return {
         ...DEFAULT_LEAD_ROUTING,
         ...parsed,
-        cleaning: { ...DEFAULT_LEAD_ROUTING.cleaning, ...(parsed.cleaning || {}) },
-        koto: { ...DEFAULT_LEAD_ROUTING.koto, ...(parsed.koto || {}) },
-        chokoAndGeneral: { ...DEFAULT_LEAD_ROUTING.chokoAndGeneral, ...(parsed.chokoAndGeneral || {}) },
+        unifiedNotificationEmail: unifiedEmail,
+        unifiedSubjectTemplate:
+          parsed.unifiedSubjectTemplate || DEFAULT_LEAD_ROUTING.unifiedSubjectTemplate,
+        additionalRecipients: parsed.additionalRecipients || "",
+        enableCustomerReplyTo:
+          parsed.enableCustomerReplyTo !== undefined
+            ? parsed.enableCustomerReplyTo
+            : DEFAULT_LEAD_ROUTING.enableCustomerReplyTo,
       };
     }
   } catch (err) {
@@ -35,15 +46,10 @@ export function saveLeadRoutingSettings(
     const updated: LeadRoutingSettings = {
       ...current,
       ...updates,
-      cleaning: updates.cleaning
-        ? { ...current.cleaning, ...updates.cleaning }
-        : current.cleaning,
-      koto: updates.koto
-        ? { ...current.koto, ...updates.koto }
-        : current.koto,
-      chokoAndGeneral: updates.chokoAndGeneral
-        ? { ...current.chokoAndGeneral, ...updates.chokoAndGeneral }
-        : current.chokoAndGeneral,
+      unifiedNotificationEmail: (updates.unifiedNotificationEmail || current.unifiedNotificationEmail || "contact@kokkiri.com").trim(),
+      unifiedSubjectTemplate: updates.unifiedSubjectTemplate || current.unifiedSubjectTemplate,
+      additionalRecipients: updates.additionalRecipients !== undefined ? updates.additionalRecipients : current.additionalRecipients,
+      enableCustomerReplyTo: updates.enableCustomerReplyTo !== undefined ? updates.enableCustomerReplyTo : current.enableCustomerReplyTo,
       updatedAt: new Date().toISOString(),
     };
 
@@ -66,7 +72,8 @@ export interface ResolvedRouting {
 }
 
 /**
- * Determine which team receives the inquiry based on category/type keywords
+ * Determine single unified notification recipient for all brands
+ * while dynamically labeling which brand/service the lead is for.
  */
 export function resolveInquiryRouting(params: {
   inquiryType: string;
@@ -79,6 +86,7 @@ export function resolveInquiryRouting(params: {
   const searchStr = `${params.inquiryType || ""} ${params.serviceCategory || ""}`.toLowerCase();
 
   let divisionKey: "cleaning" | "koto" | "chokoAndGeneral" = "chokoAndGeneral";
+  let brandName = "CHOKO 에코 라이프케어";
 
   if (
     searchStr.includes("클리닝") ||
@@ -89,6 +97,7 @@ export function resolveInquiryRouting(params: {
     searchStr.includes("사옥")
   ) {
     divisionKey = "cleaning";
+    brandName = "KOKKIRI 프리미엄 클리닝";
   } else if (
     searchStr.includes("cctv") ||
     searchStr.includes("보안") ||
@@ -100,34 +109,36 @@ export function resolveInquiryRouting(params: {
     searchStr.includes("koto")
   ) {
     divisionKey = "koto";
+    brandName = "KOTO AI 보안·시설 솔루션";
   } else {
     divisionKey = "chokoAndGeneral";
+    brandName = "CHOKO 에코 라이프케어 & 일반 문의";
   }
 
-  const divisionConfig = settings[divisionKey];
+  // SINGLE UNIFIED RECIPIENT EMAIL FOR ALL BRANDS
+  const primaryEmail = (settings.unifiedNotificationEmail || settings.masterBossEmail || "contact@kokkiri.com").trim();
 
-  // Clean recipients
-  let recipients = (divisionConfig.recipients || [])
-    .map((e) => e.trim())
-    .filter((e) => e.length > 3 && e.includes("@"));
+  const recipientsList: string[] = [primaryEmail];
 
-  // Fallback if empty
-  if (recipients.length === 0) {
-    recipients = [settings.masterBossEmail || "admin@kokkiri.com"];
-  }
-
-  // Master boss BCC
-  const bcc: string[] = [];
-  if (settings.masterBccEnabled && settings.masterBossEmail) {
-    const bossEmail = settings.masterBossEmail.trim();
-    if (bossEmail && !recipients.includes(bossEmail)) {
-      bcc.push(bossEmail);
+  // Optional extra recipients
+  if (settings.additionalRecipients) {
+    const extra = settings.additionalRecipients
+      .split(",")
+      .map((e) => e.trim())
+      .filter((e) => e.length > 3 && e.includes("@"));
+    for (const e of extra) {
+      if (!recipientsList.includes(e)) {
+        recipientsList.push(e);
+      }
     }
   }
 
-  // Generate subject from template
-  let subject = divisionConfig.subjectTemplate || "[KOKKIRI 문의] {customerName}님의 문의 접수";
-  subject = subject
+  const recipients = recipientsList.filter((e) => e.length > 3 && e.includes("@"));
+
+  // Dynamic Subject line
+  const template = settings.unifiedSubjectTemplate || "[{brandName}] {customerName}님의 문의가 접수되었습니다";
+  const subject = template
+    .replace(/\{brandName\}/g, brandName)
     .replace(/\{customerName\}/g, params.customerName || "고객")
     .replace(/\{serviceCategory\}/g, params.serviceCategory || params.inquiryType || "")
     .replace(/\{inquiryType\}/g, params.inquiryType || "")
@@ -136,11 +147,11 @@ export function resolveInquiryRouting(params: {
 
   return {
     divisionKey,
-    divisionName: divisionConfig.divisionName,
-    recipients,
-    bcc,
+    divisionName: brandName,
+    recipients: recipients.length > 0 ? recipients : ["contact@kokkiri.com"],
+    bcc: [],
     subject,
-    enableCustomerReplyTo: settings.enableCustomerReplyTo,
-    headerNote: divisionConfig.customHeaderNote,
+    enableCustomerReplyTo: settings.enableCustomerReplyTo ?? true,
+    headerNote: `[${brandName}] 통합 고객 문의 접수`,
   };
 }

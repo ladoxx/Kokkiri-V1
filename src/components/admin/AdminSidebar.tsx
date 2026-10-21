@@ -50,7 +50,7 @@ export function AdminSidebar({ isOpen = false, onClose }: AdminSidebarProps) {
     { label: "CHOKO 제품 관리", href: "/admin/products", icon: ShoppingBag },
     { label: "미디어 보관함", href: "/admin/media", icon: ImageIcon },
     { label: "시네마틱 UX 설정", href: "/admin/settings?tab=cinematic", icon: Sparkles },
-    { label: "스마트 이메일 라우팅", href: "/admin/settings?tab=routing", icon: Mail },
+    { label: "통합 이메일 알림 설정", href: "/admin/settings?tab=routing", icon: Mail },
     { label: "계정 & 비밀번호 변경", href: "/admin/settings?tab=security", icon: KeyRound },
     { label: "알림 & 발송 기록", href: "/admin/notifications", icon: Bell },
     { label: "시스템 & 연동 설정", href: "/admin/settings", icon: Sliders },
