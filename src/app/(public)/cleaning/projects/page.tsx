@@ -83,10 +83,10 @@ export default function CleaningProjectsPage() {
       {/* CTA Box */}
       <div className="text-center pt-8">
         <Link
-          href="/cleaning/request-quote"
+          href="/contact"
           className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-[#173F30] text-white font-bold text-sm hover:bg-[#173F30]/90 transition-all shadow-md"
         >
-          <span>클리닝 맞춤 견적 신청하기</span>
+          <span>클리닝 맞춤 상담 & 문의하기</span>
           <ArrowRight className="w-4 h-4" />
         </Link>
       </div>

@@ -70,10 +70,10 @@ export default function KotoServicesPage() {
               </div>
 
               <Link
-                href={`/koto/request-quote?service=${encodeURIComponent(service.title)}`}
+                href={`/contact?service=${encodeURIComponent(service.title)}`}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#243A50] text-white text-xs font-bold hover:bg-[#243A50]/90 transition-all shrink-0 self-start shadow-sm"
               >
-                <span>이 솔루션 견적 요청</span>
+                <span>이 솔루션 상담 & 문의</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>

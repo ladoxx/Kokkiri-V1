@@ -91,10 +91,10 @@ export default function CleaningBrandPage() {
 
           <div className="flex flex-wrap gap-4">
             <Link
-              href="/cleaning/request-quote"
+              href="/contact"
               className="px-6 py-3.5 rounded-xl bg-white text-[#173F30] font-bold text-sm hover:bg-gray-100 transition-all shadow-md"
             >
-              클리닝 견적 신청하기
+              클리닝 무료 상담 & 문의하기
             </Link>
             <Link
               href="/cleaning/services"

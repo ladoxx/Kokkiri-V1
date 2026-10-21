@@ -226,10 +226,10 @@ export function Header() {
             {/* Right Action CTA */}
             <div className="hidden lg:flex items-center gap-3">
               <Link
-                href="/request-quote"
+                href="/contact"
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#173F30] text-[#F8F8F4] text-xs font-bold hover:bg-[#173F30]/90 transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5"
               >
-                <span>무료 견적 문의</span>
+                <span>온라인 문의 & 상담</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </Link>
             </div>
@@ -237,10 +237,10 @@ export function Header() {
             {/* Mobile Menu Hamburger Button */}
             <div className="flex lg:hidden items-center gap-2">
               <Link
-                href="/request-quote"
+                href="/contact"
                 className="px-3 py-1.5 rounded-lg bg-[#173F30] text-[#F8F8F4] text-xs font-semibold"
               >
-                견적 문의
+                문의 & 상담
               </Link>
               <button
                 type="button"
@@ -357,11 +357,11 @@ export function Header() {
             {/* Bottom Actions */}
             <div className="pt-4 border-t border-black/10 flex flex-col gap-2">
               <Link
-                href="/request-quote"
+                href="/contact"
                 onClick={() => setMobileMenuOpen(false)}
                 className="w-full text-center py-3.5 rounded-xl bg-[#173F30] text-white font-bold text-sm shadow-md"
               >
-                무료 방문 견적 신청하기
+                온라인 문의 & 상담하기
               </Link>
               <div className="text-center mt-2">
                 <span className="text-xs text-gray-500">상담 문의 02-1588-0000 (평일 09:00~18:00)</span>

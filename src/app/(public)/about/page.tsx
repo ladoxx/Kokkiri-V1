@@ -152,10 +152,10 @@ export default function AboutPage() {
       {/* Bottom CTA */}
       <div className="mt-20 text-center">
         <Link
-          href="/request-quote"
+          href="/contact"
           className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-[#173F30] text-white font-bold text-sm hover:bg-[#173F30]/90 transition-all shadow-md"
         >
-          <span>맞춤 솔루션 견적 문의하기</span>
+          <span>맞춤 솔루션 상담 & 문의하기</span>
           <ArrowRight className="w-4 h-4" />
         </Link>
       </div>

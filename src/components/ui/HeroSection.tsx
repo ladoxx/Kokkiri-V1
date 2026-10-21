@@ -70,7 +70,7 @@ export function HeroSection() {
           <MotionReveal direction="up" delay={0.4}>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
               <Link
-                href={hero.primaryCtaHref || "/request-quote"}
+                href={hero.primaryCtaHref || "/contact"}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-[#173F30] text-[#F8F8F4] text-base font-bold shadow-lg hover:shadow-xl hover:bg-[#173F30]/90 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0"
               >
                 <span>{hero.primaryCtaText}</span>

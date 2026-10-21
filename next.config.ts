@@ -19,6 +19,25 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/request-quote",
+        destination: "/contact",
+        permanent: true,
+      },
+      {
+        source: "/cleaning/request-quote",
+        destination: "/contact",
+        permanent: true,
+      },
+      {
+        source: "/koto/request-quote",
+        destination: "/contact",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

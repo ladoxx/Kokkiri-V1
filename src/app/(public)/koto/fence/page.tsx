@@ -87,10 +87,10 @@ export default function FencePage() {
               시공 구간의 총 연장(m)과 높이(H), 지반 상태를 확인하고 상세 시공 견적을 산출해 드립니다.
             </p>
             <Link
-              href="/koto/request-quote?service=펜스시공"
+              href="/contact?service=펜스시공"
               className="inline-flex items-center justify-between w-full py-3.5 px-4 rounded-xl bg-white text-[#243A50] font-bold text-xs hover:bg-gray-100 transition-colors"
             >
-              <span>펜스 시공 견적 신청</span>
+              <span>펜스 시공 무료 상담 문의</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

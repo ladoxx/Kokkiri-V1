@@ -300,16 +300,10 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
-                href="/request-quote"
+                href="/contact"
                 className="w-full sm:w-auto px-8 py-4 rounded-xl bg-[#F8F8F4] text-[#173F30] font-bold text-sm hover:bg-white transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
-                무료 견적 문의하기
-              </Link>
-              <Link
-                href="/contact"
-                className="w-full sm:w-auto px-8 py-4 rounded-xl border border-white/20 text-white font-bold text-sm hover:bg-white/10 transition-colors"
-              >
-                고객센터 문의하기
+                온라인 문의 & 상담 신청하기
               </Link>
             </div>
           </div>

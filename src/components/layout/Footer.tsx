@@ -82,7 +82,7 @@ export function Footer() {
               <li><Link href="/cleaning/services" className="hover:text-white transition-colors">상업 공간 클리닝</Link></li>
               <li><Link href="/cleaning/services" className="hover:text-white transition-colors">오피스 정기 관리</Link></li>
               <li><Link href="/cleaning/services" className="hover:text-white transition-colors">빌딩 종합 위생</Link></li>
-              <li><Link href="/cleaning/request-quote" className="hover:text-white transition-colors">클리닝 견적 신청</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition-colors">클리닝 상담 & 문의</Link></li>
             </ul>
           </div>
 
@@ -95,7 +95,7 @@ export function Footer() {
               <li><Link href="/koto/security" className="hover:text-white transition-colors">전문 보안 경비</Link></li>
               <li><Link href="/koto/landscaping" className="hover:text-white transition-colors">기업 조경 유지관리</Link></li>
               <li><Link href="/koto/fence" className="hover:text-white transition-colors">산업용 펜스 시공</Link></li>
-              <li><Link href="/koto/request-quote" className="hover:text-white transition-colors">AI CCTV 견적 문의</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition-colors">AI CCTV & 시설 상담 문의</Link></li>
             </ul>
           </div>
 

@@ -90,10 +90,10 @@ export default function KotoBrandPage() {
 
           <div className="flex flex-wrap gap-4">
             <Link
-              href="/koto/request-quote"
+              href="/contact"
               className="px-6 py-3.5 rounded-xl bg-white text-[#243A50] font-bold text-sm hover:bg-gray-100 transition-all shadow-md"
             >
-              AI CCTV & 보안 견적 문의
+              AI CCTV & 보안 무료 상담 문의
             </Link>
             <Link
               href="/koto/services"

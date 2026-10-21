@@ -97,10 +97,10 @@ export default function ProjectsPage() {
           전문 매니저가 무료로 현장 방문 실사를 진행하고, 현재 상태 진단 리포트와 개선 맞춤 견적서를 산출해 드립니다.
         </p>
         <Link
-          href="/request-quote"
+          href="/contact"
           className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white text-[#173F30] font-bold text-sm hover:bg-gray-100 transition-all shadow-md"
         >
-          <span>무료 현장 실사 및 맞춤 견적 신청</span>
+          <span>무료 현장 실사 및 맞춤 상담 & 문의</span>
           <ArrowRight className="w-4 h-4" />
         </Link>
       </div>

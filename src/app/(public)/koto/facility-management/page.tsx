@@ -161,10 +161,10 @@ export default function AiSecurityCameraPage() {
               사업장 또는 건물의 도면과 필요 카메라 대수를 알려주시면 보안 엔지니어가 무료로 방문하여 최적의 사각지대 제로 견적서를 산출해 드립니다.
             </p>
             <Link
-              href="/koto/request-quote"
+              href="/contact"
               className="inline-flex items-center justify-between w-full py-3.5 px-5 rounded-xl bg-white text-[#243A50] font-bold text-xs hover:bg-gray-100 transition-colors shadow-xs"
             >
-              <span>AI CCTV 맞춤 견적 요청하기</span>
+              <span>AI CCTV 맞춤 상담 & 문의하기</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

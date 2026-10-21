@@ -291,7 +291,7 @@ export default function AdminContentPage() {
                   type="text"
                   value={contentData.hero.primaryCtaHref}
                   onChange={(e) => handleHeroChange("primaryCtaHref", e.target.value)}
-                  placeholder="연결 URL (예: /request-quote)"
+                  placeholder="연결 URL (예: /contact)"
                   className="w-full px-3.5 py-1.5 rounded-lg border border-gray-200 text-[11px] text-gray-500 focus:outline-none"
                 />
               </div>

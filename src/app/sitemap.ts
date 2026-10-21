@@ -19,14 +19,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const serviceRoutes = [
     { path: "/cleaning/services", priority: 0.85, changeFrequency: "weekly" as const },
     { path: "/cleaning/projects", priority: 0.8, changeFrequency: "weekly" as const },
-    { path: "/cleaning/request-quote", priority: 0.85, changeFrequency: "weekly" as const },
     { path: "/koto/facility-management", priority: 0.85, changeFrequency: "weekly" as const },
     { path: "/koto/services", priority: 0.8, changeFrequency: "weekly" as const },
     { path: "/koto/security", priority: 0.85, changeFrequency: "weekly" as const },
     { path: "/koto/landscaping", priority: 0.85, changeFrequency: "weekly" as const },
     { path: "/koto/fence", priority: 0.85, changeFrequency: "weekly" as const },
     { path: "/koto/projects", priority: 0.8, changeFrequency: "weekly" as const },
-    { path: "/koto/request-quote", priority: 0.85, changeFrequency: "weekly" as const },
     { path: "/projects", priority: 0.8, changeFrequency: "weekly" as const },
   ];
 
@@ -36,7 +34,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/brands", priority: 0.75, changeFrequency: "monthly" as const },
     { path: "/news", priority: 0.7, changeFrequency: "weekly" as const },
     { path: "/contact", priority: 0.8, changeFrequency: "monthly" as const },
-    { path: "/request-quote", priority: 0.85, changeFrequency: "weekly" as const },
     { path: "/choko/products", priority: 0.8, changeFrequency: "weekly" as const },
   ];
 

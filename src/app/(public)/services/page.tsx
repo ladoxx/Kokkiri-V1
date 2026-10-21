@@ -106,10 +106,10 @@ export default function ServicesPage() {
           전문 매니저가 현장 방문 실사를 통해 면적과 설비 현황을 점검하고 가장 경제적이고 효율적인 맞춤형 관리 플랜을 무료로 제안해 드립니다.
         </p>
         <Link
-          href="/request-quote"
+          href="/contact"
           className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-white text-[#173F30] font-bold text-sm hover:bg-gray-100 transition-all shadow-md"
         >
-          <span>무료 방문 실사 및 견적 요청</span>
+          <span>무료 방문 실사 및 맞춤 상담 & 문의</span>
           <ArrowUpRight className="w-4 h-4" />
         </Link>
       </div>

@@ -71,10 +71,10 @@ export default function CleaningServicesPage() {
               </div>
 
               <Link
-                href={`/cleaning/request-quote?service=${encodeURIComponent(service.title)}`}
+                href={`/contact?service=${encodeURIComponent(service.title)}`}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#173F30] text-white text-xs font-bold hover:bg-[#173F30]/90 transition-all shrink-0 self-start shadow-sm"
               >
-                <span>이 서비스 견적 요청</span>
+                <span>이 서비스 상담 & 문의</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>

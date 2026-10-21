@@ -82,10 +82,10 @@ export default function KotoProjectsPage() {
       {/* CTA Box */}
       <div className="text-center pt-8">
         <Link
-          href="/koto/request-quote"
+          href="/contact"
           className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-[#243A50] text-white font-bold text-sm hover:bg-[#243A50]/90 transition-all shadow-md"
         >
-          <span>KOTO 시설 견적 신청하기</span>
+          <span>KOTO 시설 무료 상담 & 문의하기</span>
           <ArrowRight className="w-4 h-4" />
         </Link>
       </div>

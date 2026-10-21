@@ -85,10 +85,10 @@ export default function SecurityPage() {
               상주 경비 인원 수, 교대 근무 형태(주야간 2교대/3교대)에 따른 최적 인력 설계를 지원합니다.
             </p>
             <Link
-              href="/koto/request-quote?service=보안경비"
+              href="/contact?service=보안경비"
               className="inline-flex items-center justify-between w-full py-3.5 px-4 rounded-xl bg-white text-[#243A50] font-bold text-xs hover:bg-gray-100 transition-colors"
             >
-              <span>보안 인력 견적 상담</span>
+              <span>보안 인력 상담 & 문의</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

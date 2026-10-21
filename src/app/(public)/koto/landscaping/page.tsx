@@ -86,10 +86,10 @@ export default function LandscapingPage() {
               정원 면적과 식재된 수목의 종류 및 수량에 맞는 연간 유지관리 플랜을 무료로 제안해 드립니다.
             </p>
             <Link
-              href="/koto/request-quote?service=조경관리"
+              href="/contact?service=조경관리"
               className="inline-flex items-center justify-between w-full py-3.5 px-4 rounded-xl bg-white text-[#243A50] font-bold text-xs hover:bg-gray-100 transition-colors"
             >
-              <span>조경 견적 요청하기</span>
+              <span>조경 상담 & 문의하기</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

@@ -72,10 +72,10 @@ export default function BrandsPage() {
 
         <div className="mt-10 text-center">
           <Link
-            href="/request-quote"
+            href="/contact"
             className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-[#173F30] text-white font-bold text-sm hover:bg-[#173F30]/90 transition-all shadow-md"
           >
-            <span>통합 브랜드 패키지 견적 상담</span>
+            <span>통합 브랜드 패키지 상담 & 문의</span>
             <ArrowUpRight className="w-4 h-4" />
           </Link>
         </div>

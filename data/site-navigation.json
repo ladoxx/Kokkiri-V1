@@ -74,9 +74,9 @@
         },
         {
           "id": "cl-6",
-          "label": "클리닝 무료 견적 신청",
-          "href": "/cleaning/request-quote",
-          "desc": "현장 방문 실사 및 맞춤 견적서 발송",
+          "label": "클리닝 상담 및 문의",
+          "href": "/contact",
+          "desc": "전문 클리닝 무료 상담 및 서비스 문의",
           "visible": true
         }
       ]
@@ -127,9 +127,9 @@
         },
         {
           "id": "koto-6",
-          "label": "AI CCTV & 보안 견적 문의",
-          "href": "/koto/request-quote",
-          "desc": "현장 무료 실사 및 맞춤 카메라 설계",
+          "label": "AI CCTV & 보안 상담 문의",
+          "href": "/contact",
+          "desc": "AI CCTV 및 보안 시설 무료 상담 문의",
           "visible": true
         }
       ]
@@ -190,9 +190,9 @@
       "id": "contact",
       "label": "문의하기",
       "href": "/contact",
-      "visible": false,
+      "visible": true,
       "items": []
     }
   ],
-  "updatedAt": "2026-10-21T04:15:46.781Z"
+  "updatedAt": "2026-10-21T07:10:03.133Z"
 }

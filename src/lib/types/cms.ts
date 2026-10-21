@@ -84,7 +84,7 @@ export const DEFAULT_NAVIGATION: SiteNavigationSettings = {
         { id: "cl-3", label: "빌딩 & 대형 건물 종합 클리닝", href: "/cleaning/services", desc: "외벽 로프, 지하주차장 습식 머신 세척", visible: true },
         { id: "cl-4", label: "특수 시설 & 준공 클리닝", href: "/cleaning/services", desc: "인테리어 후 분진 99.9% 포집 제거", visible: true },
         { id: "cl-5", label: "클리닝 시공 실적 & 전후비교", href: "/cleaning/projects", desc: "판교 테크 캠퍼스 등 Before/After 사례", badge: "Before/After", visible: true },
-        { id: "cl-6", label: "클리닝 무료 견적 신청", href: "/cleaning/request-quote", desc: "현장 방문 실사 및 맞춤 견적서 발송", visible: true },
+        { id: "cl-6", label: "클리닝 상담 및 문의", href: "/contact", desc: "전문 클리닝 무료 상담 및 서비스 문의", visible: true },
       ],
     },
     {
@@ -99,7 +99,7 @@ export const DEFAULT_NAVIGATION: SiteNavigationSettings = {
         { id: "koto-3", label: "기업 조경 & 정원 유지관리", href: "/koto/landscaping", desc: "사계절 수목 전정, 잔디 예초, 병충해 방제", visible: true },
         { id: "koto-4", label: "보안 펜스 & 게이트 시공", href: "/koto/fence", desc: "산업용 메쉬 펜스, 전동 슬라이딩 게이트", visible: true },
         { id: "koto-5", label: "KOTO 프로젝트 & 전후비교", href: "/koto/projects", desc: "인천 물류 허브 등 시공 전후 사례", badge: "Before/After", visible: true },
-        { id: "koto-6", label: "AI CCTV & 보안 견적 문의", href: "/koto/request-quote", desc: "현장 무료 실사 및 맞춤 카메라 설계", visible: true },
+        { id: "koto-6", label: "AI CCTV & 보안 상담 문의", href: "/contact", desc: "AI CCTV 및 보안 시설 무료 상담 문의", visible: true },
       ],
     },
     {
@@ -141,8 +141,8 @@ export const DEFAULT_SITE_CONTENT: SiteContentSettings = {
     titleLine1: "공간의 가치를 높이는",
     titleLine2Highlight: "새로운 기준",
     subtitle: "청소부터 AI 스마트 보안·시설 솔루션까지, 더 나은 공간과 지속 가능한 가치를 만들어갑니다. 기업 맞춤형 위생 케어, 딥러닝 AI CCTV 구축 및 시설 솔루션을 하나의 플랫폼에서 경험하세요.",
-    primaryCtaText: "무료 견적 문의하기",
-    primaryCtaHref: "/request-quote",
+    primaryCtaText: "문의하기",
+    primaryCtaHref: "/contact",
     secondaryCtaText: "시공 전후 비교 보기",
     secondaryCtaHref: "/projects#before-after",
     stat1Label: "누적 관리 면적",
