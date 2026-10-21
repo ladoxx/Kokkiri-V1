@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: kokkiri-web:1.0.1
+    image: kokkiri-web:latest
     container_name: kokkiri-web
     restart: unless-stopped
     ports:
