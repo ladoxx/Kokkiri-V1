@@ -20,35 +20,10 @@ export async function GET() {
 
     return NextResponse.json({ success: true, jobs });
   } catch {
-    // Mock / fallback sample jobs
+    // If DB is empty or during initialization, return empty jobs array
     return NextResponse.json({
       success: true,
-      jobs: [
-        {
-          id: "job-sample-1",
-          channel: "EMAIL",
-          recipient: "admin@kokkiri.com",
-          subject: "[신규 문의] 박서준님의 오피스 클리닝 견적 신청",
-          status: "SENT",
-          retryCount: 0,
-          maxRetries: 3,
-          sentAt: new Date().toISOString(),
-          createdAt: new Date().toISOString(),
-          logs: [{ status: "SENT", details: "Delivered successfully", createdAt: new Date().toISOString() }],
-        },
-        {
-          id: "job-sample-2",
-          channel: "KAKAO_ALIMTALK",
-          recipient: "010-3344-5566",
-          subject: "고객 상담 접수 알림톡",
-          status: "SENT",
-          retryCount: 0,
-          maxRetries: 3,
-          sentAt: new Date().toISOString(),
-          createdAt: new Date().toISOString(),
-          logs: [{ status: "SENT", details: "Delivered in sandbox mode", createdAt: new Date().toISOString() }],
-        },
-      ],
+      jobs: [],
     });
   }
 }

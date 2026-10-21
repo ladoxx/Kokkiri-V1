@@ -11,9 +11,14 @@ if [ ! -f /app/data/company-info.json ] && [ -d /app/data-template ]; then
 fi
 
 # 2. If /app/prisma is missing kokkiri.db, copy the seeded SQLite database
-if [ ! -f /app/prisma/kokkiri.db ] && [ -d /app/prisma-template ]; then
-  echo "=> [KOKKIRI] Initializing /app/prisma/kokkiri.db from template..."
-  cp -rn /app/prisma-template/* /app/prisma/ 2>/dev/null || cp -r /app/prisma-template/* /app/prisma/ || true
+if [ ! -f /app/prisma/kokkiri.db ]; then
+  if [ -f /app/prisma-template/kokkiri.db ]; then
+    echo "=> [KOKKIRI] Initializing /app/prisma/kokkiri.db from template..."
+    cp /app/prisma-template/kokkiri.db /app/prisma/kokkiri.db
+  elif [ -d /app/prisma-template ]; then
+    echo "=> [KOKKIRI] Initializing /app/prisma from template directory..."
+    cp -rn /app/prisma-template/* /app/prisma/ 2>/dev/null || cp -r /app/prisma-template/* /app/prisma/ || true
+  fi
 fi
 
 # 3. Ensure proper ownership for nextjs user on persistent volumes

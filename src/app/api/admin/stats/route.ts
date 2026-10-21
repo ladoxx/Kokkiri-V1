@@ -41,11 +41,11 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       stats: {
-        totalInquiries: 18,
-        newInquiries: 4,
-        inProgressInquiries: 9,
-        completedInquiries: 5,
-        sentNotifications: 32,
+        totalInquiries: 0,
+        newInquiries: 0,
+        inProgressInquiries: 0,
+        completedInquiries: 0,
+        sentNotifications: 0,
         failedNotifications: 0,
       },
     });
