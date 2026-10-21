@@ -30,19 +30,51 @@ import {
   HelpCircle,
   Sparkle,
   ArrowRight,
+  Lock,
+  KeyRound,
+  User,
+  AtSign,
+  UserCheck,
 } from "lucide-react";
 import Link from "next/link";
 
 function AdminSettingsContent() {
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab");
-  const initialTab: "routing" | "cinematic" | "company" =
+  const initialTab: "routing" | "cinematic" | "company" | "security" =
     tabParam === "cinematic"
       ? "cinematic"
       : tabParam === "company"
       ? "company"
+      : tabParam === "security"
+      ? "security"
       : "routing";
-  const [activeTab, setActiveTab] = useState<"routing" | "cinematic" | "company">(initialTab);
+  const [activeTab, setActiveTab] = useState<"routing" | "cinematic" | "company" | "security">(initialTab);
+
+  useEffect(() => {
+    if (tabParam === "security" || tabParam === "cinematic" || tabParam === "company" || tabParam === "routing") {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
+
+  // Admin Account (Username / Email) State
+  const [accountData, setAccountData] = useState<{ email: string; name: string; role?: string } | null>(null);
+  const [usernameForm, setUsernameForm] = useState({
+    newUsername: "",
+    name: "",
+    currentPassword: "",
+  });
+  const [savingUsername, setSavingUsername] = useState(false);
+  const [usernameFeedback, setUsernameFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
+  // Password Change State
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [savingPassword, setSavingPassword] = useState(false);
+  const [passwordFeedback, setPasswordFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
   // Lead Routing Settings State
   const [routingData, setRoutingData] = useState<LeadRoutingSettings>(DEFAULT_LEAD_ROUTING);
@@ -63,6 +95,21 @@ function AdminSettingsContent() {
   const [previewOpen, setPreviewOpen] = useState(false);
 
   useEffect(() => {
+    // Load Account Info
+    fetch("/api/admin/settings/account")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.user) {
+          setAccountData(data.user);
+          setUsernameForm((prev) => ({
+            ...prev,
+            newUsername: data.user.email || "",
+            name: data.user.name || "",
+          }));
+        }
+      })
+      .catch((err) => console.error("Error loading account settings:", err));
+
     // Load Lead Routing Settings
     fetch("/api/admin/settings/lead-routing")
       .then((res) => res.json())
@@ -242,6 +289,19 @@ function AdminSettingsContent() {
           >
             <Building className="w-3.5 h-3.5 text-gray-500" />
             <span>기업 공식 고지</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("security")}
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+              activeTab === "security"
+                ? "bg-white text-amber-800 shadow-xs"
+                : "text-gray-500 hover:text-gray-900"
+            }`}
+          >
+            <KeyRound className="w-3.5 h-3.5 text-amber-600" />
+            <span>계정 & 보안 (아이디/비밀번호)</span>
           </button>
         </div>
       </div>
@@ -1391,6 +1451,334 @@ function AdminSettingsContent() {
       )}
 
       {/* ========================================================================= */}
+      {/* TAB 3: ADMIN SECURITY & CREDENTIALS MANAGEMENT */}
+      {/* ========================================================================= */}
+      {activeTab === "security" && (
+        <div className="space-y-6">
+          {/* Top Banner */}
+          <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-gray-900 via-stone-900 to-gray-800 text-white shadow-md relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+            <div className="relative z-10 max-w-xl">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-amber-300 text-[11px] font-bold mb-3 backdrop-blur-xs border border-white/10">
+                <KeyRound className="w-3.5 h-3.5" />
+                <span>Security & Admin Credentials</span>
+              </div>
+              <h2 className="text-lg sm:text-xl font-black tracking-tight mb-2">
+                관리자 계정 및 보안 설정
+              </h2>
+              <p className="text-xs text-gray-300 leading-relaxed">
+                관리자 로그인 아이디(이메일) 및 비밀번호를 안전하게 변경할 수 있습니다. 변경 후 다음 로그인부터 새로운 정보가 적용됩니다.
+              </p>
+            </div>
+            {accountData && (
+              <div className="relative z-10 px-4 py-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md shrink-0 text-right sm:text-left">
+                <span className="text-[10px] text-gray-300 block uppercase tracking-wider font-semibold">
+                  현재 로그인 계정
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-white block mt-0.5">
+                  {accountData.email}
+                </span>
+                <span className="text-[10px] text-amber-400 font-medium block mt-0.5">
+                  {accountData.name || "최고 관리자"} ({accountData.role || "SUPER_ADMIN"})
+                </span>
+              </div>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* 1. USERNAME / EMAIL CHANGE CARD */}
+            <div className="bg-white rounded-3xl border border-gray-200 shadow-xs p-5 sm:p-8 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-3 pb-5 mb-5 border-b border-gray-100">
+                  <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-[#173F30] flex items-center justify-center font-bold">
+                    <UserCheck className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm sm:text-base font-bold text-gray-900">
+                      관리자 아이디 (이메일) 변경
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      로그인에 사용하는 관리자 계정 아이디 또는 이메일을 변경합니다.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Username Feedback notification */}
+                {usernameFeedback && (
+                  <div
+                    className={`p-4 rounded-2xl text-xs font-bold flex items-center gap-2 mb-4 animate-in fade-in duration-200 ${
+                      usernameFeedback.type === "success"
+                        ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                        : "bg-red-50 text-red-800 border border-red-200"
+                    }`}
+                  >
+                    {usernameFeedback.type === "success" ? (
+                      <Check className="w-4 h-4 shrink-0 text-emerald-600" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+                    )}
+                    <span>{usernameFeedback.message}</span>
+                  </div>
+                )}
+
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    setSavingUsername(true);
+                    setUsernameFeedback(null);
+
+                    try {
+                      const res = await fetch("/api/admin/settings/account", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(usernameForm),
+                      });
+                      const data = await res.json();
+                      if (!res.ok) throw new Error(data.error || "아이디 변경 실패");
+
+                      setUsernameFeedback({
+                        type: "success",
+                        message: data.message || "계정 정보가 성공적으로 변경되었습니다.",
+                      });
+                      if (data.user) {
+                        setAccountData(data.user);
+                      }
+                      setUsernameForm((prev) => ({ ...prev, currentPassword: "" }));
+                    } catch (err: any) {
+                      setUsernameFeedback({
+                        type: "error",
+                        message: err.message || "오류가 발생했습니다.",
+                      });
+                    } finally {
+                      setSavingUsername(false);
+                    }
+                  }}
+                  className="space-y-4 text-xs"
+                >
+                  <div>
+                    <label className="block font-bold text-gray-700 mb-1.5">
+                      새로운 아이디 / 이메일 *
+                    </label>
+                    <div className="relative">
+                      <AtSign className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        required
+                        minLength={3}
+                        value={usernameForm.newUsername}
+                        onChange={(e) =>
+                          setUsernameForm({ ...usernameForm, newUsername: e.target.value })
+                        }
+                        placeholder="예: admin, manager, admin@kokkiri.com"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#173F30]"
+                      />
+                    </div>
+                    <p className="text-[11px] text-gray-400 mt-1">
+                      일반 문자열 아이디 또는 이메일 주소 형식 모두 사용 가능합니다. (최소 3자 이상)
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-gray-700 mb-1.5">
+                      관리자 표시 이름
+                    </label>
+                    <div className="relative">
+                      <User className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        value={usernameForm.name}
+                        onChange={(e) =>
+                          setUsernameForm({ ...usernameForm, name: e.target.value })
+                        }
+                        placeholder="예: 최고 관리자, 홍길동 실장"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#173F30]"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-gray-700 mb-1.5">
+                      현재 비밀번호 확인 *
+                    </label>
+                    <div className="relative">
+                      <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="password"
+                        required
+                        value={usernameForm.currentPassword}
+                        onChange={(e) =>
+                          setUsernameForm({ ...usernameForm, currentPassword: e.target.value })
+                        }
+                        placeholder="보안을 위해 현재 비밀번호를 입력하세요"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#173F30]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-3 flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={savingUsername}
+                      className="px-6 py-3 rounded-xl bg-[#173F30] hover:bg-[#173F30]/90 text-white font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
+                    >
+                      {savingUsername ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Save className="w-3.5 h-3.5" />
+                      )}
+                      <span>아이디(이메일) 변경하기</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            {/* 2. PASSWORD CHANGE CARD */}
+            <div className="bg-white rounded-3xl border border-gray-200 shadow-xs p-5 sm:p-8 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-3 pb-5 mb-5 border-b border-gray-100">
+                  <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center font-bold">
+                    <Lock className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm sm:text-base font-bold text-gray-900">
+                      보안 비밀번호 재설정
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      현재 비밀번호를 확인한 후 새로운 비밀번호를 설정합니다. (최소 6자 이상)
+                    </p>
+                  </div>
+                </div>
+
+                {/* Password Feedback notification */}
+                {passwordFeedback && (
+                  <div
+                    className={`p-4 rounded-2xl text-xs font-bold flex items-center gap-2 mb-4 animate-in fade-in duration-200 ${
+                      passwordFeedback.type === "success"
+                        ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                        : "bg-red-50 text-red-800 border border-red-200"
+                    }`}
+                  >
+                    {passwordFeedback.type === "success" ? (
+                      <Check className="w-4 h-4 shrink-0 text-emerald-600" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+                    )}
+                    <span>{passwordFeedback.message}</span>
+                  </div>
+                )}
+
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    setSavingPassword(true);
+                    setPasswordFeedback(null);
+
+                    try {
+                      const res = await fetch("/api/admin/settings/password", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(passwordForm),
+                      });
+                      const data = await res.json();
+                      if (!res.ok) throw new Error(data.error || "비밀번호 변경 실패");
+
+                      setPasswordFeedback({
+                        type: "success",
+                        message: data.message || "비밀번호가 성공적으로 변경되었습니다.",
+                      });
+                      setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+                    } catch (err: any) {
+                      setPasswordFeedback({
+                        type: "error",
+                        message: err.message || "오류가 발생했습니다.",
+                      });
+                    } finally {
+                      setSavingPassword(false);
+                    }
+                  }}
+                  className="space-y-4 text-xs"
+                >
+                  <div>
+                    <label className="block font-bold text-gray-700 mb-1.5">
+                      현재 비밀번호 *
+                    </label>
+                    <div className="relative">
+                      <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="password"
+                        required
+                        value={passwordForm.currentPassword}
+                        onChange={(e) =>
+                          setPasswordForm({ ...passwordForm, currentPassword: e.target.value })
+                        }
+                        placeholder="현재 사용 중인 비밀번호"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#173F30]"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-gray-700 mb-1.5">
+                      새 비밀번호 (6자 이상) *
+                    </label>
+                    <div className="relative">
+                      <KeyRound className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="password"
+                        required
+                        minLength={6}
+                        value={passwordForm.newPassword}
+                        onChange={(e) =>
+                          setPasswordForm({ ...passwordForm, newPassword: e.target.value })
+                        }
+                        placeholder="새로운 비밀번호를 입력하세요"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#173F30]"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-gray-700 mb-1.5">
+                      새 비밀번호 확인 *
+                    </label>
+                    <div className="relative">
+                      <KeyRound className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="password"
+                        required
+                        minLength={6}
+                        value={passwordForm.confirmPassword}
+                        onChange={(e) =>
+                          setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })
+                        }
+                        placeholder="새로운 비밀번호를 한 번 더 입력하세요"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#173F30]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-3 flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={savingPassword}
+                      className="px-6 py-3 rounded-xl bg-gray-900 hover:bg-black text-white font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
+                    >
+                      {savingPassword ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Save className="w-3.5 h-3.5" />
+                      )}
+                      <span>비밀번호 변경하기</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
       {/* TAB 2: COMPANY INFORMATION & INFRASTRUCTURE */}
       {/* ========================================================================= */}
       {activeTab === "company" && (
@@ -1599,6 +1987,334 @@ function AdminSettingsContent() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* TAB 3: ADMIN SECURITY & CREDENTIALS MANAGEMENT */}
+      {/* ========================================================================= */}
+      {activeTab === "security" && (
+        <div className="space-y-6">
+          {/* Top Banner */}
+          <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-gray-900 via-stone-900 to-gray-800 text-white shadow-md relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+            <div className="relative z-10 max-w-xl">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-amber-300 text-[11px] font-bold mb-3 backdrop-blur-xs border border-white/10">
+                <KeyRound className="w-3.5 h-3.5" />
+                <span>Security & Admin Credentials</span>
+              </div>
+              <h2 className="text-lg sm:text-xl font-black tracking-tight mb-2">
+                관리자 계정 및 보안 설정
+              </h2>
+              <p className="text-xs text-gray-300 leading-relaxed">
+                관리자 로그인 아이디(이메일) 및 비밀번호를 안전하게 변경할 수 있습니다. 변경 후 다음 로그인부터 새로운 정보가 적용됩니다.
+              </p>
+            </div>
+            {accountData && (
+              <div className="relative z-10 px-4 py-3 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md shrink-0 text-right sm:text-left">
+                <span className="text-[10px] text-gray-300 block uppercase tracking-wider font-semibold">
+                  현재 로그인 계정
+                </span>
+                <span className="text-xs sm:text-sm font-bold text-white block mt-0.5">
+                  {accountData.email}
+                </span>
+                <span className="text-[10px] text-amber-400 font-medium block mt-0.5">
+                  {accountData.name || "최고 관리자"} ({accountData.role || "SUPER_ADMIN"})
+                </span>
+              </div>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* 1. USERNAME / EMAIL CHANGE CARD */}
+            <div className="bg-white rounded-3xl border border-gray-200 shadow-xs p-5 sm:p-8 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-3 pb-5 mb-5 border-b border-gray-100">
+                  <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-[#173F30] flex items-center justify-center font-bold">
+                    <UserCheck className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm sm:text-base font-bold text-gray-900">
+                      관리자 아이디 (이메일) 변경
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      로그인에 사용하는 관리자 계정 아이디 또는 이메일을 변경합니다.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Username Feedback notification */}
+                {usernameFeedback && (
+                  <div
+                    className={`p-4 rounded-2xl text-xs font-bold flex items-center gap-2 mb-4 animate-in fade-in duration-200 ${
+                      usernameFeedback.type === "success"
+                        ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                        : "bg-red-50 text-red-800 border border-red-200"
+                    }`}
+                  >
+                    {usernameFeedback.type === "success" ? (
+                      <Check className="w-4 h-4 shrink-0 text-emerald-600" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+                    )}
+                    <span>{usernameFeedback.message}</span>
+                  </div>
+                )}
+
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    setSavingUsername(true);
+                    setUsernameFeedback(null);
+
+                    try {
+                      const res = await fetch("/api/admin/settings/account", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(usernameForm),
+                      });
+                      const data = await res.json();
+                      if (!res.ok) throw new Error(data.error || "아이디 변경 실패");
+
+                      setUsernameFeedback({
+                        type: "success",
+                        message: data.message || "계정 정보가 성공적으로 변경되었습니다.",
+                      });
+                      if (data.user) {
+                        setAccountData(data.user);
+                      }
+                      setUsernameForm((prev) => ({ ...prev, currentPassword: "" }));
+                    } catch (err: any) {
+                      setUsernameFeedback({
+                        type: "error",
+                        message: err.message || "오류가 발생했습니다.",
+                      });
+                    } finally {
+                      setSavingUsername(false);
+                    }
+                  }}
+                  className="space-y-4 text-xs"
+                >
+                  <div>
+                    <label className="block font-bold text-gray-700 mb-1.5">
+                      새로운 아이디 / 이메일 *
+                    </label>
+                    <div className="relative">
+                      <AtSign className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        required
+                        minLength={3}
+                        value={usernameForm.newUsername}
+                        onChange={(e) =>
+                          setUsernameForm({ ...usernameForm, newUsername: e.target.value })
+                        }
+                        placeholder="예: admin, manager, admin@kokkiri.com"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#173F30]"
+                      />
+                    </div>
+                    <p className="text-[11px] text-gray-400 mt-1">
+                      일반 문자열 아이디 또는 이메일 주소 형식 모두 사용 가능합니다. (최소 3자 이상)
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-gray-700 mb-1.5">
+                      관리자 표시 이름
+                    </label>
+                    <div className="relative">
+                      <User className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        value={usernameForm.name}
+                        onChange={(e) =>
+                          setUsernameForm({ ...usernameForm, name: e.target.value })
+                        }
+                        placeholder="예: 최고 관리자, 홍길동 실장"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#173F30]"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-gray-700 mb-1.5">
+                      현재 비밀번호 확인 *
+                    </label>
+                    <div className="relative">
+                      <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="password"
+                        required
+                        value={usernameForm.currentPassword}
+                        onChange={(e) =>
+                          setUsernameForm({ ...usernameForm, currentPassword: e.target.value })
+                        }
+                        placeholder="보안을 위해 현재 비밀번호를 입력하세요"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#173F30]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-3 flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={savingUsername}
+                      className="px-6 py-3 rounded-xl bg-[#173F30] hover:bg-[#173F30]/90 text-white font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
+                    >
+                      {savingUsername ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Save className="w-3.5 h-3.5" />
+                      )}
+                      <span>아이디(이메일) 변경하기</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            {/* 2. PASSWORD CHANGE CARD */}
+            <div className="bg-white rounded-3xl border border-gray-200 shadow-xs p-5 sm:p-8 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-3 pb-5 mb-5 border-b border-gray-100">
+                  <div className="w-10 h-10 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center font-bold">
+                    <Lock className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm sm:text-base font-bold text-gray-900">
+                      보안 비밀번호 재설정
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      현재 비밀번호를 확인한 후 새로운 비밀번호를 설정합니다. (최소 6자 이상)
+                    </p>
+                  </div>
+                </div>
+
+                {/* Password Feedback notification */}
+                {passwordFeedback && (
+                  <div
+                    className={`p-4 rounded-2xl text-xs font-bold flex items-center gap-2 mb-4 animate-in fade-in duration-200 ${
+                      passwordFeedback.type === "success"
+                        ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                        : "bg-red-50 text-red-800 border border-red-200"
+                    }`}
+                  >
+                    {passwordFeedback.type === "success" ? (
+                      <Check className="w-4 h-4 shrink-0 text-emerald-600" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 shrink-0 text-red-600" />
+                    )}
+                    <span>{passwordFeedback.message}</span>
+                  </div>
+                )}
+
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    setSavingPassword(true);
+                    setPasswordFeedback(null);
+
+                    try {
+                      const res = await fetch("/api/admin/settings/password", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(passwordForm),
+                      });
+                      const data = await res.json();
+                      if (!res.ok) throw new Error(data.error || "비밀번호 변경 실패");
+
+                      setPasswordFeedback({
+                        type: "success",
+                        message: data.message || "비밀번호가 성공적으로 변경되었습니다.",
+                      });
+                      setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+                    } catch (err: any) {
+                      setPasswordFeedback({
+                        type: "error",
+                        message: err.message || "오류가 발생했습니다.",
+                      });
+                    } finally {
+                      setSavingPassword(false);
+                    }
+                  }}
+                  className="space-y-4 text-xs"
+                >
+                  <div>
+                    <label className="block font-bold text-gray-700 mb-1.5">
+                      현재 비밀번호 *
+                    </label>
+                    <div className="relative">
+                      <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="password"
+                        required
+                        value={passwordForm.currentPassword}
+                        onChange={(e) =>
+                          setPasswordForm({ ...passwordForm, currentPassword: e.target.value })
+                        }
+                        placeholder="현재 사용 중인 비밀번호"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#173F30]"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-gray-700 mb-1.5">
+                      새 비밀번호 (6자 이상) *
+                    </label>
+                    <div className="relative">
+                      <KeyRound className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="password"
+                        required
+                        minLength={6}
+                        value={passwordForm.newPassword}
+                        onChange={(e) =>
+                          setPasswordForm({ ...passwordForm, newPassword: e.target.value })
+                        }
+                        placeholder="새로운 비밀번호를 입력하세요"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#173F30]"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-gray-700 mb-1.5">
+                      새 비밀번호 확인 *
+                    </label>
+                    <div className="relative">
+                      <KeyRound className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="password"
+                        required
+                        minLength={6}
+                        value={passwordForm.confirmPassword}
+                        onChange={(e) =>
+                          setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })
+                        }
+                        placeholder="새로운 비밀번호를 한 번 더 입력하세요"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-[#173F30]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="pt-3 flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={savingPassword}
+                      className="px-6 py-3 rounded-xl bg-gray-900 hover:bg-black text-white font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
+                    >
+                      {savingPassword ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Save className="w-3.5 h-3.5" />
+                      )}
+                      <span>비밀번호 변경하기</span>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
       )}
