@@ -51,7 +51,8 @@ scratch/
 *.tsbuildinfo
 next-env.d.ts
 
-# cloudflare / binary / logs
+# cloudflare tunnel & binaries
 *.exe
 *.log
+cloudflared.exe
 cloudflare_tunnel.log
