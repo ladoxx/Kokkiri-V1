@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { getSession, comparePassword, hashPassword, generateToken, getCookieOptions } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
@@ -70,6 +72,12 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    if (!user) {
+      user = await prisma.user.findFirst({
+        where: { role: RoleType.SUPER_ADMIN },
+      });
+    }
+
     // 2. Verify current password
     if (user) {
       const isMatch = await comparePassword(currentPassword, user.passwordHash);
@@ -80,7 +88,7 @@ export async function POST(req: NextRequest) {
         );
       }
     } else {
-      const defaultPassword = process.env.ADMIN_INIT_PASSWORD || "KokkiriAdmin2026!#";
+      const defaultPassword = process.env.ADMIN_INIT_PASSWORD || "123123";
       if (currentPassword !== defaultPassword) {
         return NextResponse.json(
           { error: "현재 비밀번호가 일치하지 않습니다." },
@@ -112,6 +120,14 @@ export async function POST(req: NextRequest) {
           ...(name ? { name: name.trim() } : {}),
         },
       });
+
+      // Remove any lingering duplicate super admin records
+      await prisma.user.deleteMany({
+        where: {
+          id: { not: user.id },
+          role: RoleType.SUPER_ADMIN,
+        },
+      });
     } else {
       const newPasswordHash = await hashPassword(currentPassword);
       updatedUser = await prisma.user.create({
@@ -124,6 +140,19 @@ export async function POST(req: NextRequest) {
         },
       });
     }
+
+    // Synchronize .env file with updated admin email
+    try {
+      const envPath = path.resolve(process.cwd(), ".env");
+      if (fs.existsSync(envPath)) {
+        let envContent = fs.readFileSync(envPath, "utf8");
+        envContent = envContent.replace(
+          /ADMIN_INIT_EMAIL=.*(?=\r?\n|$)/,
+          `ADMIN_INIT_EMAIL="${trimmedUsername}"`
+        );
+        fs.writeFileSync(envPath, envContent, "utf8");
+      }
+    } catch {}
 
     // 5. Generate refreshed session token with updated email/name
     const token = generateToken({

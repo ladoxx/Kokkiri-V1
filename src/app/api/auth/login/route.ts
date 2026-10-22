@@ -19,20 +19,22 @@ export async function POST(req: NextRequest) {
     const { email, password } = parsed.data;
 
     let user = null;
+    let totalUsers = 0;
     try {
       user = await prisma.user.findUnique({
         where: { email },
       });
+      totalUsers = await prisma.user.count();
     } catch {
       // Prisma offline or connection issue: check default fallback admin
     }
 
-    // Default emergency fallback check if DB has not been seeded yet
-    const defaultEmail = process.env.ADMIN_INIT_EMAIL || "admin@kokkiri.com";
-    const defaultPassword = process.env.ADMIN_INIT_PASSWORD || "KokkiriAdmin2026!#";
+    // Default emergency fallback check ONLY if DB has zero users (first-time boot before seeding)
+    const defaultEmail = process.env.ADMIN_INIT_EMAIL || "mert@mert.com";
+    const defaultPassword = process.env.ADMIN_INIT_PASSWORD || "123123";
 
     if (!user) {
-      if (email === defaultEmail && password === defaultPassword) {
+      if (totalUsers === 0 && email === defaultEmail && password === defaultPassword) {
         user = {
           id: "admin-default-id",
           email: defaultEmail,

@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { getSession, comparePassword, hashPassword } from "@/lib/auth/auth";
 import { prisma } from "@/lib/prisma";
@@ -33,13 +35,25 @@ export async function POST(req: NextRequest) {
     }
 
     // Find user in database
-    const user = await prisma.user.findUnique({
+    let user = await prisma.user.findUnique({
       where: { id: session.userId },
     });
 
     if (!user) {
+      user = await prisma.user.findUnique({
+        where: { email: session.email },
+      });
+    }
+
+    if (!user) {
+      user = await prisma.user.findFirst({
+        where: { role: "SUPER_ADMIN" },
+      });
+    }
+
+    if (!user) {
       // Fallback for default admin
-      const defaultPassword = process.env.ADMIN_INIT_PASSWORD || "KokkiriAdmin2026!#";
+      const defaultPassword = process.env.ADMIN_INIT_PASSWORD || "123123";
       if (currentPassword !== defaultPassword) {
         return NextResponse.json(
           { error: "현재 비밀번호가 일치하지 않습니다." },
@@ -49,7 +63,7 @@ export async function POST(req: NextRequest) {
 
       // Create or update default admin in DB with new password
       const newPasswordHash = await hashPassword(newPassword);
-      await prisma.user.upsert({
+      user = await prisma.user.upsert({
         where: { email: session.email },
         update: { passwordHash: newPasswordHash },
         create: {
@@ -60,6 +74,19 @@ export async function POST(req: NextRequest) {
           isActive: true,
         },
       });
+
+      // Sync .env
+      try {
+        const envPath = path.resolve(process.cwd(), ".env");
+        if (fs.existsSync(envPath)) {
+          let envContent = fs.readFileSync(envPath, "utf8");
+          envContent = envContent.replace(
+            /ADMIN_INIT_PASSWORD=.*(?=\r?\n|$)/,
+            `ADMIN_INIT_PASSWORD="${newPassword}"`
+          );
+          fs.writeFileSync(envPath, envContent, "utf8");
+        }
+      } catch {}
 
       return NextResponse.json({
         success: true,
@@ -76,12 +103,25 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Update with new hashed password
+    // Update with new hashed password on the existing user
     const newPasswordHash = await hashPassword(newPassword);
     await prisma.user.update({
       where: { id: user.id },
       data: { passwordHash: newPasswordHash },
     });
+
+    // Sync .env file
+    try {
+      const envPath = path.resolve(process.cwd(), ".env");
+      if (fs.existsSync(envPath)) {
+        let envContent = fs.readFileSync(envPath, "utf8");
+        envContent = envContent.replace(
+          /ADMIN_INIT_PASSWORD=.*(?=\r?\n|$)/,
+          `ADMIN_INIT_PASSWORD="${newPassword}"`
+        );
+        fs.writeFileSync(envPath, envContent, "utf8");
+      }
+    } catch {}
 
     return NextResponse.json({
       success: true,
