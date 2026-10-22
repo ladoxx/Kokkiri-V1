@@ -205,4 +205,27 @@ describe("Site Navigation & Content CMS Stores", () => {
     saveSiteContent(content);
     expect(getSiteContent().hero.titleLine1).toBe(origTitle);
   });
+
+  it("should create snapshots and check system updates", async () => {
+    const { createRestorePoint, listRestorePoints, deleteRestorePoint, checkSystemUpdates } = await import("../data/updates-store");
+    
+    // Check system updates info
+    const updateInfo = await checkSystemUpdates();
+    expect(updateInfo).toBeDefined();
+    expect(updateInfo.currentVersion).toBeDefined();
+    expect(updateInfo.currentCommit).toBeDefined();
+
+    // Create a test snapshot
+    const snapshot = createRestorePoint("manual", "테스트 복원 지점");
+    expect(snapshot.id).toBeDefined();
+    expect(snapshot.type).toBe("manual");
+    expect(snapshot.filesCount).toBeGreaterThan(0);
+
+    // List snapshots
+    const points = listRestorePoints();
+    expect(points.some((p) => p.id === snapshot.id)).toBe(true);
+
+    // Clean up test snapshot
+    deleteRestorePoint(snapshot.id);
+  });
 });
