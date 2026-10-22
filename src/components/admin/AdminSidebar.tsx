@@ -75,7 +75,7 @@ const MENU_SECTIONS: MenuSection[] = [
         label: "시스템 업데이트 & 롤백",
         href: "/admin/updates",
         icon: RefreshCw,
-        badge: "v1.0.1",
+        badge: "v1.0.2",
       },
       {
         label: "시네마틱 UX 설정",

@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "id": "snapshot-20261022-101122-70841f0",
+    "commitHash": "70841f0",
+    "commitMessage": "test: add verification test for restore points and update checking",
+    "version": "1.0.1",
+    "createdAt": "2026-10-22T10:11:22.407Z",
+    "type": "manual",
+    "note": "Yönetici Manuel Sistem Yedeği",
+    "filesCount": 10,
+    "backupPath": "C:\\Users\\black\\OneDrive\\Desktop\\Kokkiri-V1-main\\data\\backups\\snapshot-20261022-101122-70841f0"
+  }
+]

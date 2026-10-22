@@ -1,6 +1,6 @@
 {
   "name": "kokkiri-business-platform",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
@@ -10,6 +10,7 @@
     "test": "vitest run",
     "seo:check": "node scripts/seo-audit.js",
     "security:check": "node scripts/security-audit.js",
+    "version:bump": "node scripts/bump-version.js",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push"
   },

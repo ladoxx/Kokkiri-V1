@@ -56,3 +56,6 @@ next-env.d.ts
 *.log
 cloudflared.exe
 cloudflare_tunnel.log
+
+# local backups & snapshots
+data/backups/
