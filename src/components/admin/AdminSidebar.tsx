@@ -21,6 +21,7 @@ import {
   FileText,
   KeyRound,
   ShieldCheck,
+  RefreshCw,
 } from "lucide-react";
 
 interface AdminSidebarProps {
@@ -69,6 +70,12 @@ const MENU_SECTIONS: MenuSection[] = [
         icon: Mail,
         tab: "routing",
         badge: "통합",
+      },
+      {
+        label: "시스템 업데이트 & 롤백",
+        href: "/admin/updates",
+        icon: RefreshCw,
+        badge: "v1.0.1",
       },
       {
         label: "시네마틱 UX 설정",
