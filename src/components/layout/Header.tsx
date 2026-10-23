@@ -76,6 +76,18 @@ export function Header() {
     setActiveDropdown(null);
   }, [pathname]);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
   // Filter only visible categories and sub-items
   const navCategories: NavCategory[] = navData.categories
     .filter((cat) => cat.visible !== false)
@@ -238,17 +250,18 @@ export function Header() {
             <div className="flex lg:hidden items-center gap-2">
               <Link
                 href="/contact"
-                className="px-3 py-1.5 rounded-lg bg-[#173F30] text-[#F8F8F4] text-xs font-semibold"
+                className="px-3.5 py-2 rounded-xl bg-[#173F30] text-[#F8F8F4] text-xs font-bold shadow-xs touch-manipulation"
               >
                 문의 & 상담
               </Link>
               <button
                 type="button"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2.5 rounded-xl text-[#202622] hover:bg-black/5 focus:outline-none cursor-pointer border border-black/10 bg-white"
+                onClick={() => setMobileMenuOpen((prev) => !prev)}
+                className="p-2.5 rounded-xl text-[#202622] hover:bg-black/5 active:bg-black/10 focus:outline-none cursor-pointer border border-black/10 bg-white touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center transition-colors"
                 aria-label={mobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
+                aria-expanded={mobileMenuOpen}
               >
-                {mobileMenuOpen ? <X className="w-5 h-5 text-red-600" /> : <Menu className="w-5 h-5" />}
+                {mobileMenuOpen ? <X className="w-5 h-5 text-red-600" /> : <Menu className="w-5 h-5 text-gray-900" />}
               </button>
             </div>
           </div>
@@ -256,7 +269,7 @@ export function Header() {
 
         {/* Mobile Full-Screen/Drawer Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-[#F8F8F4] border-b border-[#202622]/15 shadow-2xl px-5 py-6 max-h-[85vh] overflow-y-auto animate-in slide-in-from-top-2 duration-200 z-50">
+          <div className="lg:hidden fixed top-[60px] sm:top-[68px] left-0 right-0 bottom-0 bg-[#F8F8F4] border-t border-[#202622]/10 shadow-2xl px-5 py-6 pb-28 overflow-y-auto z-50 overscroll-contain touch-manipulation">
             {/* Quick 3 Brand Direct Jumps */}
             <div className="mb-6">
               <div className="text-[11px] font-bold uppercase tracking-wider text-[#477B56] mb-2 px-1">
@@ -266,27 +279,27 @@ export function Header() {
                 <Link
                   href="/cleaning"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex flex-col items-center p-3 rounded-xl bg-white border border-[#173F30]/15 text-[#173F30] text-center shadow-xs"
+                  className="flex flex-col items-center p-3 rounded-2xl bg-white border border-[#173F30]/15 text-[#173F30] text-center shadow-xs hover:border-[#173F30] active:scale-95 transition-all touch-manipulation min-h-[72px] justify-center"
                 >
-                  <Sparkles className="w-5 h-5 mb-1" />
+                  <Sparkles className="w-5 h-5 mb-1 text-[#477B56]" />
                   <span className="text-xs font-bold">코끼리</span>
                   <span className="text-[10px] text-gray-500">클리닝</span>
                 </Link>
                 <Link
                   href="/koto"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex flex-col items-center p-3 rounded-xl bg-white border border-[#243A50]/15 text-[#243A50] text-center shadow-xs"
+                  className="flex flex-col items-center p-3 rounded-2xl bg-white border border-[#243A50]/15 text-[#243A50] text-center shadow-xs hover:border-[#243A50] active:scale-95 transition-all touch-manipulation min-h-[72px] justify-center"
                 >
-                  <Building2 className="w-5 h-5 mb-1" />
+                  <Building2 className="w-5 h-5 mb-1 text-[#3E82B8]" />
                   <span className="text-xs font-bold">KOTO</span>
                   <span className="text-[10px] text-gray-500">AI 보안·시설</span>
                 </Link>
                 <Link
                   href="/choko"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex flex-col items-center p-3 rounded-xl bg-white border border-[#8C6C43]/15 text-[#8C6C43] text-center shadow-xs"
+                  className="flex flex-col items-center p-3 rounded-2xl bg-white border border-[#8C6C43]/15 text-[#8C6C43] text-center shadow-xs hover:border-[#8C6C43] active:scale-95 transition-all touch-manipulation min-h-[72px] justify-center"
                 >
-                  <Leaf className="w-5 h-5 mb-1" />
+                  <Leaf className="w-5 h-5 mb-1 text-[#8C6C43]" />
                   <span className="text-xs font-bold">CHOKO</span>
                   <span className="text-[10px] text-gray-500">에코제품</span>
                 </Link>
@@ -294,9 +307,9 @@ export function Header() {
             </div>
 
             {/* Accordion Menu List */}
-            <div className="space-y-1 mb-6 border-t border-black/5 pt-4">
+            <div className="space-y-2 mb-6 border-t border-black/5 pt-4">
               <div className="text-[11px] font-bold uppercase tracking-wider text-[#477B56] mb-2 px-1">
-                메뉴 목록
+                전체 메뉴
               </div>
 
               {navCategories.map((cat) => {
@@ -304,47 +317,68 @@ export function Header() {
                 const isExpanded = expandedMobileCategory === cat.label;
 
                 return (
-                  <div key={cat.label} className="rounded-xl bg-white border border-black/5 overflow-hidden">
-                    <div className="flex items-center justify-between p-3">
+                  <div key={cat.label} className="rounded-2xl bg-white border border-black/5 overflow-hidden shadow-xs">
+                    {hasSub ? (
+                      <button
+                        type="button"
+                        onClick={() => toggleMobileCategory(cat.label)}
+                        className="w-full flex items-center justify-between p-4 text-left cursor-pointer active:bg-gray-50 touch-manipulation min-h-[48px]"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-bold text-gray-900">{cat.label}</span>
+                          {cat.badge && (
+                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#477B56]/15 text-[#173F30]">
+                              {cat.badge}
+                            </span>
+                          )}
+                        </div>
+                        <ChevronDown
+                          className={`w-4 h-4 transition-transform duration-200 text-gray-500 ${
+                            isExpanded ? "rotate-180 text-[#173F30]" : ""
+                          }`}
+                        />
+                      </button>
+                    ) : (
                       <Link
                         href={cat.href}
                         onClick={() => setMobileMenuOpen(false)}
-                        className="text-sm font-bold text-gray-900 flex-1 hover:text-[#173F30]"
+                        className="flex items-center justify-between p-4 text-sm font-bold text-gray-900 hover:text-[#173F30] active:bg-gray-50 touch-manipulation min-h-[48px]"
                       >
-                        {cat.label}
+                        <span>{cat.label}</span>
+                        {cat.badge && (
+                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#477B56]/15 text-[#173F30]">
+                            {cat.badge}
+                          </span>
+                        )}
                       </Link>
-
-                      {hasSub && (
-                        <button
-                          type="button"
-                          onClick={() => toggleMobileCategory(cat.label)}
-                          className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100"
-                        >
-                          <ChevronDown
-                            className={`w-4 h-4 transition-transform ${isExpanded ? "rotate-180 text-[#173F30]" : ""}`}
-                          />
-                        </button>
-                      )}
-                    </div>
+                    )}
 
                     {/* Sublinks Accordion */}
                     {hasSub && isExpanded && (
-                      <div className="bg-[#F8F8F4] px-4 py-2 border-t border-gray-100 space-y-2">
+                      <div className="bg-[#F8F8F4] px-4 py-3 border-t border-gray-100 space-y-1">
+                        {/* Jump to parent category page */}
+                        <Link
+                          href={cat.href}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="flex items-center justify-between py-2 px-3 rounded-xl bg-white/70 border border-black/5 text-xs font-bold text-[#173F30] touch-manipulation"
+                        >
+                          <span>{cat.label} 메인 바로가기</span>
+                          <ArrowUpRight className="w-3.5 h-3.5 text-[#173F30]" />
+                        </Link>
+
                         {cat.items!.map((sub) => (
                           <Link
                             key={sub.label}
                             href={sub.href}
                             onClick={() => setMobileMenuOpen(false)}
-                            className="block py-1.5 text-xs text-gray-700 hover:text-[#173F30] font-medium"
+                            className="flex items-center justify-between py-2.5 px-3 rounded-xl text-xs text-gray-700 hover:text-[#173F30] hover:bg-white/80 active:bg-white font-medium touch-manipulation min-h-[40px]"
                           >
-                            <div className="flex items-center justify-between">
-                              <span>• {sub.label}</span>
-                              {sub.badge && (
-                                <span className="text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800">
-                                  {sub.badge}
-                                </span>
-                              )}
-                            </div>
+                            <span>• {sub.label}</span>
+                            {sub.badge && (
+                              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800">
+                                {sub.badge}
+                              </span>
+                            )}
                           </Link>
                         ))}
                       </div>
@@ -355,16 +389,16 @@ export function Header() {
             </div>
 
             {/* Bottom Actions */}
-            <div className="pt-4 border-t border-black/10 flex flex-col gap-2">
+            <div className="pt-4 border-t border-black/10 flex flex-col gap-3">
               <Link
                 href="/contact"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-3.5 rounded-xl bg-[#173F30] text-white font-bold text-sm shadow-md"
+                className="w-full text-center py-4 rounded-2xl bg-[#173F30] text-white font-bold text-sm shadow-md active:bg-[#173F30]/90 touch-manipulation"
               >
                 온라인 문의 & 상담하기
               </Link>
-              <div className="text-center mt-2">
-                <span className="text-xs text-gray-500">상담 문의 02-1588-0000 (평일 09:00~18:00)</span>
+              <div className="text-center">
+                <span className="text-xs text-gray-500">고객 상담: 02-1588-0000 (평일 09:00~18:00)</span>
               </div>
             </div>
           </div>
@@ -375,7 +409,7 @@ export function Header() {
       {mobileMenuOpen && (
         <div
           onClick={() => setMobileMenuOpen(false)}
-          className="lg:hidden fixed inset-0 bg-black/40 z-40 backdrop-blur-xs"
+          className="lg:hidden fixed inset-0 bg-black/40 z-40 backdrop-blur-xs touch-manipulation"
         />
       )}
     </>

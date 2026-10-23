@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
     "127.0.0.1",
     "lease-permit-bend-home.trycloudflare.com",
     "*.trycloudflare.com",
+    "*.lhr.life",
   ],
   images: {
     remotePatterns: [

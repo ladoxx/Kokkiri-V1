@@ -93,11 +93,14 @@ export function CinematicSplash({
   useEffect(() => {
     if (isVisible) {
       document.body.style.overflow = "hidden";
+      document.body.style.touchAction = "none";
     } else {
       document.body.style.overflow = "";
+      document.body.style.touchAction = "";
     }
     return () => {
       document.body.style.overflow = "";
+      document.body.style.touchAction = "";
     };
   }, [isVisible]);
 
@@ -145,11 +148,16 @@ export function CinematicSplash({
           initial={{ opacity: 1 }}
           exit={{
             opacity: 0,
-            scale: 1.04,
-            filter: "blur(12px)",
-            transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1] },
+            scale: 1.02,
+            filter: "blur(6px)",
+            pointerEvents: "none",
+            transition: { duration: 0.3, ease: "easeOut" },
           }}
-          className={`fixed inset-0 z-[999999] flex flex-col items-center justify-center select-none overflow-hidden ${currentTheme.bg}`}
+          role="dialog"
+          aria-modal="true"
+          aria-label="KOKKIRI Brand Intro"
+          onClick={handleComplete}
+          className={`fixed inset-0 z-[999999] flex flex-col items-center justify-center select-none overflow-hidden cursor-pointer touch-manipulation ${currentTheme.bg}`}
           style={{ background: currentTheme.radialGlow }}
         >
           {/* Subtle Ambient Particle Halo */}
@@ -173,12 +181,15 @@ export function CinematicSplash({
             type="button"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.4 }}
-            onClick={handleComplete}
-            className="absolute top-6 right-6 sm:top-8 sm:right-8 z-20 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white text-xs font-semibold backdrop-blur-md border border-white/15 transition-all cursor-pointer shadow-lg"
+            transition={{ delay: 0.2, duration: 0.3 }}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleComplete();
+            }}
+            className="absolute top-6 right-6 sm:top-8 sm:right-8 z-20 flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/15 hover:bg-white/25 active:bg-white/30 text-white text-xs font-semibold backdrop-blur-md border border-white/20 transition-all cursor-pointer shadow-lg touch-manipulation"
           >
             <span>건너뛰기</span>
-            <span className="text-[10px] opacity-60 font-mono">ESC</span>
+            <span className="text-[10px] opacity-70 font-mono hidden sm:inline">ESC</span>
             <X className="w-3.5 h-3.5 ml-0.5" />
           </motion.button>
 
