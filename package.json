@@ -14,7 +14,8 @@
     "security:check": "node scripts/security-audit.js",
     "version:bump": "node scripts/bump-version.js",
     "prisma:generate": "prisma generate",
-    "prisma:push": "prisma db push"
+    "prisma:push": "prisma db push",
+    "db:seed": "tsx scripts/seed.mjs"
   },
   "dependencies": {
     "@prisma/client": "6.4.1",
@@ -42,6 +43,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5",
     "vitest": "^5.0.3"
   },

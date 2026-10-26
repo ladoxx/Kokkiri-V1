@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 # Base stage
 # -----------------------------------------------------------------------------
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
@@ -28,7 +28,7 @@ COPY . .
 ENV DATABASE_URL="file:/app/prisma/kokkiri.db"
 RUN npx prisma generate
 RUN npx prisma db push --skip-generate
-RUN node scripts/seed.mjs
+RUN npm run db:seed
 
 # Build Next.js in standalone mode
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -71,7 +71,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modul
 
 # Copy entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh && chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Ensure storage directories exist with write permissions
 RUN mkdir -p /app/data /app/prisma /app/public/uploads && \
@@ -79,8 +79,8 @@ RUN mkdir -p /app/data /app/prisma /app/public/uploads && \
 
 EXPOSE 3000
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-  CMD curl -f http://127.0.0.1:3000/ || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+  CMD curl -f -s http://127.0.0.1:3000/ || exit 1
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["node", "server.js"]
