@@ -24,9 +24,11 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Generate Prisma Client for SQLite
-ENV DATABASE_URL="file:./kokkiri.db"
+# Generate Prisma Client for SQLite and initialize schema and template database
+ENV DATABASE_URL="file:/app/prisma/kokkiri.db"
 RUN npx prisma generate
+RUN npx prisma db push --skip-generate
+RUN node scripts/seed.mjs
 
 # Build Next.js in standalone mode
 ENV NEXT_TELEMETRY_DISABLED=1

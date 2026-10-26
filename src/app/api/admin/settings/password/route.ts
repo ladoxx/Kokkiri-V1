@@ -35,20 +35,25 @@ export async function POST(req: NextRequest) {
     }
 
     // Find user in database
-    let user = await prisma.user.findUnique({
-      where: { id: session.userId },
-    });
-
-    if (!user) {
+    let user = null;
+    try {
       user = await prisma.user.findUnique({
-        where: { email: session.email },
+        where: { id: session.userId },
       });
-    }
 
-    if (!user) {
-      user = await prisma.user.findFirst({
-        where: { role: "SUPER_ADMIN" },
-      });
+      if (!user) {
+        user = await prisma.user.findUnique({
+          where: { email: session.email },
+        });
+      }
+
+      if (!user) {
+        user = await prisma.user.findFirst({
+          where: { role: "SUPER_ADMIN" },
+        });
+      }
+    } catch (dbErr) {
+      console.warn("Database user lookup error (possible uninitialized DB):", dbErr);
     }
 
     if (!user) {

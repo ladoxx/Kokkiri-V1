@@ -62,20 +62,25 @@ export async function POST(req: NextRequest) {
     }
 
     // 1. Find current user
-    let user = await prisma.user.findUnique({
-      where: { id: session.userId },
-    });
-
-    if (!user) {
+    let user = null;
+    try {
       user = await prisma.user.findUnique({
-        where: { email: session.email },
+        where: { id: session.userId },
       });
-    }
 
-    if (!user) {
-      user = await prisma.user.findFirst({
-        where: { role: RoleType.SUPER_ADMIN },
-      });
+      if (!user) {
+        user = await prisma.user.findUnique({
+          where: { email: session.email },
+        });
+      }
+
+      if (!user) {
+        user = await prisma.user.findFirst({
+          where: { role: RoleType.SUPER_ADMIN },
+        });
+      }
+    } catch (dbErr) {
+      console.warn("Database user lookup error (possible uninitialized DB):", dbErr);
     }
 
     // 2. Verify current password

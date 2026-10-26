@@ -10,10 +10,13 @@ if [ ! -f /app/data/company-info.json ] && [ -d /app/data-template ]; then
   cp -rn /app/data-template/* /app/data/ 2>/dev/null || cp -r /app/data-template/* /app/data/ || true
 fi
 
-# 2. If /app/prisma is missing kokkiri.db, copy from template if exists
-if [ ! -f /app/prisma/kokkiri.db ] && [ -d /app/prisma-template ]; then
-  echo "=> [KOKKIRI] Initializing /app/prisma from template directory..."
-  cp -rn /app/prisma-template/* /app/prisma/ 2>/dev/null || cp -r /app/prisma-template/* /app/prisma/ || true
+# 2. If /app/prisma is missing, empty or uninitialized kokkiri.db, copy from template
+DB_SIZE=$(wc -c < /app/prisma/kokkiri.db 2>/dev/null || echo 0)
+if [ ! -f /app/prisma/kokkiri.db ] || [ "$DB_SIZE" -lt 5000 ]; then
+  if [ -f /app/prisma-template/kokkiri.db ]; then
+    echo "=> [KOKKIRI] Initializing /app/prisma/kokkiri.db from template (previous size: $DB_SIZE bytes)..."
+    cp -f /app/prisma-template/kokkiri.db /app/prisma/kokkiri.db
+  fi
 fi
 
 # 3. Ensure proper ownership for nextjs user on persistent volumes
