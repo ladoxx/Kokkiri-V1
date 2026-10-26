@@ -22,6 +22,10 @@ import {
   KeyRound,
   ShieldCheck,
   RefreshCw,
+  Briefcase,
+  Building,
+  Bot,
+  Zap,
 } from "lucide-react";
 
 interface AdminSidebarProps {
@@ -44,38 +48,49 @@ interface MenuSection {
 
 const MENU_SECTIONS: MenuSection[] = [
   {
-    title: "대시보드 & 고객 관리",
+    title: "1. 대시보드 & 고객 관리",
     items: [
-      { label: "대시보드 개요", href: "/admin", icon: LayoutDashboard },
-      { label: "고객 문의 & CRM", href: "/admin/inquiries", icon: Inbox },
-      { label: "알림 & 발송 기록", href: "/admin/notifications", icon: Bell },
+      { label: "대시보드 종합 개요", href: "/admin", icon: LayoutDashboard },
+      { label: "고객 문의 & 견적 상담", href: "/admin/inquiries", icon: Inbox, badge: "실시간" },
+      { label: "알림 & 발송 기록 보관함", href: "/admin/notifications", icon: Bell },
     ],
   },
   {
-    title: "콘텐츠 & 사이트 CMS",
+    title: "2. 비즈니스 & 상품/서비스",
     items: [
-      { label: "네비게이션 메뉴 관리", href: "/admin/navigation", icon: Menu },
-      { label: "문구 & 콘텐츠 편집", href: "/admin/content", icon: FileText },
-      { label: "시공 전후 갤러리", href: "/admin/before-after", icon: MoveHorizontal },
-      { label: "CHOKO 제품 관리", href: "/admin/products", icon: ShoppingBag },
+      { label: "브랜드 서비스 관리", href: "/admin/services", icon: Briefcase, badge: "청소·AI보안" },
+      { label: "CHOKO 제품 & 네이버 SEO", href: "/admin/products", icon: ShoppingBag, badge: "SEO" },
+      { label: "시공 전후 비교 갤러리", href: "/admin/before-after", icon: MoveHorizontal },
+    ],
+  },
+  {
+    title: "3. 사이트 콘텐츠 & 디자인 CMS",
+    items: [
+      { label: "문구 & 텍스트 편집", href: "/admin/content", icon: FileText },
+      { label: "네비게이션 메뉴 구조", href: "/admin/navigation", icon: Menu },
       { label: "미디어 파일 보관함", href: "/admin/media", icon: ImageIcon },
     ],
   },
   {
-    title: "설정 & 인프라 보안",
+    title: "4. 시스템 환경 & AI 에이전트",
     items: [
       {
-        label: "통합 이메일 알림",
+        label: "AI 에이전트 & 코드 관제",
+        href: "/admin/agents",
+        icon: Bot,
+        badge: "AI Agent",
+      },
+      {
+        label: "통합 이메일 알림 라우팅",
         href: "/admin/settings?tab=routing",
         icon: Mail,
         tab: "routing",
-        badge: "통합",
       },
       {
-        label: "시스템 업데이트 & 롤백",
-        href: "/admin/updates",
-        icon: RefreshCw,
-        badge: "v1.0.7",
+        label: "회사 정보 & 연락처",
+        href: "/admin/settings?tab=company",
+        icon: Building,
+        tab: "company",
       },
       {
         label: "시네마틱 UX 설정",
@@ -84,16 +99,16 @@ const MENU_SECTIONS: MenuSection[] = [
         tab: "cinematic",
       },
       {
-        label: "회사 정보 & 시스템",
-        href: "/admin/settings?tab=company",
-        icon: Sliders,
-        tab: "company",
-      },
-      {
-        label: "계정 & 보안 관리",
+        label: "계정 & 비밀번호 보안",
         href: "/admin/settings?tab=security",
         icon: KeyRound,
         tab: "security",
+      },
+      {
+        label: "시스템 업데이트 & 롤백",
+        href: "/admin/updates",
+        icon: RefreshCw,
+        badge: "v1.0.7",
       },
     ],
   },
@@ -119,15 +134,15 @@ function SidebarNavContent({ onClose }: { onClose?: () => void }) {
   };
 
   return (
-    <nav className="p-3.5 space-y-6">
+    <nav className="p-3.5 space-y-5">
       {MENU_SECTIONS.map((section, idx) => (
-        <div key={idx} className="space-y-1.5">
-          <div className="px-3 py-1 flex items-center justify-between text-[11px] font-extrabold uppercase tracking-wider text-gray-400">
+        <div key={idx} className="space-y-1">
+          <div className="px-3 py-1 flex items-center justify-between text-[10px] font-extrabold uppercase tracking-wider text-gray-400">
             <span>{section.title}</span>
             <span className="w-1 h-1 rounded-full bg-white/20" />
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-0.5">
             {section.items.map((item) => {
               const active = isItemActive(item);
               const Icon = item.icon;
@@ -137,9 +152,9 @@ function SidebarNavContent({ onClose }: { onClose?: () => void }) {
                   key={item.href}
                   href={item.href}
                   onClick={onClose}
-                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all group ${
+                  className={`flex items-center justify-between px-3.5 py-2 rounded-xl text-xs transition-all group ${
                     active
-                      ? "bg-[#477B56] text-white shadow-sm shadow-[#477B56]/30 font-black"
+                      ? "bg-[#477B56] text-white shadow-xs font-black"
                       : "text-gray-300 hover:text-white hover:bg-white/5 font-semibold"
                   }`}
                 >
@@ -156,7 +171,7 @@ function SidebarNavContent({ onClose }: { onClose?: () => void }) {
 
                   {item.badge && (
                     <span
-                      className={`px-1.5 py-0.5 rounded text-[10px] font-bold tracking-tight ${
+                      className={`px-1.5 py-0.5 rounded text-[9px] font-bold tracking-tight ${
                         active
                           ? "bg-white/20 text-white"
                           : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
@@ -191,14 +206,14 @@ export function AdminSidebar({ isOpen = false, onClose }: AdminSidebarProps) {
   const sidebarContent = (
     <div className="flex flex-col h-full justify-between">
       {/* 1. Brand Header */}
-      <div className="p-5 border-b border-white/10 flex items-center justify-between shrink-0 bg-[#121915]">
-        <Link href="/admin" onClick={onClose} className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl bg-white p-1 flex items-center justify-center overflow-hidden shadow-xs shrink-0 group-hover:scale-105 transition-transform">
+      <div className="p-4 border-b border-white/10 flex items-center justify-between shrink-0 bg-[#121915]">
+        <Link href="/admin" onClick={onClose} className="flex items-center gap-2.5 group">
+          <div className="w-8 h-8 rounded-xl bg-white p-1 flex items-center justify-center overflow-hidden shadow-xs shrink-0 group-hover:scale-105 transition-transform">
             <Image
               src="/brand/kokkiri-elephant-logo.png"
               alt="Kokkiri Elephant Logo"
-              width={36}
-              height={36}
+              width={32}
+              height={32}
               className="w-full h-full object-contain"
             />
           </div>
@@ -217,7 +232,7 @@ export function AdminSidebar({ isOpen = false, onClose }: AdminSidebarProps) {
         <button
           type="button"
           onClick={onClose}
-          className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 lg:hidden cursor-pointer"
+          className="p-1.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 lg:hidden cursor-pointer"
           aria-label="사이드바 닫기"
         >
           <X className="w-5 h-5" />
@@ -237,34 +252,38 @@ export function AdminSidebar({ isOpen = false, onClose }: AdminSidebarProps) {
         </Suspense>
       </div>
 
-      {/* 3. Bottom Profile, Site Link, and Logout */}
-      <div className="p-3.5 border-t border-white/10 space-y-2 shrink-0 bg-[#121915]">
-        <div className="px-3 py-2 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
+      {/* 3. Bottom AI Status, Site Link, and Logout */}
+      <div className="p-3 border-t border-white/10 space-y-1.5 shrink-0 bg-[#121915]">
+        <Link
+          href="/admin/agents"
+          onClick={onClose}
+          className="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 flex items-center justify-between transition-colors group"
+        >
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-xs shadow-emerald-400/50" />
-            <span className="text-[11px] font-bold text-gray-300">최고 관리자 모드</span>
+            <span className="text-[10px] font-bold text-gray-300 group-hover:text-white">AI 에이전트 관제</span>
           </div>
-          <span className="text-[10px] font-bold text-[#86efac] bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-            인증됨
+          <span className="text-[9px] font-black text-[#86efac] bg-emerald-500/15 px-1.5 py-0.5 rounded border border-emerald-500/30">
+            정상 98점
           </span>
-        </div>
+        </Link>
 
         <Link
           href="/"
           target="_blank"
           onClick={onClose}
-          className="flex items-center justify-between px-3 py-2 rounded-xl text-xs text-gray-300 hover:text-white hover:bg-white/5 transition-colors font-semibold"
+          className="flex items-center justify-between px-3 py-1.5 rounded-xl text-xs text-gray-300 hover:text-white hover:bg-white/5 transition-colors font-semibold"
         >
-          <span className="flex items-center gap-2">
+          <span className="flex items-center gap-2 text-[11px]">
             <ExternalLink className="w-3.5 h-3.5 text-gray-400" />
-            <span>웹사이트 바로가기</span>
+            <span>내 웹사이트 바로가기</span>
           </span>
         </Link>
 
         <button
           type="button"
           onClick={handleLogout}
-          className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors cursor-pointer"
+          className="w-full flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors cursor-pointer"
         >
           <LogOut className="w-3.5 h-3.5" />
           <span>관리자 로그아웃</span>

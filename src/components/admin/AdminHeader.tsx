@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { User, Menu } from "lucide-react";
+import Link from "next/link";
+import { User, Menu, Bot, Sparkles } from "lucide-react";
 
 interface AdminHeaderProps {
   onToggleSidebar?: () => void;
@@ -40,7 +41,18 @@ export function AdminHeader({ onToggleSidebar }: AdminHeaderProps) {
         </span>
       </div>
 
-      <div className="flex items-center gap-3 sm:gap-4">
+      <div className="flex items-center gap-2.5 sm:gap-4">
+        {/* AI Agent Quick Status Pill */}
+        <Link
+          href="/admin/agents"
+          className="px-2.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-[11px] font-bold flex items-center gap-1.5 transition-colors"
+          title="AI 에이전트 시스템 진단 및 코드 관제 센터 열기"
+        >
+          <Bot className="w-3.5 h-3.5 text-emerald-600" />
+          <span className="hidden sm:inline">AI 에이전트 관제</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+        </Link>
+
         {user ? (
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="text-right hidden sm:block">

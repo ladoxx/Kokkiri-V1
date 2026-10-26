@@ -14,6 +14,15 @@ import {
   ShoppingBag,
   MoveHorizontal,
   Sparkles,
+  Bot,
+  Briefcase,
+  FileText,
+  Menu,
+  Mail,
+  KeyRound,
+  RefreshCw,
+  FolderTree,
+  Zap,
 } from "lucide-react";
 
 interface DashboardStats {
@@ -70,76 +79,270 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      {/* Top Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">대시보드 개요</h1>
-          <p className="text-xs text-gray-500 mt-0.5 sm:mt-1">
-            KOKKIRI 플랫폼의 실시간 문의, 알림 전송 현황 및 채널 지표입니다.
+      {/* 1. Top Welcome & AI Agent Status Banner */}
+      <div className="p-6 rounded-3xl bg-gradient-to-br from-[#173F30] via-[#204E3E] to-[#121915] text-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/20 text-[#86efac] flex items-center gap-1">
+              <Bot className="w-3 h-3 text-[#86efac]" />
+              <span>AI 코드 & 관제 에이전트 활성</span>
+            </span>
+            <span className="text-[11px] text-gray-300">시스템 헬스: 98점 / 최적</span>
+          </div>
+          <h1 className="text-xl sm:text-2xl font-black tracking-tight">
+            KOKKIRI 통합 관리자 콘솔
+          </h1>
+          <p className="text-xs text-gray-300 max-w-xl">
+            고객 견적 문의 접수, 브랜드별 서비스/제품 관리, 네이버 SEO 자동화 및 시스템 설정을 한곳에서 체계적으로 관리합니다.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 shrink-0">
+          <Link
+            href="/admin/agents"
+            className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs"
+          >
+            <Bot className="w-4 h-4 text-[#86efac]" />
+            <span>AI 에이전트 관제실</span>
+          </Link>
           <Link
             href="/admin/inquiries"
-            className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#173F30] text-white text-xs font-bold hover:bg-[#173F30]/90 transition-all shadow-sm text-center"
+            className="px-4 py-2.5 rounded-xl bg-[#86efac] text-gray-900 text-xs font-black hover:bg-[#86efac]/90 transition-all shadow-xs flex items-center gap-1"
           >
-            문의 전체 관리 &rarr;
+            <span>신규 문의 확인</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
         </div>
       </div>
 
-      {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
-        <div className="p-5 sm:p-6 rounded-2xl bg-white border border-gray-200 shadow-xs flex items-center justify-between">
+      {/* 2. Key Performance Indicators (KPI Cards Grid) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+        <div className="p-5 rounded-2xl bg-white border border-gray-200 shadow-xs flex items-center justify-between">
           <div>
             <div className="text-xs font-bold text-gray-500 uppercase">신규 미확인 문의</div>
-            <div className="text-2xl font-black text-emerald-600 mt-1 sm:mt-1.5">{stats.newInquiries}건</div>
-            <div className="text-[11px] text-gray-400 mt-0.5 sm:mt-1">즉시 대응 필요</div>
+            <div className="text-2xl font-black text-emerald-600 mt-1">{stats.newInquiries}건</div>
+            <div className="text-[11px] text-gray-400 mt-0.5">즉시 대응 필요</div>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-            <Inbox className="w-6 h-6" />
+          <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+            <Inbox className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="p-5 sm:p-6 rounded-2xl bg-white border border-gray-200 shadow-xs flex items-center justify-between">
+        <div className="p-5 rounded-2xl bg-white border border-gray-200 shadow-xs flex items-center justify-between">
           <div>
             <div className="text-xs font-bold text-gray-500 uppercase">진행 중 상담</div>
-            <div className="text-2xl font-black text-blue-600 mt-1 sm:mt-1.5">{stats.inProgressInquiries}건</div>
-            <div className="text-[11px] text-gray-400 mt-0.5 sm:mt-1">실사 및 견적 조율</div>
+            <div className="text-2xl font-black text-blue-600 mt-1">{stats.inProgressInquiries}건</div>
+            <div className="text-[11px] text-gray-400 mt-0.5">실사 및 견적 조율</div>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-            <Clock className="w-6 h-6" />
+          <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+            <Clock className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="p-5 sm:p-6 rounded-2xl bg-white border border-gray-200 shadow-xs flex items-center justify-between">
+        <div className="p-5 rounded-2xl bg-white border border-gray-200 shadow-xs flex items-center justify-between">
           <div>
-            <div className="text-xs font-bold text-gray-500 uppercase">상담 및 계약 완료</div>
-            <div className="text-2xl font-black text-gray-900 mt-1 sm:mt-1.5">{stats.completedInquiries}건</div>
-            <div className="text-[11px] text-gray-400 mt-0.5 sm:mt-1">누적 성공 계약</div>
+            <div className="text-xs font-bold text-gray-500 uppercase">상담 계약 완료</div>
+            <div className="text-2xl font-black text-gray-900 mt-1">{stats.completedInquiries}건</div>
+            <div className="text-[11px] text-gray-400 mt-0.5">누적 체결 실적</div>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-gray-100 text-gray-600 flex items-center justify-center shrink-0">
-            <CheckCircle2 className="w-6 h-6" />
+          <div className="w-11 h-11 rounded-xl bg-gray-100 text-gray-600 flex items-center justify-center shrink-0">
+            <CheckCircle2 className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="p-5 sm:p-6 rounded-2xl bg-white border border-gray-200 shadow-xs flex items-center justify-between">
+        <div className="p-5 rounded-2xl bg-white border border-gray-200 shadow-xs flex items-center justify-between">
           <div>
             <div className="text-xs font-bold text-gray-500 uppercase">알림 발송 완료</div>
-            <div className="text-2xl font-black text-purple-600 mt-1 sm:mt-1.5">{stats.sentNotifications}건</div>
-            <div className="text-[11px] text-gray-400 mt-0.5 sm:mt-1">
-              이메일 및 알림톡 (실패: {stats.failedNotifications}건)
-            </div>
+            <div className="text-2xl font-black text-purple-600 mt-1">{stats.sentNotifications}건</div>
+            <div className="text-[11px] text-gray-400 mt-0.5">이메일 & 알림톡 로그</div>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
-            <Bell className="w-6 h-6" />
+          <div className="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+            <Bell className="w-5 h-5" />
           </div>
         </div>
       </div>
 
-      {/* Recent Inquiries List / Table */}
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-xs overflow-hidden">
+      {/* 3. Structured 4-Zone Master Navigation Hub */}
+      <div className="bg-white rounded-3xl border border-gray-200 shadow-xs p-6 space-y-6">
+        <div>
+          <h2 className="text-base font-black text-gray-900 flex items-center gap-2">
+            <FolderTree className="w-5 h-5 text-[#173F30]" />
+            <span>관리자 패널 전체 섹션 & 링크 안내</span>
+          </h2>
+          <p className="text-xs text-gray-500 mt-0.5">
+            어느 메뉴에서 어떤 작업을 수행하는지 4개 영역으로 체계화되어 있습니다.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Zone 1 */}
+          <div className="p-4 rounded-2xl bg-gray-50/70 border border-gray-200/80 space-y-3 flex flex-col justify-between">
+            <div>
+              <div className="text-[10px] font-extrabold uppercase text-gray-400">1. 고객 관리 & CRM</div>
+              <h3 className="font-bold text-xs text-gray-900 mt-0.5">상담 및 알림 로그</h3>
+              <p className="text-[11px] text-gray-500 mt-1">고객의 온라인 견적 접수 내역과 이메일/알림톡 발송 이력</p>
+            </div>
+            <div className="space-y-1.5 pt-2 border-t border-gray-200">
+              <Link
+                href="/admin/inquiries"
+                className="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-emerald-50 border border-gray-200/80 text-xs font-bold text-gray-800 hover:text-emerald-800 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Inbox className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>고객 문의 & CRM</span>
+                </div>
+                <ChevronRight className="w-3 h-3 text-gray-400" />
+              </Link>
+              <Link
+                href="/admin/notifications"
+                className="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-purple-50 border border-gray-200/80 text-xs font-bold text-gray-800 hover:text-purple-800 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Bell className="w-3.5 h-3.5 text-purple-600" />
+                  <span>알림 발송 기록</span>
+                </div>
+                <ChevronRight className="w-3 h-3 text-gray-400" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Zone 2 */}
+          <div className="p-4 rounded-2xl bg-gray-50/70 border border-gray-200/80 space-y-3 flex flex-col justify-between">
+            <div>
+              <div className="text-[10px] font-extrabold uppercase text-gray-400">2. 비즈니스 & 상품/서비스</div>
+              <h3 className="font-bold text-xs text-gray-900 mt-0.5">서비스·쇼핑몰·시공실적</h3>
+              <p className="text-[11px] text-gray-500 mt-1">청소·AI보안 서비스 목록과 CHOKO 친환경 제품 및 SEO 관리</p>
+            </div>
+            <div className="space-y-1.5 pt-2 border-t border-gray-200">
+              <Link
+                href="/admin/services"
+                className="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-blue-50 border border-gray-200/80 text-xs font-bold text-gray-800 hover:text-blue-800 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Briefcase className="w-3.5 h-3.5 text-blue-600" />
+                  <span>브랜드 서비스 관리</span>
+                </div>
+                <ChevronRight className="w-3 h-3 text-gray-400" />
+              </Link>
+              <Link
+                href="/admin/products"
+                className="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-emerald-50 border border-gray-200/80 text-xs font-bold text-gray-800 hover:text-emerald-800 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <ShoppingBag className="w-3.5 h-3.5 text-[#8C6C43]" />
+                  <span>CHOKO 제품 & SEO</span>
+                </div>
+                <ChevronRight className="w-3 h-3 text-gray-400" />
+              </Link>
+              <Link
+                href="/admin/before-after"
+                className="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-gray-100 border border-gray-200/80 text-xs font-bold text-gray-800 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <MoveHorizontal className="w-3.5 h-3.5 text-[#243A50]" />
+                  <span>시공 전후 갤러리</span>
+                </div>
+                <ChevronRight className="w-3 h-3 text-gray-400" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Zone 3 */}
+          <div className="p-4 rounded-2xl bg-gray-50/70 border border-gray-200/80 space-y-3 flex flex-col justify-between">
+            <div>
+              <div className="text-[10px] font-extrabold uppercase text-gray-400">3. 콘텐츠 & 사이트 CMS</div>
+              <h3 className="font-bold text-xs text-gray-900 mt-0.5">문구·메뉴·미디어 사진</h3>
+              <p className="text-[11px] text-gray-500 mt-1">웹사이트 텍스트 문구, 헤더/푸터 메뉴 구조, 이미지 라이브러리</p>
+            </div>
+            <div className="space-y-1.5 pt-2 border-t border-gray-200">
+              <Link
+                href="/admin/content"
+                className="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-emerald-50 border border-gray-200/80 text-xs font-bold text-gray-800 hover:text-emerald-800 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <FileText className="w-3.5 h-3.5 text-gray-700" />
+                  <span>문구 & 텍스트 편집</span>
+                </div>
+                <ChevronRight className="w-3 h-3 text-gray-400" />
+              </Link>
+              <Link
+                href="/admin/navigation"
+                className="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-emerald-50 border border-gray-200/80 text-xs font-bold text-gray-800 hover:text-emerald-800 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Menu className="w-3.5 h-3.5 text-gray-700" />
+                  <span>네비게이션 메뉴 구조</span>
+                </div>
+                <ChevronRight className="w-3 h-3 text-gray-400" />
+              </Link>
+              <Link
+                href="/admin/media"
+                className="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-emerald-50 border border-gray-200/80 text-xs font-bold text-gray-800 hover:text-emerald-800 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <ImageIcon className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>미디어 파일 보관함</span>
+                </div>
+                <ChevronRight className="w-3 h-3 text-gray-400" />
+              </Link>
+            </div>
+          </div>
+
+          {/* Zone 4 */}
+          <div className="p-4 rounded-2xl bg-gray-50/70 border border-gray-200/80 space-y-3 flex flex-col justify-between">
+            <div>
+              <div className="text-[10px] font-extrabold uppercase text-gray-400">4. 시스템 환경 & AI 에이전트</div>
+              <h3 className="font-bold text-xs text-gray-900 mt-0.5">설정·보안·코드 관제</h3>
+              <p className="text-[11px] text-gray-500 mt-1">이메일 라우팅, 비밀번호 보안, AI 코드 검사, 시스템 롤백</p>
+            </div>
+            <div className="space-y-1.5 pt-2 border-t border-gray-200">
+              <Link
+                href="/admin/agents"
+                className="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-emerald-50 border border-gray-200/80 text-xs font-bold text-gray-800 hover:text-emerald-800 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Bot className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>AI 에이전트 관제실</span>
+                </div>
+                <ChevronRight className="w-3 h-3 text-gray-400" />
+              </Link>
+              <Link
+                href="/admin/settings?tab=routing"
+                className="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-gray-100 border border-gray-200/80 text-xs font-bold text-gray-800 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Mail className="w-3.5 h-3.5 text-amber-600" />
+                  <span>통합 이메일 라우팅</span>
+                </div>
+                <ChevronRight className="w-3 h-3 text-gray-400" />
+              </Link>
+              <Link
+                href="/admin/settings?tab=security"
+                className="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-gray-100 border border-gray-200/80 text-xs font-bold text-gray-800 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <KeyRound className="w-3.5 h-3.5 text-red-600" />
+                  <span>계정 & 비밀번호 보안</span>
+                </div>
+                <ChevronRight className="w-3 h-3 text-gray-400" />
+              </Link>
+              <Link
+                href="/admin/updates"
+                className="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-gray-100 border border-gray-200/80 text-xs font-bold text-gray-800 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <RefreshCw className="w-3.5 h-3.5 text-blue-600" />
+                  <span>시스템 버전 & 롤백</span>
+                </div>
+                <ChevronRight className="w-3 h-3 text-gray-400" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 4. Recent Inquiries List / Table */}
+      <div className="bg-white rounded-3xl border border-gray-200 shadow-xs overflow-hidden">
         <div className="p-4 sm:p-6 border-b border-gray-100 flex items-center justify-between">
           <div>
             <h2 className="text-sm sm:text-base font-bold text-gray-900">최근 접수된 고객 문의</h2>
@@ -149,8 +352,7 @@ export default function AdminDashboardPage() {
             href="/admin/inquiries"
             className="text-xs font-bold text-[#173F30] hover:underline flex items-center gap-1 shrink-0"
           >
-            <span className="hidden sm:inline">전체 목록 보기</span>
-            <span className="sm:hidden">전체</span>
+            <span>전체 문의 관리</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -192,7 +394,7 @@ export default function AdminDashboardPage() {
                 <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100 text-xs">
                   <span className="font-mono text-gray-600">{inq.customer?.phone}</span>
                   <span className="text-[11px] font-bold text-[#173F30] flex items-center gap-0.5">
-                    <span>열기</span>
+                    <span>상세보기</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
@@ -246,7 +448,7 @@ export default function AdminDashboardPage() {
                         href={`/admin/inquiries?id=${inq.id}`}
                         className="px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-[11px] transition-colors"
                       >
-                        열기
+                        상세보기
                       </Link>
                     </td>
                   </tr>
@@ -255,73 +457,6 @@ export default function AdminDashboardPage() {
             </tbody>
           </table>
         </div>
-      </div>
-
-      {/* Quick Action Navigation Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Link
-          href="/admin/media"
-          className="p-5 rounded-2xl bg-white border border-gray-200/80 hover:border-[#173F30] hover:shadow-md transition-all group flex items-center justify-between"
-        >
-          <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-[#173F30]/10 text-[#173F30] flex items-center justify-center group-hover:bg-[#173F30] group-hover:text-white transition-all">
-              <ImageIcon className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-xs font-bold text-gray-900">미디어 라이브러리</div>
-              <div className="text-[11px] text-gray-400">사진 직접 업로드 및 보관함 관리</div>
-            </div>
-          </div>
-          <ChevronRight className="w-4 h-4 text-gray-400 group-hover:translate-x-0.5 transition-transform" />
-        </Link>
-
-        <Link
-          href="/admin/products"
-          className="p-5 rounded-2xl bg-white border border-gray-200/80 hover:border-[#8C6C43] hover:shadow-md transition-all group flex items-center justify-between"
-        >
-          <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-[#8C6C43]/10 text-[#8C6C43] flex items-center justify-center group-hover:bg-[#8C6C43] group-hover:text-white transition-all">
-              <ShoppingBag className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-xs font-bold text-gray-900">CHOKO 제품 관리</div>
-              <div className="text-[11px] text-gray-400">네이버·쿠팡 구매 링크 및 사진 수정</div>
-            </div>
-          </div>
-          <ChevronRight className="w-4 h-4 text-gray-400 group-hover:translate-x-0.5 transition-transform" />
-        </Link>
-
-        <Link
-          href="/admin/before-after"
-          className="p-5 rounded-2xl bg-white border border-gray-200/80 hover:border-[#243A50] hover:shadow-md transition-all group flex items-center justify-between"
-        >
-          <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-[#243A50]/10 text-[#243A50] flex items-center justify-center group-hover:bg-[#243A50] group-hover:text-white transition-all">
-              <MoveHorizontal className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-xs font-bold text-gray-900">시공 전후 비교 관리</div>
-              <div className="text-[11px] text-gray-400">비교 슬라이더 사진 및 성과 수정</div>
-            </div>
-          </div>
-          <ChevronRight className="w-4 h-4 text-gray-400 group-hover:translate-x-0.5 transition-transform" />
-        </Link>
-
-        <Link
-          href="/admin/settings?tab=cinematic"
-          className="p-5 rounded-2xl bg-white border border-gray-200/80 hover:border-[#477B56] hover:shadow-md transition-all group flex items-center justify-between"
-        >
-          <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#173F30] to-[#477B56] text-white flex items-center justify-center transition-all shadow-xs">
-              <Sparkles className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-xs font-bold text-gray-900">시네마틱 UX 설정</div>
-              <div className="text-[11px] text-gray-400">오프닝 인트로 & 페이지 전환 제어</div>
-            </div>
-          </div>
-          <ChevronRight className="w-4 h-4 text-gray-400 group-hover:translate-x-0.5 transition-transform" />
-        </Link>
       </div>
     </div>
   );

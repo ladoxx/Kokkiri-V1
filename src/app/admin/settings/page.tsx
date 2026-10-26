@@ -51,6 +51,15 @@ function AdminSettingsContent() {
       : "routing";
   const [activeTab, setActiveTab] = useState<"routing" | "cinematic" | "company" | "security">(initialTab);
 
+  const handleTabChange = (tab: "routing" | "cinematic" | "company" | "security") => {
+    setActiveTab(tab);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", tab);
+      window.history.replaceState({}, "", url.toString());
+    }
+  };
+
   useEffect(() => {
     if (tabParam === "security" || tabParam === "cinematic" || tabParam === "company" || tabParam === "routing") {
       setActiveTab(tabParam);
@@ -254,7 +263,7 @@ function AdminSettingsContent() {
         <div className="flex items-center gap-1.5 p-1 bg-gray-100/90 rounded-2xl border border-gray-200/80 self-start sm:self-auto overflow-x-auto max-w-full">
           <button
             type="button"
-            onClick={() => setActiveTab("routing")}
+            onClick={() => handleTabChange("routing")}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === "routing"
                 ? "bg-white text-[#173F30] shadow-xs"
@@ -267,7 +276,7 @@ function AdminSettingsContent() {
 
           <button
             type="button"
-            onClick={() => setActiveTab("cinematic")}
+            onClick={() => handleTabChange("cinematic")}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === "cinematic"
                 ? "bg-white text-[#173F30] shadow-xs"
@@ -280,7 +289,7 @@ function AdminSettingsContent() {
 
           <button
             type="button"
-            onClick={() => setActiveTab("company")}
+            onClick={() => handleTabChange("company")}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === "company"
                 ? "bg-white text-gray-900 shadow-xs"
@@ -293,7 +302,7 @@ function AdminSettingsContent() {
 
           <button
             type="button"
-            onClick={() => setActiveTab("security")}
+            onClick={() => handleTabChange("security")}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
               activeTab === "security"
                 ? "bg-white text-amber-800 shadow-xs"
