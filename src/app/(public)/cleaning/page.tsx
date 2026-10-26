@@ -5,9 +5,12 @@ import { MotionReveal } from "@/components/animations/MotionReveal";
 import { ServiceCard } from "@/components/ui/ServiceCard";
 import { ProjectCard } from "@/components/ui/ProjectCard";
 import { SERVICES, PROJECTS } from "@/lib/data/initial-data";
+import { getSiteContent } from "@/lib/data/content-store";
 import { Sparkles, ArrowUpRight, CheckCircle2, Shield, Leaf, Clock, HelpCircle } from "lucide-react";
 import { buildPageMetadata, getBreadcrumbSchema, getServiceSchema, getFaqSchema } from "@/lib/seo/config";
 import { JsonLd } from "@/components/seo/JsonLd";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "청소 서비스 | 병원·사무실·상가·건물 청소 | KOKKIRI",
@@ -32,31 +35,10 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function CleaningBrandPage() {
+  const siteContent = getSiteContent();
   const cleaningServices = SERVICES.filter((s) => s.brandSlug === "kokkiri");
   const cleaningProjects = PROJECTS.filter((p) => p.brandSlug === "kokkiri");
-
-  const faqs = [
-    {
-      question: "정기 클리닝은 어떻게 진행되나요?",
-      answer:
-        "사전 무료 현장 실사를 통해 공간 구조, 바닥 마감재 및 오염도를 진단한 후 최적의 주기(일간/주간/월간)와 맞춤 작업 공정표를 수립하여 전담 직영 매니저가 체계적으로 진행합니다.",
-    },
-    {
-      question: "병원이나 클리닉 등 의료 시설 청소도 가능한가요?",
-      answer:
-        "네, 가능합니다. 코끼리는 병의원 위생 가이드라인에 맞춘 무독성 친환경 소독 약품과 HEPA 필터 집진 장비를 사용하여 진료실, 대기실, 검사실 위생 환경을 철저히 케어합니다.",
-    },
-    {
-      question: "클리닝 서비스가 가능한 지역은 어디인가요?",
-      answer:
-        "파주, 문산, 운정, 일산, 고양, 김포, 서울 및 경기도 수도권 전역에 전문 직영 인력이 신속하게 방문 실사 및 정기 클리닝을 제공합니다.",
-    },
-    {
-      question: "현장 방문 실사와 견적 산출은 무료인가요?",
-      answer:
-        "네, 100% 무료입니다. 온라인 또는 대표번호로 신청해 주시면 담당 매니저가 직접 사업장을 방문하여 실측 후 24시간 이내에 세부 견적서를 발송해 드립니다.",
-    },
-  ];
+  const faqs = siteContent.cleaning.faqs;
 
   const breadcrumbs = getBreadcrumbSchema([{ name: "청소 서비스", url: "/cleaning" }]);
   const cleaningServiceSchema = getServiceSchema({
@@ -77,16 +59,15 @@ export default function CleaningBrandPage() {
         <div className="max-w-3xl relative z-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-[#65A377] text-xs font-bold mb-6">
             <Sparkles className="w-4 h-4" />
-            <span>KOKKIRI Corporate Cleaning</span>
+            <span>{siteContent.cleaning.pillBadge}</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight mb-6">
-            공간의 품격을 완성하는<br />
-            프리미엄 클리닝 솔루션
+            {siteContent.cleaning.headline}
           </h1>
 
           <p className="text-sm sm:text-base text-white/80 leading-relaxed mb-8">
-            코끼리는 단순한 청소를 넘어, 공간의 자산 가치를 보존하고 임직원과 고객 모두에게 안전하고 쾌적한 위생 환경을 제공합니다.
+            {siteContent.cleaning.description}
           </p>
 
           <div className="flex flex-wrap gap-4">
@@ -94,13 +75,13 @@ export default function CleaningBrandPage() {
               href="/contact"
               className="px-6 py-3.5 rounded-xl bg-white text-[#173F30] font-bold text-sm hover:bg-gray-100 transition-all shadow-md"
             >
-              클리닝 무료 상담 & 문의하기
+              {siteContent.cleaning.primaryCtaText}
             </Link>
             <Link
               href="/cleaning/services"
               className="px-6 py-3.5 rounded-xl border border-white/20 text-white font-bold text-sm hover:bg-white/10 transition-colors"
             >
-              서비스 전체보기
+              {siteContent.cleaning.secondaryCtaText}
             </Link>
           </div>
         </div>
@@ -114,7 +95,7 @@ export default function CleaningBrandPage() {
               Cleaning Services
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-[#173F30]">
-              코끼리 전문 클리닝 분야
+              {siteContent.cleaning.sectionTitle}
             </h2>
           </div>
           <Link href="/cleaning/services" className="text-xs font-bold text-[#173F30] hover:underline flex items-center gap-1">

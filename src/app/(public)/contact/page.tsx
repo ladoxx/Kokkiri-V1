@@ -4,6 +4,7 @@ import { InquiryForm } from "@/components/ui/InquiryForm";
 import { MotionReveal } from "@/components/animations/MotionReveal";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { getCompanyInfo } from "@/lib/data/company-store";
+import { getSiteContent } from "@/lib/data/content-store";
 import { buildPageMetadata, getBreadcrumbSchema } from "@/lib/seo/config";
 import { JsonLd } from "@/components/seo/JsonLd";
 
@@ -26,6 +27,7 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default function ContactPage() {
   const COMPANY_INFO = getCompanyInfo();
+  const siteContent = getSiteContent();
   const breadcrumbs = getBreadcrumbSchema([{ name: "문의하기", url: "/contact" }]);
 
   return (
@@ -35,13 +37,13 @@ export default function ContactPage() {
       <div className="text-center max-w-3xl mx-auto mb-16">
         <MotionReveal direction="down">
           <span className="text-xs font-bold text-[#477B56] uppercase tracking-wider block mb-2">
-            Contact & Support
+            {siteContent.contact.pillBadge}
           </span>
           <h1 className="text-3xl sm:text-5xl font-black text-[#173F30] tracking-tight mb-6">
-            고객센터 & 상담 문의
+            {siteContent.contact.title}
           </h1>
           <p className="text-sm sm:text-base text-[#202622]/75 leading-relaxed">
-            서비스 상담, 제휴 문의, 채용 관련 등 궁금하신 점을 남겨주시면 담당 부서에서 신속하고 정확하게 안내해 드립니다.
+            {siteContent.contact.description}
           </p>
         </MotionReveal>
       </div>
@@ -50,7 +52,7 @@ export default function ContactPage() {
         {/* Contact Information Cards */}
         <div className="lg:col-span-5 space-y-6">
           <div className="p-8 rounded-3xl bg-white border border-[#202622]/10 shadow-sm">
-            <h3 className="text-xl font-bold text-[#173F30] mb-6">고객 상담 안내</h3>
+            <h3 className="text-xl font-bold text-[#173F30] mb-6">{siteContent.contact.cardTitle}</h3>
 
             <div className="space-y-6">
               <div className="flex items-start gap-4">
@@ -104,8 +106,8 @@ export default function ContactPage() {
         <div className="lg:col-span-7">
           <InquiryForm
             defaultType="기타 일반 문의"
-            title="온라인 문의 접수"
-            subtitle="문의 내용을 남겨주시면 담당자가 검토 후 등록하신 연락처 또는 이메일로 답변드립니다."
+            title={siteContent.contact.formTitle}
+            subtitle={siteContent.contact.formSubtitle}
           />
         </div>
       </div>

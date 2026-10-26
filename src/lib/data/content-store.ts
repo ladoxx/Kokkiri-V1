@@ -10,7 +10,7 @@ export function getSiteContent(): SiteContentSettings {
     if (fs.existsSync(CONTENT_FILE)) {
       const data = fs.readFileSync(CONTENT_FILE, "utf-8");
       const parsed = JSON.parse(data);
-      if (parsed && parsed.hero) {
+      if (parsed) {
         return {
           ...DEFAULT_SITE_CONTENT,
           ...parsed,
@@ -20,6 +20,27 @@ export function getSiteContent(): SiteContentSettings {
             koto: { ...DEFAULT_SITE_CONTENT.brands.koto, ...(parsed.brands?.koto || {}) },
             choko: { ...DEFAULT_SITE_CONTENT.brands.choko, ...(parsed.brands?.choko || {}) },
           },
+          homeAbout: {
+            ...DEFAULT_SITE_CONTENT.homeAbout,
+            ...(parsed.homeAbout || {}),
+          },
+          cleaning: {
+            ...DEFAULT_SITE_CONTENT.cleaning,
+            ...(parsed.cleaning || {}),
+            faqs: Array.isArray(parsed.cleaning?.faqs) && parsed.cleaning.faqs.length > 0
+              ? parsed.cleaning.faqs
+              : DEFAULT_SITE_CONTENT.cleaning.faqs,
+          },
+          koto: {
+            ...DEFAULT_SITE_CONTENT.koto,
+            ...(parsed.koto || {}),
+            faqs: Array.isArray(parsed.koto?.faqs) && parsed.koto.faqs.length > 0
+              ? parsed.koto.faqs
+              : DEFAULT_SITE_CONTENT.koto.faqs,
+          },
+          choko: { ...DEFAULT_SITE_CONTENT.choko, ...(parsed.choko || {}) },
+          about: { ...DEFAULT_SITE_CONTENT.about, ...(parsed.about || {}) },
+          contact: { ...DEFAULT_SITE_CONTENT.contact, ...(parsed.contact || {}) },
         };
       }
     }
@@ -50,6 +71,17 @@ export function saveSiteContent(
             choko: { ...current.brands.choko, ...(settings.brands.choko || {}) },
           }
         : current.brands,
+      homeAbout: settings.homeAbout
+        ? {
+            ...current.homeAbout,
+            ...settings.homeAbout,
+          }
+        : current.homeAbout,
+      cleaning: settings.cleaning ? { ...current.cleaning, ...settings.cleaning } : current.cleaning,
+      koto: settings.koto ? { ...current.koto, ...settings.koto } : current.koto,
+      choko: settings.choko ? { ...current.choko, ...settings.choko } : current.choko,
+      about: settings.about ? { ...current.about, ...settings.about } : current.about,
+      contact: settings.contact ? { ...current.contact, ...settings.contact } : current.contact,
       updatedAt: new Date().toISOString(),
     };
 

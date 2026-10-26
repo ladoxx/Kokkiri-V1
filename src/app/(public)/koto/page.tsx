@@ -5,9 +5,12 @@ import { MotionReveal } from "@/components/animations/MotionReveal";
 import { ServiceCard } from "@/components/ui/ServiceCard";
 import { ProjectCard } from "@/components/ui/ProjectCard";
 import { SERVICES, PROJECTS } from "@/lib/data/initial-data";
+import { getSiteContent } from "@/lib/data/content-store";
 import { Building2, ArrowUpRight, ShieldCheck, Wrench, Trees, Warehouse, Video, HelpCircle } from "lucide-react";
 import { buildPageMetadata, getBreadcrumbSchema, getServiceSchema, getFaqSchema } from "@/lib/seo/config";
 import { JsonLd } from "@/components/seo/JsonLd";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "시설관리 & AI보안 서비스 | 건물·시설 종합관리 | KOKKIRI",
@@ -31,31 +34,10 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function KotoBrandPage() {
+  const siteContent = getSiteContent();
   const kotoServices = SERVICES.filter((s) => s.brandSlug === "koto");
   const kotoProjects = PROJECTS.filter((p) => p.brandSlug === "koto");
-
-  const faqs = [
-    {
-      question: "KOTO의 시설관리 서비스에는 어떤 항목들이 포함되나요?",
-      answer:
-        "4K AI 지능형 보안 카메라 & 스마트 CCTV 구축, 24시간 전문 시설 보안 경비, 기업 사옥 조경 수목 전정 및 잔디 예초, 산업용 외곽 보안 펜스 및 전동 게이트 시공이 포함됩니다.",
-    },
-    {
-      question: "AI CCTV 설치 시 스마트폰 실시간 알림과 관제가 가능한가요?",
-      answer:
-        "네, 가능합니다. 딥러닝 영상 분석 엔진이 사람과 차량의 침입, 배회, 화재 연기 등을 감지하여 관리자 스마트폰 전용 앱으로 즉각적인 알림 푸시와 고화질 영상을 실시간 전송합니다.",
-    },
-    {
-      question: "펜스 및 울타리 시공 지역과 소요 기간은 어떻게 되나요?",
-      answer:
-        "파주, 문산, 운정, 일산, 고양, 김포, 서울 및 수도권 전역을 지원하며, 현장 실측 후 표준 메쉬 펜스 기준 1~3영업일 이내 신속하고 견고하게 시공을 완료합니다.",
-    },
-    {
-      question: "방문 실사 및 카메라 도면 설계 비용이 발생하나요?",
-      answer:
-        "아닙니다. 보안 전문 엔지니어의 현장 방문, 사각지대 분석 및 맞춤 설계 견적은 100% 무료로 제공됩니다.",
-    },
-  ];
+  const faqs = siteContent.koto.faqs;
 
   const breadcrumbs = getBreadcrumbSchema([{ name: "시설관리 & AI보안 (KOTO)", url: "/koto" }]);
   const kotoServiceSchema = getServiceSchema({
@@ -76,16 +58,15 @@ export default function KotoBrandPage() {
         <div className="max-w-3xl relative z-10">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 text-[#3E82B8] text-xs font-bold mb-6">
             <Video className="w-4 h-4" />
-            <span>KOTO AI Security & Facility Solutions</span>
+            <span>{siteContent.koto.pillBadge}</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight mb-6">
-            인공지능과 첨단 기술로<br />
-            자산의 완벽한 보안을 실현합니다
+            {siteContent.koto.headline}
           </h1>
 
           <p className="text-sm sm:text-base text-white/80 leading-relaxed mb-8">
-            딥러닝 AI 지능형 보안 카메라(CCTV) 설계·시공부터 24시간 전문 보안 경비, 기업 조경 관리, 외곽 보안 펜스까지 안전하고 체계적인 시설 솔루션을 제공합니다.
+            {siteContent.koto.description}
           </p>
 
           <div className="flex flex-wrap gap-4">
@@ -93,13 +74,13 @@ export default function KotoBrandPage() {
               href="/contact"
               className="px-6 py-3.5 rounded-xl bg-white text-[#243A50] font-bold text-sm hover:bg-gray-100 transition-all shadow-md"
             >
-              AI CCTV & 보안 무료 상담 문의
+              {siteContent.koto.primaryCtaText}
             </Link>
             <Link
               href="/koto/services"
               className="px-6 py-3.5 rounded-xl border border-white/20 text-white font-bold text-sm hover:bg-white/10 transition-colors"
             >
-              KOTO 솔루션 전체보기
+              {siteContent.koto.secondaryCtaText}
             </Link>
           </div>
         </div>

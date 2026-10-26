@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getSession } from "@/lib/auth/auth";
 import { getSiteContent, saveSiteContent } from "@/lib/data/content-store";
 
@@ -23,6 +24,19 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const updated = saveSiteContent(body);
+
+    try {
+      revalidatePath("/", "layout");
+      revalidatePath("/");
+      revalidatePath("/cleaning");
+      revalidatePath("/koto");
+      revalidatePath("/choko");
+      revalidatePath("/about");
+      revalidatePath("/contact");
+    } catch {
+      // Non-fatal cache revalidation notice
+    }
+
     return NextResponse.json({
       success: true,
       message: "사이트 콘텐츠 및 문구가 성공적으로 저장되었습니다.",

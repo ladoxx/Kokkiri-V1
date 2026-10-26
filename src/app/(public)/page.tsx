@@ -11,8 +11,11 @@ import { BeforeAfterGallery } from "@/components/ui/BeforeAfterGallery";
 import { MotionReveal } from "@/components/animations/MotionReveal";
 import { SERVICES, PROJECTS, NEWS_LIST } from "@/lib/data/initial-data";
 import { getStoredProducts } from "@/lib/data/products-store";
+import { getSiteContent } from "@/lib/data/content-store";
 import { buildPageMetadata } from "@/lib/seo/config";
 import { JsonLd } from "@/components/seo/JsonLd";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "KOKKIRI | 시설관리·청소·보안·조경 전문기업",
@@ -48,6 +51,7 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function HomePage() {
+  const siteContent = getSiteContent();
   const featuredServices = SERVICES.filter((s) => s.isFeatured).slice(0, 4);
   const featuredProjects = PROJECTS.filter((p) => p.isFeatured).slice(0, 2);
   const chokoProducts = getStoredProducts().slice(0, 3);
@@ -73,24 +77,23 @@ export default function HomePage() {
           <div className="lg:col-span-5">
             <MotionReveal direction="left">
               <span className="text-xs font-bold text-[#477B56] uppercase tracking-wider block mb-2">
-                About KOKKIRI
+                {siteContent.homeAbout.pillBadge}
               </span>
               <h2 className="text-3xl sm:text-4xl font-black text-[#173F30] tracking-tight leading-tight mb-6">
-                공간을 깊이 이해하고,<br />
-                가치를 지속시키는 파트너
+                {siteContent.homeAbout.title}
               </h2>
               <p className="text-sm sm:text-base text-[#202622]/75 leading-relaxed mb-6">
-                주식회사 코끼리는 기업 공간의 위생 클리닝부터 AI 지능형 보안 카메라 & 스마트 시설 솔루션, 그리고 친환경 소비재 브랜드에 이르기까지 전문화된 세 가지 핵심 사업 영역을 유기적으로 연결합니다.
+                {siteContent.homeAbout.paragraph1}
               </p>
               <p className="text-sm text-[#202622]/70 leading-relaxed mb-8">
-                단순한 청소와 관리를 넘어, 공간을 이용하는 사람들의 건강과 업무 생산성, 그리고 고객사의 자산 가치를 지속 가능하게 보존하는 체계적인 관리 프로토콜을 지향합니다.
+                {siteContent.homeAbout.paragraph2}
               </p>
 
               <Link
-                href="/about"
+                href={siteContent.homeAbout.linkHref || "/about"}
                 className="inline-flex items-center gap-2 text-sm font-bold text-[#173F30] hover:text-[#477B56] transition-colors group"
               >
-                <span>코끼리 비즈니스 철학 더 알아보기</span>
+                <span>{siteContent.homeAbout.linkText}</span>
                 <ChevronRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
               </Link>
             </MotionReveal>
@@ -103,9 +106,9 @@ export default function HomePage() {
                   <div className="w-10 h-10 rounded-xl bg-[#173F30]/10 text-[#173F30] flex items-center justify-center font-bold mb-4">
                     01
                   </div>
-                  <h4 className="text-base font-bold text-[#202622] mb-2">전문 직영 관리제</h4>
+                  <h4 className="text-base font-bold text-[#202622] mb-2">{siteContent.homeAbout.point1Title}</h4>
                   <p className="text-xs text-[#202622]/70 leading-relaxed">
-                    하청에 의존하지 않는 정규 교육 수료 전문 인력과 전담 현장 매니저 중심의 책임 시공제
+                    {siteContent.homeAbout.point1Desc}
                   </p>
                 </div>
 
@@ -113,9 +116,9 @@ export default function HomePage() {
                   <div className="w-10 h-10 rounded-xl bg-[#243A50]/10 text-[#243A50] flex items-center justify-center font-bold mb-4">
                     02
                   </div>
-                  <h4 className="text-base font-bold text-[#202622] mb-2">친환경 안전 프로토콜</h4>
+                  <h4 className="text-base font-bold text-[#202622] mb-2">{siteContent.homeAbout.point2Title}</h4>
                   <p className="text-xs text-[#202622]/70 leading-relaxed">
-                    인체 무해 인증 세제 및 탄소 배출 저감 장비 활용으로 실내 공기질과 안전 동시 확보
+                    {siteContent.homeAbout.point2Desc}
                   </p>
                 </div>
 
@@ -123,9 +126,9 @@ export default function HomePage() {
                   <div className="w-10 h-10 rounded-xl bg-[#8C6C43]/10 text-[#8C6C43] flex items-center justify-center font-bold mb-4">
                     03
                   </div>
-                  <h4 className="text-base font-bold text-[#202622] mb-2">지속 가능한 자산 보호</h4>
+                  <h4 className="text-base font-bold text-[#202622] mb-2">{siteContent.homeAbout.point3Title}</h4>
                   <p className="text-xs text-[#202622]/70 leading-relaxed">
-                    초기 마감재의 내구성을 보호하는 정밀 코팅 및 사후 유지보수 연계 솔루션
+                    {siteContent.homeAbout.point3Desc}
                   </p>
                 </div>
 
@@ -133,9 +136,9 @@ export default function HomePage() {
                   <div className="w-10 h-10 rounded-xl bg-[#477B56]/10 text-[#477B56] flex items-center justify-center font-bold mb-4">
                     04
                   </div>
-                  <h4 className="text-base font-bold text-[#202622] mb-2">디지털 품질 리포팅</h4>
+                  <h4 className="text-base font-bold text-[#202622] mb-2">{siteContent.homeAbout.point4Title}</h4>
                   <p className="text-xs text-[#202622]/70 leading-relaxed">
-                    작업 전후 체크리스트와 공정 사진이 포함된 투명한 월간 업무 보고서 디지털 제공
+                    {siteContent.homeAbout.point4Desc}
                   </p>
                 </div>
               </div>
@@ -152,10 +155,10 @@ export default function HomePage() {
               Three Integrated Brands
             </span>
             <h2 className="text-3xl sm:text-4xl font-black text-[#173F30] tracking-tight mb-4">
-              전문 영역별 3대 브랜드 솔루션
+              {siteContent.brandSectionTitle}
             </h2>
             <p className="text-sm text-[#202622]/70 leading-relaxed">
-              클리닝 전문 코끼리, AI 스마트 보안 & 시설 KOTO, 지속 가능한 에코 라이프케어 CHOKO가 상호 시너지를 발휘합니다.
+              {siteContent.brandSectionSubtitle}
             </p>
           </div>
         </MotionReveal>

@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { MotionReveal } from "@/components/animations/MotionReveal";
 import { ShieldCheck, Target, HeartHandshake, Award, Sparkles, Building2, Video, Leaf, ArrowRight } from "lucide-react";
 import { getCompanyInfo } from "@/lib/data/company-store";
+import { getSiteContent } from "@/lib/data/content-store";
 import { buildPageMetadata, getBreadcrumbSchema } from "@/lib/seo/config";
 import { JsonLd } from "@/components/seo/JsonLd";
 
@@ -19,6 +20,7 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default function AboutPage() {
   const COMPANY_INFO = getCompanyInfo();
+  const siteContent = getSiteContent();
   const breadcrumbs = getBreadcrumbSchema([{ name: "회사 소개", url: "/about" }]);
 
   return (
@@ -28,14 +30,13 @@ export default function AboutPage() {
       <div className="text-center max-w-3xl mx-auto mb-20">
         <MotionReveal direction="down">
           <span className="text-xs font-bold text-[#477B56] uppercase tracking-wider block mb-2">
-            Company Philosophy
+            {siteContent.about.pillBadge}
           </span>
           <h1 className="text-3xl sm:text-5xl font-black text-[#173F30] tracking-tight leading-tight mb-6">
-            공간의 품격을 높이고<br />
-            지속 가능한 내일을 만듭니다
+            {siteContent.about.headline}
           </h1>
           <p className="text-sm sm:text-base text-[#202622]/75 leading-relaxed">
-            코끼리는 프리미엄 클리닝과 첨단 AI 스마트 보안 및 공간 관리를 넘어, 고객의 소중한 비즈니스 공간이 최상의 가치와 생산성을 발휘할 수 있도록 돕는 통합 공간 솔루션 파트너입니다.
+            {siteContent.about.subtitle}
           </p>
         </MotionReveal>
       </div>
@@ -43,16 +44,16 @@ export default function AboutPage() {
       {/* Core Values */}
       <section className="mb-24">
         <h2 className="text-2xl font-black text-[#173F30] text-center mb-12">
-          코끼리가 지켜가는 3대 핵심 가치
+          {siteContent.about.valuesTitle}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="p-8 rounded-3xl bg-white border border-[#202622]/10 shadow-sm text-center">
             <div className="w-14 h-14 mx-auto rounded-2xl bg-[#173F30]/10 text-[#173F30] flex items-center justify-center mb-6">
               <ShieldCheck className="w-7 h-7" />
             </div>
-            <h3 className="text-lg font-bold text-[#202622] mb-3">철저한 표준과 안전</h3>
+            <h3 className="text-lg font-bold text-[#202622] mb-3">{siteContent.about.value1Title}</h3>
             <p className="text-xs text-[#202622]/70 leading-relaxed">
-              작업자 안전 매뉴얼과 체계적인 위생 프로토콜을 바탕으로 현장 위해 요소를 사전에 차단하고 규격화된 고품질 서비스를 제공합니다.
+              {siteContent.about.value1Desc}
             </p>
           </div>
 
@@ -60,9 +61,9 @@ export default function AboutPage() {
             <div className="w-14 h-14 mx-auto rounded-2xl bg-[#243A50]/10 text-[#243A50] flex items-center justify-center mb-6">
               <Target className="w-7 h-7" />
             </div>
-            <h3 className="text-lg font-bold text-[#202622] mb-3">책임 직영 매니저제</h3>
+            <h3 className="text-lg font-bold text-[#202622] mb-3">{siteContent.about.value2Title}</h3>
             <p className="text-xs text-[#202622]/70 leading-relaxed">
-              외주 하청 없이 정규 교육을 이수한 숙련된 전문가를 전담 배치하여 사업장별 고유한 니즈에 1:1로 신속하고 유연하게 대응합니다.
+              {siteContent.about.value2Desc}
             </p>
           </div>
 
@@ -70,9 +71,9 @@ export default function AboutPage() {
             <div className="w-14 h-14 mx-auto rounded-2xl bg-[#8C6C43]/10 text-[#8C6C43] flex items-center justify-center mb-6">
               <HeartHandshake className="w-7 h-7" />
             </div>
-            <h3 className="text-lg font-bold text-[#202622] mb-3">친환경과 지속 가능성</h3>
+            <h3 className="text-lg font-bold text-[#202622] mb-3">{siteContent.about.value3Title}</h3>
             <p className="text-xs text-[#202622]/70 leading-relaxed">
-              친환경 인증 약제 도입과 100% 대나무 소재 소비재 보급을 통해 이용자의 건강과 지구 환경 모두를 보호하는 ESG 경영을 실천합니다.
+              {siteContent.about.value3Desc}
             </p>
           </div>
         </div>
@@ -158,7 +159,7 @@ export default function AboutPage() {
           href="/contact"
           className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-[#173F30] text-white font-bold text-sm hover:bg-[#173F30]/90 transition-all shadow-md"
         >
-          <span>맞춤 솔루션 상담 & 문의하기</span>
+          <span>{siteContent.about.ctaText}</span>
           <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
