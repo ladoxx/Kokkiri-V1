@@ -287,8 +287,11 @@ export interface ProductSchemaProps {
   sku: string;
   brandName?: string;
   url: string;
-  price?: string;
+  price?: string | number;
   priceCurrency?: string;
+  naverUrl?: string;
+  coupangUrl?: string;
+  inStock?: boolean;
 }
 
 export function getProductSchema({
@@ -296,10 +299,16 @@ export function getProductSchema({
   description,
   image,
   sku,
-  brandName = "CHOKO (KOKKIRI)",
+  brandName = "CHOKO (주식회사 코끼리)",
   url,
+  price,
+  priceCurrency = "KRW",
+  naverUrl,
+  coupangUrl,
+  inStock = true,
 }: ProductSchemaProps) {
   const fullImageUrl = image.startsWith("http") ? image : `${SITE_CONFIG.url}${image}`;
+  const sameAs = [naverUrl, coupangUrl].filter(Boolean) as string[];
 
   return {
     "@context": "https://schema.org",
@@ -312,11 +321,18 @@ export function getProductSchema({
       "@type": "Brand",
       name: brandName,
     },
+    ...(sameAs.length > 0 ? { sameAs } : {}),
     offers: {
       "@type": "Offer",
       url: `${SITE_CONFIG.url}${url}`,
-      priceCurrency: "KRW",
-      availability: "https://schema.org/InStock",
+      priceCurrency,
+      ...(price !== undefined && price !== "" ? { price: String(price) } : {}),
+      availability: inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      seller: {
+        "@type": "Organization",
+        name: SITE_CONFIG.fullName,
+        url: SITE_CONFIG.url,
+      },
     },
   };
 }

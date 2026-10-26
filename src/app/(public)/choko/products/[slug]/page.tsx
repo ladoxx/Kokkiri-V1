@@ -25,15 +25,22 @@ export async function generateMetadata({
     });
   }
 
-  const descSnippet = `${product.name} - ${product.summary} ${
+  const defaultTitle = `${product.name} | 친환경 에코 라이프케어 | KOKKIRI`;
+  const defaultDesc = `${product.name} - ${product.summary} ${
     product.features ? product.features.slice(0, 2).join(". ") : ""
   }`.slice(0, 160);
 
+  const title = product.metaTitle || defaultTitle;
+  const description = product.metaDesc || defaultDesc;
+  const keywords = product.keywords && product.keywords.length > 0
+    ? product.keywords
+    : [product.name, product.category, "CHOKO", "친환경제품", "대나무", "비건", "KOKKIRI", "네이버스마트스토어"];
+
   return buildPageMetadata({
-    title: `${product.name} | 친환경 에코 라이프케어 | KOKKIRI`,
-    description: descSnippet,
+    title,
+    description,
     path: `/choko/products/${slug}`,
-    keywords: [product.name, product.category, "CHOKO", "친환경제품", "대나무", "비건", "KOKKIRI"],
+    keywords,
     ogImage: product.mainImage,
   });
 }
@@ -58,12 +65,15 @@ export default async function ProductDetailPage({
   ]);
 
   const productSchema = getProductSchema({
-    name: product.name,
-    description: product.description || product.summary,
+    name: product.metaTitle || product.name,
+    description: product.metaDesc || product.description || product.summary,
     image: product.mainImage,
     sku: product.id,
     brandName: "CHOKO (주식회사 코끼리)",
     url: `/choko/products/${slug}`,
+    price: product.price,
+    naverUrl: product.naverUrl,
+    coupangUrl: product.coupangUrl,
   });
 
   return (

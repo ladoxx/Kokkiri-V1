@@ -40,6 +40,18 @@ for (const p of publicPages) {
     .replace('src/app/(public)', '')
     .replace(/\/page\.tsx$/, '') || '/';
 
+  // Handle Redirect pages (e.g., redirect("/contact"))
+  if (/redirect\(['"`]/.test(content)) {
+    pageResults.push({
+      relPath,
+      title: '↪️ Redirect page (Route stub to /contact)',
+      status: '✅ PASS',
+      errors: [],
+      warnings: [],
+    });
+    continue;
+  }
+
   // Title Extraction
   const titleRegex = /title:\s*(?:"([^"]+)"|'([^']+)'|`([^`]+)`)/;
   const titleMatch = content.match(titleRegex);

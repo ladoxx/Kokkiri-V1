@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { PRODUCTS as INITIAL_PRODUCTS, ProductItem } from "./initial-data";
+import { analyzeAndGenerateNaverSeo, batchOptimizeProductsSeo } from "@/lib/seo/agent/naver-seo-agent";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const PRODUCTS_FILE = path.join(DATA_DIR, "products.json");
@@ -40,9 +41,38 @@ export function getProductBySlug(slug: string): ProductItem | undefined {
   return items.find((p) => p.slug === slug);
 }
 
-export function saveProduct(data: Partial<ProductItem> & { name: string }): ProductItem {
+export function saveProduct(data: Partial<ProductItem> & { name: string; autoSeo?: boolean }): ProductItem {
   const items = [...getStoredProducts()];
   const existingIndex = data.id ? items.findIndex((p) => p.id === data.id) : -1;
+
+  // Auto-run Naver SEO Agent if SEO fields are absent or autoSeo flag is true
+  const shouldRunAutoSeo =
+    data.autoSeo === true ||
+    !data.metaTitle ||
+    !data.metaDesc ||
+    !data.keywords ||
+    data.keywords.length === 0;
+
+  let seoMeta = {
+    metaTitle: data.metaTitle,
+    metaDesc: data.metaDesc,
+    keywords: data.keywords,
+    seoScore: data.seoScore,
+    seoGeneratedAt: data.seoGeneratedAt,
+  };
+
+  if (shouldRunAutoSeo) {
+    const analysis = analyzeAndGenerateNaverSeo(data, {
+      preserveExisting: !data.autoSeo,
+    });
+    seoMeta = {
+      metaTitle: data.metaTitle || analysis.metaTitle,
+      metaDesc: data.metaDesc || analysis.metaDesc,
+      keywords: data.keywords && data.keywords.length > 0 ? data.keywords : analysis.keywords,
+      seoScore: analysis.seoScore,
+      seoGeneratedAt: analysis.generatedAt,
+    };
+  }
 
   if (existingIndex >= 0) {
     // Update
@@ -62,14 +92,27 @@ export function saveProduct(data: Partial<ProductItem> & { name: string }): Prod
       isFeatured: typeof data.isFeatured === "boolean" ? data.isFeatured : current.isFeatured,
       features: data.features || current.features,
       specs: data.specs || current.specs,
+      price: data.price !== undefined ? data.price : current.price,
+      metaTitle: seoMeta.metaTitle || current.metaTitle,
+      metaDesc: seoMeta.metaDesc || current.metaDesc,
+      keywords: seoMeta.keywords || current.keywords,
+      seoScore: seoMeta.seoScore !== undefined ? seoMeta.seoScore : current.seoScore,
+      seoGeneratedAt: seoMeta.seoGeneratedAt || current.seoGeneratedAt,
     };
     items[existingIndex] = updated;
     fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(items, null, 2), "utf-8");
     return updated;
   } else {
-    // Create
+    // Create new product
     const id = data.id || `prod-${Date.now()}`;
-    const slug = data.slug || data.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || `prod-${Date.now()}`;
+    const slug =
+      data.slug ||
+      data.name
+        .toLowerCase()
+        .replace(/[^a-z0-9가-힣]+/g, "-")
+        .replace(/^-|-$/g, "") ||
+      `prod-${Date.now()}`;
+
     const created: ProductItem = {
       id,
       slug,
@@ -84,6 +127,12 @@ export function saveProduct(data: Partial<ProductItem> & { name: string }): Prod
       naverUrl: data.naverUrl || "",
       coupangUrl: data.coupangUrl || "",
       isFeatured: data.isFeatured ?? true,
+      price: data.price,
+      metaTitle: seoMeta.metaTitle,
+      metaDesc: seoMeta.metaDesc,
+      keywords: seoMeta.keywords,
+      seoScore: seoMeta.seoScore,
+      seoGeneratedAt: seoMeta.seoGeneratedAt,
     };
     items.unshift(created);
     fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(items, null, 2), "utf-8");
@@ -99,4 +148,11 @@ export function deleteProduct(id: string): boolean {
     return true;
   }
   return false;
+}
+
+export function batchOptimizeAllStoredProducts() {
+  const items = getStoredProducts();
+  const { optimized, report } = batchOptimizeProductsSeo(items);
+  fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(optimized, null, 2), "utf-8");
+  return { products: optimized, report };
 }

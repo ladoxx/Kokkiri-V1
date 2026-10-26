@@ -57,6 +57,12 @@ export interface ProductItem {
   naverUrl: string;
   coupangUrl: string;
   isFeatured: boolean;
+  price?: number | string;
+  metaTitle?: string;
+  metaDesc?: string;
+  keywords?: string[];
+  seoScore?: number;
+  seoGeneratedAt?: string;
 }
 
 export interface NewsItem {

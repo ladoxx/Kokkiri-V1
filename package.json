@@ -9,6 +9,8 @@
     "lint": "eslint",
     "test": "vitest run",
     "seo:check": "node scripts/seo-audit.js",
+    "seo:agent": "node scripts/naver-seo-agent.js",
+    "seo:prepare": "node scripts/naver-seo-agent.js",
     "security:check": "node scripts/security-audit.js",
     "version:bump": "node scripts/bump-version.js",
     "prisma:generate": "prisma generate",
