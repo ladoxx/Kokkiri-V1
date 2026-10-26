@@ -1,28 +1,58 @@
 import type { Metadata } from "next";
-import { COMPANY_INFO } from "@/lib/data/initial-data";
+import { getCompanyInfo } from "@/lib/data/company-store";
 
 export const SITE_CONFIG = {
   name: "KOKKIRI",
-  corporateName: "주식회사 코끼리",
-  fullName: "KOKKIRI (주식회사 코끼리)",
+  get corporateName() {
+    return getCompanyInfo().name;
+  },
+  get fullName() {
+    return `${this.name} (${this.corporateName})`;
+  },
   slogan: "공간의 가치를 높이는 새로운 기준",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://kokkiri.com",
+  get url() {
+    return getCompanyInfo().siteUrl || process.env.NEXT_PUBLIC_SITE_URL || "https://kokkiri.com";
+  },
   defaultOgImage: "/brand/kokkiri-elephant-logo.png",
   locale: "ko_KR",
-  author: "주식회사 코끼리",
-  publisher: "주식회사 코끼리",
-  googleVerification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
-  naverVerification: process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION || "",
+  get author() {
+    return getCompanyInfo().name;
+  },
+  get publisher() {
+    return getCompanyInfo().name;
+  },
+  get googleVerification() {
+    return getCompanyInfo().googleVerification || process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "";
+  },
+  get naverVerification() {
+    return getCompanyInfo().naverVerification || process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION || "";
+  },
   
-  // Real company details from project data
-  businessNumber: COMPANY_INFO.businessNumber,
-  ceo: COMPANY_INFO.ceo,
-  phone: COMPANY_INFO.phone,
-  email: COMPANY_INFO.email,
-  quoteEmail: COMPANY_INFO.quoteEmail,
-  address: COMPANY_INFO.address,
-  operatingHours: COMPANY_INFO.operatingHours,
-  emergencyPhone: COMPANY_INFO.emergencyPhone,
+  // Real company details from dynamic data store
+  get businessNumber() {
+    return getCompanyInfo().businessNumber;
+  },
+  get ceo() {
+    return getCompanyInfo().ceo;
+  },
+  get phone() {
+    return getCompanyInfo().phone;
+  },
+  get email() {
+    return getCompanyInfo().email;
+  },
+  get quoteEmail() {
+    return getCompanyInfo().quoteEmail;
+  },
+  get address() {
+    return getCompanyInfo().address;
+  },
+  get operatingHours() {
+    return getCompanyInfo().operatingHours;
+  },
+  get emergencyPhone() {
+    return getCompanyInfo().emergencyPhone;
+  },
 
   // Service regions (Local SEO)
   serviceRegions: [

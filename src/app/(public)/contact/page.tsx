@@ -3,9 +3,11 @@ import type { Metadata } from "next";
 import { InquiryForm } from "@/components/ui/InquiryForm";
 import { MotionReveal } from "@/components/animations/MotionReveal";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
-import { COMPANY_INFO } from "@/lib/data/initial-data";
+import { getCompanyInfo } from "@/lib/data/company-store";
 import { buildPageMetadata, getBreadcrumbSchema } from "@/lib/seo/config";
 import { JsonLd } from "@/components/seo/JsonLd";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "문의하기 | 고객센터 & 본사 안내 | KOKKIRI",
@@ -23,6 +25,7 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function ContactPage() {
+  const COMPANY_INFO = getCompanyInfo();
   const breadcrumbs = getBreadcrumbSchema([{ name: "문의하기", url: "/contact" }]);
 
   return (

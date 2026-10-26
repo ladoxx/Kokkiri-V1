@@ -1,8 +1,15 @@
 import React from "react";
 import Link from "next/link";
 import { Sparkles, Video, Leaf, Phone, Mail, MapPin, ArrowUpRight, Lock } from "lucide-react";
+import { getCompanyInfo } from "@/lib/data/company-store";
 
-export function Footer() {
+interface FooterProps {
+  companyInfo?: ReturnType<typeof getCompanyInfo>;
+}
+
+export function Footer({ companyInfo }: FooterProps = {}) {
+  const company = companyInfo || getCompanyInfo();
+
   return (
     <footer className="bg-[#17201C] text-[#F8F8F4] pt-16 pb-12 border-t border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -107,17 +114,17 @@ export function Footer() {
               <div className="flex items-start gap-2">
                 <Phone className="w-4 h-4 text-[#65A377] shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-bold text-white text-base">02-1588-0000</span>
-                  <p className="text-[11px] text-white/60">평일 09:00 - 18:00 (점심 12:00-13:00)</p>
+                  <span className="font-bold text-white text-base">{company.phone}</span>
+                  <p className="text-[11px] text-white/60">{company.operatingHours}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-[#65A377] shrink-0" />
-                <span>contact@kokkiri.com</span>
+                <span>{company.email}</span>
               </div>
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-[#65A377] shrink-0 mt-0.5" />
-                <span>서울 강남구 테헤란로 123 코끼리타워 8층</span>
+                <span>{company.address}</span>
               </div>
             </div>
           </div>
@@ -127,13 +134,13 @@ export function Footer() {
         <div className="pt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs text-white/60">
           <div className="space-y-1">
             <p>
-              <strong>주식회사 코끼리 (KOKKIRI Co., Ltd.)</strong> | 대표자: 김코끼 | 사업자등록번호: 123-45-67890
+              <strong>{company.name}</strong> | 대표자: {company.ceo} | 사업자등록번호: {company.businessNumber}
             </p>
             <p>
-              주소: 서울특별시 강남구 테헤란로 123 코끼리타워 8층 | 통신판매업신고: 2026-서울강남-0000호
+              주소: {company.address}
             </p>
             <p className="text-[11px] text-white/40 pt-1">
-              © 2026 KOKKIRI Co., Ltd. All rights reserved. 본 웹사이트의 모든 콘텐츠는 저작권법의 보호를 받습니다.
+              © 2026 {company.name}. All rights reserved. 본 웹사이트의 모든 콘텐츠는 저작권법의 보호를 받습니다.
             </p>
           </div>
 

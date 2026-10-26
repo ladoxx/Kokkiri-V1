@@ -1,8 +1,10 @@
 import React from "react";
 import type { Metadata } from "next";
-import { COMPANY_INFO } from "@/lib/data/initial-data";
+import { getCompanyInfo } from "@/lib/data/company-store";
 import { buildPageMetadata, getBreadcrumbSchema } from "@/lib/seo/config";
 import { JsonLd } from "@/components/seo/JsonLd";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "이용약관 | KOKKIRI",
@@ -13,6 +15,7 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function TermsPage() {
+  const COMPANY_INFO = getCompanyInfo();
   const breadcrumbs = getBreadcrumbSchema([{ name: "이용약관", url: "/terms" }]);
 
   return (
@@ -26,7 +29,7 @@ export default function TermsPage() {
         <section>
           <h2 className="text-base font-bold text-[#173F30] mb-3">제1조 (목적)</h2>
           <p>
-            본 약관은 주식회사 코끼리(이하 &apos;회사&apos;)가 운영하는 KOKKIRI 비즈니스 플랫폼 웹사이트(이하 &apos;웹사이트&apos;)에서 제공하는 기업 정보, 클리닝 및 AI 보안·시설 견적 신청, 제품 카탈로그 안내 등 제반 서비스(이하 &apos;서비스&apos;)의 이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
+            본 약관은 {COMPANY_INFO.name}(이하 &apos;회사&apos;)가 운영하는 KOKKIRI 비즈니스 플랫폼 웹사이트(이하 &apos;웹사이트&apos;)에서 제공하는 기업 정보, 클리닝 및 AI 보안·시설 견적 신청, 제품 카탈로그 안내 등 제반 서비스(이하 &apos;서비스&apos;)의 이용과 관련하여 회사와 이용자 간의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
           </p>
         </section>
 

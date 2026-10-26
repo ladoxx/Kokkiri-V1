@@ -41,12 +41,24 @@ interface NavCategory {
   items?: SubLink[];
 }
 
-export function Header() {
+interface HeaderProps {
+  initialCompanyInfo?: {
+    phone?: string;
+    operatingHours?: string;
+    name?: string;
+  };
+}
+
+export function Header({ initialCompanyInfo }: HeaderProps = {}) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [expandedMobileCategory, setExpandedMobileCategory] = useState<string | null>(null);
   const [navData, setNavData] = useState<SiteNavigationSettings>(DEFAULT_NAVIGATION);
+  const [companyInfo, setCompanyInfo] = useState({
+    phone: initialCompanyInfo?.phone || "02-1588-0000",
+    operatingHours: initialCompanyInfo?.operatingHours || "평일 09:00~18:00",
+  });
   const pathname = usePathname();
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -58,13 +70,25 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Fetch dynamic navigation settings
+  // Fetch dynamic navigation and company settings
   useEffect(() => {
     fetch("/api/navigation")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data && Array.isArray(data.categories)) {
           setNavData(data);
+        }
+      })
+      .catch(() => {});
+
+    fetch("/api/company")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data && data.phone) {
+          setCompanyInfo({
+            phone: data.phone,
+            operatingHours: data.operatingHours || "평일 09:00~18:00",
+          });
         }
       })
       .catch(() => {});
@@ -364,7 +388,9 @@ export function Header() {
                 온라인 문의 & 상담하기
               </Link>
               <div className="text-center mt-2">
-                <span className="text-xs text-gray-500">상담 문의 02-1588-0000 (평일 09:00~18:00)</span>
+                <span className="text-xs text-gray-500">
+                  상담 문의 {companyInfo.phone} ({companyInfo.operatingHours})
+                </span>
               </div>
             </div>
           </div>

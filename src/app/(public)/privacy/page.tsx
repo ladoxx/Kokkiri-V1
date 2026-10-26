@@ -1,8 +1,10 @@
 import React from "react";
 import type { Metadata } from "next";
-import { COMPANY_INFO } from "@/lib/data/initial-data";
+import { getCompanyInfo } from "@/lib/data/company-store";
 import { buildPageMetadata, getBreadcrumbSchema } from "@/lib/seo/config";
 import { JsonLd } from "@/components/seo/JsonLd";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "개인정보처리방침 | KOKKIRI",
@@ -13,6 +15,7 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function PrivacyPolicyPage() {
+  const COMPANY_INFO = getCompanyInfo();
   const breadcrumbs = getBreadcrumbSchema([{ name: "개인정보처리방침", url: "/privacy" }]);
 
   return (
@@ -24,7 +27,7 @@ export default function PrivacyPolicyPage() {
 
       <div className="space-y-8 text-xs sm:text-sm text-[#202622]/80 leading-relaxed">
         <p>
-          주식회사 코끼리(이하 &apos;회사&apos;)는 정보주체의 자유와 권리 보호를 위해 「개인정보 보호법」 및 관계 법령이 정한 바를 준수하여, 적법하게 개인정보를 처리하고 안전하게 관리하고 있습니다. 이에 「개인정보 보호법」 제30조에 따라 정보주체에게 개인정보의 처리와 보호에 관한 절차 및 기준을 안내하고, 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보 처리방침을 수립·공개합니다.
+          {COMPANY_INFO.name}(이하 &apos;회사&apos;)는 정보주체의 자유와 권리 보호를 위해 「개인정보 보호법」 및 관계 법령이 정한 바를 준수하여, 적법하게 개인정보를 처리하고 안전하게 관리하고 있습니다. 이에 「개인정보 보호법」 제30조에 따라 정보주체에게 개인정보의 처리와 보호에 관한 절차 및 기준을 안내하고, 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보 처리방침을 수립·공개합니다.
         </p>
 
         <section>
@@ -70,7 +73,7 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-base font-bold text-[#173F30] mb-3">제5조 (개인정보 보호책임자)</h2>
           <p>회사는 개인정보 처리에 관한 업무를 총괄해서 책임지고, 개인정보 처리와 관련한 정보주체의 불만처리 및 피해구제 등을 위하여 아래와 같이 개인정보 보호책임자를 지정하고 있습니다.</p>
           <div className="mt-3 p-4 rounded-xl bg-white border border-gray-200">
-            <div><strong>성명:</strong> 김코끼 (개인정보보호책임자)</div>
+            <div><strong>성명:</strong> {COMPANY_INFO.ceo || "대표자"} (개인정보보호책임자)</div>
             <div><strong>연락처:</strong> {COMPANY_INFO.phone}</div>
             <div><strong>이메일:</strong> {COMPANY_INFO.email}</div>
           </div>

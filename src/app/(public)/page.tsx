@@ -9,7 +9,7 @@ import { ProductCard } from "@/components/ui/ProductCard";
 import { ProjectCard } from "@/components/ui/ProjectCard";
 import { BeforeAfterGallery } from "@/components/ui/BeforeAfterGallery";
 import { MotionReveal } from "@/components/animations/MotionReveal";
-import { SERVICES, PROJECTS, NEWS_LIST, COMPANY_INFO } from "@/lib/data/initial-data";
+import { SERVICES, PROJECTS, NEWS_LIST } from "@/lib/data/initial-data";
 import { getStoredProducts } from "@/lib/data/products-store";
 import { buildPageMetadata } from "@/lib/seo/config";
 import { JsonLd } from "@/components/seo/JsonLd";

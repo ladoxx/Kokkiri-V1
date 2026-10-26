@@ -3,9 +3,11 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { MotionReveal } from "@/components/animations/MotionReveal";
 import { ShieldCheck, Target, HeartHandshake, Award, Sparkles, Building2, Video, Leaf, ArrowRight } from "lucide-react";
-import { COMPANY_INFO } from "@/lib/data/initial-data";
+import { getCompanyInfo } from "@/lib/data/company-store";
 import { buildPageMetadata, getBreadcrumbSchema } from "@/lib/seo/config";
 import { JsonLd } from "@/components/seo/JsonLd";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "회사 소개 | 기업 철학과 비전 | KOKKIRI",
@@ -16,6 +18,7 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function AboutPage() {
+  const COMPANY_INFO = getCompanyInfo();
   const breadcrumbs = getBreadcrumbSchema([{ name: "회사 소개", url: "/about" }]);
 
   return (
