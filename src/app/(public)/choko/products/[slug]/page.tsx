@@ -147,10 +147,22 @@ export default async function ProductDetailPage({
           {/* External Purchase Buttons Box (Section 11) */}
           <div className="p-6 rounded-3xl bg-[#F4EFE5] border border-[#8C6C43]/30">
             <h3 className="text-sm font-bold text-[#202622] mb-2">
-              공식 외부 구매 링크 안내
+              {product.naverUrl && product.coupangUrl
+                ? "공식 외부 구매 링크 안내"
+                : product.naverUrl
+                ? "공식 네이버 스마트스토어 구매 안내"
+                : product.coupangUrl
+                ? "공식 쿠팡 구매 안내"
+                : "제품 구매 및 상담 안내"}
             </h3>
             <p className="text-xs text-[#202622]/70 leading-relaxed mb-6">
-              CHOKO는 내부 결제 및 장바구니를 운영하지 않으며, 공식 네이버 스마트스토어와 쿠팡을 통해 빠르고 안전하게 구매하실 수 있습니다.
+              {product.naverUrl && product.coupangUrl
+                ? "CHOKO는 내부 결제 및 장바구니를 운영하지 않으며, 공식 네이버 스마트스토어와 쿠팡을 통해 빠르고 안전하게 구매하실 수 있습니다."
+                : product.naverUrl
+                ? "CHOKO 공식 네이버 스마트스토어를 통해 빠르고 안전하게 공식 정품을 구매하실 수 있습니다."
+                : product.coupangUrl
+                ? "CHOKO 공식 쿠팡몰을 통해 로켓배송과 안전한 결제로 빠르게 구매하실 수 있습니다."
+                : "본 제품은 현재 온라인 판매처 입점 준비 중이거나 기업 납품용 제품입니다. 견적 및 구매 관련 문의는 고객센터 상담을 통해 신속하게 안내해 드립니다."}
             </p>
 
             <div className="space-y-3">
@@ -183,42 +195,59 @@ export default async function ProductDetailPage({
                   <ArrowUpRight className="w-5 h-5" />
                 </a>
               )}
+
+              {!product.naverUrl && !product.coupangUrl && (
+                <Link
+                  href="/contact"
+                  className="flex items-center justify-between w-full py-3.5 px-5 rounded-2xl bg-[#173F30] text-white font-bold text-xs shadow-sm hover:bg-[#173F30]/90 transition-all hover:shadow-md"
+                >
+                  <div className="flex items-center gap-2">
+                    <ShoppingBag className="w-4 h-4" />
+                    <span>구매 및 제품 관련 문의하기</span>
+                  </div>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              )}
             </div>
           </div>
 
           {/* Key Features */}
-          <div className="p-6 rounded-3xl bg-white border border-[#202622]/10 shadow-sm">
-            <h3 className="text-sm font-bold text-[#202622] uppercase tracking-wider mb-4">
-              제품 특장점 (Key Features)
-            </h3>
-            <div className="space-y-2.5">
-              {product.features.map((feat, idx) => (
-                <div key={idx} className="flex items-start gap-2.5 text-xs text-[#202622]/85">
-                  <Check className="w-4 h-4 text-[#5E7652] shrink-0 mt-0.5" />
-                  <span>{feat}</span>
-                </div>
-              ))}
+          {Array.isArray(product.features) && product.features.length > 0 && (
+            <div className="p-6 rounded-3xl bg-white border border-[#202622]/10 shadow-sm">
+              <h3 className="text-sm font-bold text-[#202622] uppercase tracking-wider mb-4">
+                제품 특장점 (Key Features)
+              </h3>
+              <div className="space-y-2.5">
+                {product.features.map((feat, idx) => (
+                  <div key={idx} className="flex items-start gap-2.5 text-xs text-[#202622]/85">
+                    <Check className="w-4 h-4 text-[#5E7652] shrink-0 mt-0.5" />
+                    <span>{feat}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Specifications Table */}
-          <div className="p-6 rounded-3xl bg-white border border-[#202622]/10 shadow-sm">
-            <h3 className="text-sm font-bold text-[#202622] uppercase tracking-wider mb-4">
-              제품 상세 스펙 (Specifications)
-            </h3>
-            <table className="w-full text-xs">
-              <tbody>
-                {product.specs.map((spec, idx) => (
-                  <tr key={idx} className="border-b border-gray-100 last:border-b-0">
-                    <th className="py-2.5 px-3 bg-gray-50 text-left font-bold text-gray-500 w-28">
-                      {spec.label}
-                    </th>
-                    <td className="py-2.5 px-3 text-gray-800">{spec.value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {Array.isArray(product.specs) && product.specs.length > 0 && (
+            <div className="p-6 rounded-3xl bg-white border border-[#202622]/10 shadow-sm">
+              <h3 className="text-sm font-bold text-[#202622] uppercase tracking-wider mb-4">
+                제품 상세 스펙 (Specifications)
+              </h3>
+              <table className="w-full text-xs">
+                <tbody>
+                  {product.specs.map((spec, idx) => (
+                    <tr key={idx} className="border-b border-gray-100 last:border-b-0">
+                      <th className="py-2.5 px-3 bg-gray-50 text-left font-bold text-gray-500 w-28">
+                        {spec.label}
+                      </th>
+                      <td className="py-2.5 px-3 text-gray-800">{spec.value}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     </div>

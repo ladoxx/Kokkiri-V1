@@ -65,20 +65,24 @@ export function ProductCard({ product }: ProductCardProps) {
           </p>
 
           {/* Key Features */}
-          <div className="space-y-1.5 mb-6">
-            {product.features.slice(0, 2).map((feat, idx) => (
-              <div key={idx} className="flex items-center gap-1.5 text-xs text-[#202622]/80">
-                <Check className="w-3.5 h-3.5 text-[#5E7652] shrink-0" />
-                <span className="truncate">{feat}</span>
-              </div>
-            ))}
-          </div>
+          {Array.isArray(product.features) && product.features.length > 0 && (
+            <div className="space-y-1.5 mb-6">
+              {product.features.slice(0, 2).map((feat, idx) => (
+                <div key={idx} className="flex items-center gap-1.5 text-xs text-[#202622]/80">
+                  <Check className="w-3.5 h-3.5 text-[#5E7652] shrink-0" />
+                  <span className="truncate">{feat}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
       {/* External Purchase Buttons */}
       <div className="px-6 pb-6 pt-2 border-t border-black/5 space-y-2">
-        <div className="text-[11px] text-gray-400 font-semibold mb-1">구매 공식 채널:</div>
+        {(product.naverUrl || product.coupangUrl) && (
+          <div className="text-[11px] text-gray-400 font-semibold mb-1">구매 공식 채널:</div>
+        )}
 
         {product.naverUrl && (
           <a
