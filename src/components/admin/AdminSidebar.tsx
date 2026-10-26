@@ -24,8 +24,6 @@ import {
   RefreshCw,
   Briefcase,
   Building,
-  Bot,
-  Zap,
 } from "lucide-react";
 
 interface AdminSidebarProps {
@@ -72,14 +70,8 @@ const MENU_SECTIONS: MenuSection[] = [
     ],
   },
   {
-    title: "4. 시스템 환경 & AI 에이전트",
+    title: "4. 시스템 설정 & 보안",
     items: [
-      {
-        label: "AI 에이전트 & 코드 관제",
-        href: "/admin/agents",
-        icon: Bot,
-        badge: "AI Agent",
-      },
       {
         label: "통합 이메일 알림 라우팅",
         href: "/admin/settings?tab=routing",
@@ -152,7 +144,7 @@ function SidebarNavContent({ onClose }: { onClose?: () => void }) {
                   key={item.href}
                   href={item.href}
                   onClick={onClose}
-                  className={`flex items-center justify-between px-3.5 py-2 rounded-xl text-xs transition-all group ${
+                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs transition-all group ${
                     active
                       ? "bg-[#477B56] text-white shadow-xs font-black"
                       : "text-gray-300 hover:text-white hover:bg-white/5 font-semibold"
@@ -252,21 +244,17 @@ export function AdminSidebar({ isOpen = false, onClose }: AdminSidebarProps) {
         </Suspense>
       </div>
 
-      {/* 3. Bottom AI Status, Site Link, and Logout */}
+      {/* 3. Bottom Status, Site Link, and Logout */}
       <div className="p-3 border-t border-white/10 space-y-1.5 shrink-0 bg-[#121915]">
-        <Link
-          href="/admin/agents"
-          onClick={onClose}
-          className="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 flex items-center justify-between transition-colors group"
-        >
+        <div className="px-3 py-2 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-xs shadow-emerald-400/50" />
-            <span className="text-[10px] font-bold text-gray-300 group-hover:text-white">AI 에이전트 관제</span>
+            <span className="text-[11px] font-bold text-gray-300">최고 관리자 모드</span>
           </div>
-          <span className="text-[9px] font-black text-[#86efac] bg-emerald-500/15 px-1.5 py-0.5 rounded border border-emerald-500/30">
-            정상 98점
+          <span className="text-[10px] font-bold text-[#86efac] bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+            인증됨
           </span>
-        </Link>
+        </div>
 
         <Link
           href="/"

@@ -14,7 +14,6 @@ import {
   ShoppingBag,
   MoveHorizontal,
   Sparkles,
-  Bot,
   Briefcase,
   FileText,
   Menu,
@@ -22,7 +21,6 @@ import {
   KeyRound,
   RefreshCw,
   FolderTree,
-  Zap,
 } from "lucide-react";
 
 interface DashboardStats {
@@ -79,37 +77,29 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      {/* 1. Top Welcome & AI Agent Status Banner */}
+      {/* 1. Top Welcome Banner */}
       <div className="p-6 rounded-3xl bg-gradient-to-br from-[#173F30] via-[#204E3E] to-[#121915] text-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/20 text-[#86efac] flex items-center gap-1">
-              <Bot className="w-3 h-3 text-[#86efac]" />
-              <span>AI 코드 & 관제 에이전트 활성</span>
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/20 text-[#86efac]">
+              KOKKIRI Central Admin
             </span>
-            <span className="text-[11px] text-gray-300">시스템 헬스: 98점 / 최적</span>
+            <span className="text-[11px] text-gray-300">실시간 통합 관제</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-black tracking-tight">
             KOKKIRI 통합 관리자 콘솔
           </h1>
           <p className="text-xs text-gray-300 max-w-xl">
-            고객 견적 문의 접수, 브랜드별 서비스/제품 관리, 네이버 SEO 자동화 및 시스템 설정을 한곳에서 체계적으로 관리합니다.
+            고객 견적 문의 접수, 브랜드별 서비스/제품 관리, 네이버 쇼핑몰 연동 및 시스템 설정을 한눈에 관리합니다.
           </p>
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
           <Link
-            href="/admin/agents"
-            className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs"
-          >
-            <Bot className="w-4 h-4 text-[#86efac]" />
-            <span>AI 에이전트 관제실</span>
-          </Link>
-          <Link
             href="/admin/inquiries"
             className="px-4 py-2.5 rounded-xl bg-[#86efac] text-gray-900 text-xs font-black hover:bg-[#86efac]/90 transition-all shadow-xs flex items-center gap-1"
           >
-            <span>신규 문의 확인</span>
+            <span>신규 문의 확인하기</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -291,21 +281,11 @@ export default function AdminDashboardPage() {
           {/* Zone 4 */}
           <div className="p-4 rounded-2xl bg-gray-50/70 border border-gray-200/80 space-y-3 flex flex-col justify-between">
             <div>
-              <div className="text-[10px] font-extrabold uppercase text-gray-400">4. 시스템 환경 & AI 에이전트</div>
-              <h3 className="font-bold text-xs text-gray-900 mt-0.5">설정·보안·코드 관제</h3>
-              <p className="text-[11px] text-gray-500 mt-1">이메일 라우팅, 비밀번호 보안, AI 코드 검사, 시스템 롤백</p>
+              <div className="text-[10px] font-extrabold uppercase text-gray-400">4. 시스템 설정 & 보안</div>
+              <h3 className="font-bold text-xs text-gray-900 mt-0.5">설정·보안·업데이트</h3>
+              <p className="text-[11px] text-gray-500 mt-1">이메일 라우팅, 비밀번호 보안, 회사 정보, 시스템 롤백</p>
             </div>
             <div className="space-y-1.5 pt-2 border-t border-gray-200">
-              <Link
-                href="/admin/agents"
-                className="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-emerald-50 border border-gray-200/80 text-xs font-bold text-gray-800 hover:text-emerald-800 transition-colors"
-              >
-                <div className="flex items-center gap-2">
-                  <Bot className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>AI 에이전트 관제실</span>
-                </div>
-                <ChevronRight className="w-3 h-3 text-gray-400" />
-              </Link>
               <Link
                 href="/admin/settings?tab=routing"
                 className="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-gray-100 border border-gray-200/80 text-xs font-bold text-gray-800 transition-colors"
@@ -313,6 +293,26 @@ export default function AdminDashboardPage() {
                 <div className="flex items-center gap-2">
                   <Mail className="w-3.5 h-3.5 text-amber-600" />
                   <span>통합 이메일 라우팅</span>
+                </div>
+                <ChevronRight className="w-3 h-3 text-gray-400" />
+              </Link>
+              <Link
+                href="/admin/settings?tab=company"
+                className="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-gray-100 border border-gray-200/80 text-xs font-bold text-gray-800 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Building className="w-3.5 h-3.5 text-blue-600" />
+                  <span>회사 정보 & 연락처</span>
+                </div>
+                <ChevronRight className="w-3 h-3 text-gray-400" />
+              </Link>
+              <Link
+                href="/admin/settings?tab=cinematic"
+                className="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-gray-100 border border-gray-200/80 text-xs font-bold text-gray-800 transition-colors"
+              >
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>시네마틱 UX 설정</span>
                 </div>
                 <ChevronRight className="w-3 h-3 text-gray-400" />
               </Link>
@@ -331,7 +331,7 @@ export default function AdminDashboardPage() {
                 className="flex items-center justify-between p-2 rounded-xl bg-white hover:bg-gray-100 border border-gray-200/80 text-xs font-bold text-gray-800 transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  <RefreshCw className="w-3.5 h-3.5 text-blue-600" />
+                  <RefreshCw className="w-3.5 h-3.5 text-purple-600" />
                   <span>시스템 버전 & 롤백</span>
                 </div>
                 <ChevronRight className="w-3 h-3 text-gray-400" />

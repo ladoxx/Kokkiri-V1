@@ -350,8 +350,8 @@ export default function AdminProductsPage() {
             <Sparkles className="w-4 h-4" />
           </div>
           <div>
-            <div className="text-[10px] text-gray-400 font-semibold uppercase">자동 SEO Agent</div>
-            <div className="text-base font-black text-purple-900">상시 작동중</div>
+            <div className="text-[10px] text-gray-400 font-semibold uppercase">네이버 자동 SEO</div>
+            <div className="text-base font-black text-purple-900">상시 적용중</div>
           </div>
         </div>
       </div>
@@ -760,7 +760,7 @@ export default function AdminProductsPage() {
                     </div>
                     <div>
                       <h4 className="text-xs font-black text-gray-900 flex items-center gap-1.5">
-                        <span>네이버 검색 & 서치어드바이저 자동 SEO Agent</span>
+                        <span>네이버 검색 & 서치어드바이저 자동 SEO 최적화</span>
                         {seoScore !== null && (
                           <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-600 text-white font-bold">
                             {seoScore}점 / 100점
