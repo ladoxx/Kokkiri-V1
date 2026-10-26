@@ -49,13 +49,15 @@ export function saveBeforeAfterItem(data: Partial<BeforeAfterItem> & { title: st
       category: data.category || current.category,
       client: data.client !== undefined ? data.client : current.client,
       description: data.description || current.description,
-      beforeLabel: data.beforeLabel || current.beforeLabel,
-      afterLabel: data.afterLabel || current.afterLabel,
-      beforeImage: data.beforeImage || current.beforeImage,
-      afterImage: data.afterImage || current.afterImage,
-      metric: data.metric || current.metric,
-      beforeDetails: data.beforeDetails || current.beforeDetails,
-      afterDetails: data.afterDetails || current.afterDetails,
+      displayMode: data.displayMode !== undefined ? data.displayMode : current.displayMode,
+      singleImage: data.singleImage !== undefined ? data.singleImage : current.singleImage,
+      beforeLabel: data.beforeLabel !== undefined ? data.beforeLabel : current.beforeLabel,
+      afterLabel: data.afterLabel !== undefined ? data.afterLabel : current.afterLabel,
+      beforeImage: data.beforeImage !== undefined ? data.beforeImage : current.beforeImage,
+      afterImage: data.afterImage !== undefined ? data.afterImage : current.afterImage,
+      metric: data.metric !== undefined ? data.metric : current.metric,
+      beforeDetails: Array.isArray(data.beforeDetails) ? data.beforeDetails : (data.beforeDetails !== undefined ? data.beforeDetails : current.beforeDetails),
+      afterDetails: Array.isArray(data.afterDetails) ? data.afterDetails : (data.afterDetails !== undefined ? data.afterDetails : current.afterDetails),
     };
     items[existingIndex] = updated;
     fs.writeFileSync(FILE_PATH, JSON.stringify(items, null, 2), "utf-8");
@@ -69,13 +71,15 @@ export function saveBeforeAfterItem(data: Partial<BeforeAfterItem> & { title: st
       category: data.category || "특수 시공",
       client: data.client || "고객사 비공개",
       description: data.description || "",
+      displayMode: data.displayMode || (data.singleImage ? "single" : "slider"),
+      singleImage: data.singleImage || "",
       beforeLabel: data.beforeLabel || "시공 전 오염 상태",
       afterLabel: data.afterLabel || "시공 후 복원 완료",
-      beforeImage: data.beforeImage || "/images/projects/project-office-tech.jpg",
-      afterImage: data.afterImage || "/images/projects/project-building-gangnam.jpg",
+      beforeImage: data.beforeImage || "",
+      afterImage: data.afterImage || "",
       metric: data.metric || "시공 품질 만족도 99%",
-      beforeDetails: data.beforeDetails || ["오염 발생 및 마모"],
-      afterDetails: data.afterDetails || ["전문 정밀 세척 및 코팅"],
+      beforeDetails: Array.isArray(data.beforeDetails) ? data.beforeDetails : ["오염 발생 및 마모"],
+      afterDetails: Array.isArray(data.afterDetails) ? data.afterDetails : ["전문 정밀 세척 및 코팅"],
     };
     items.unshift(created);
     fs.writeFileSync(FILE_PATH, JSON.stringify(items, null, 2), "utf-8");

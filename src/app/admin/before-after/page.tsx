@@ -37,11 +37,15 @@ export default function AdminBeforeAfterPage() {
     category: "바닥 특수 코팅",
     client: "",
     description: "",
+    displayMode: "slider" as "slider" | "single",
+    singleImage: "",
     beforeLabel: "오염 축적 상태",
     afterLabel: "신축 수준 복원 완료",
     beforeImage: "/images/projects/project-office-tech.jpg",
     afterImage: "/images/projects/project-building-gangnam.jpg",
     metric: "표면 조도 94 GU 달성",
+    beforeDetails: [] as string[],
+    afterDetails: [] as string[],
   });
 
   const fetchCases = async () => {
@@ -76,30 +80,84 @@ export default function AdminBeforeAfterPage() {
       category: "오피스 클리닝",
       client: "신규 고객사",
       description: "",
+      displayMode: "slider",
+      singleImage: "",
       beforeLabel: "시공 전 오염 상태",
       afterLabel: "시공 후 완벽 복원",
       beforeImage: "/images/projects/project-office-tech.jpg",
       afterImage: "/images/projects/project-building-gangnam.jpg",
       metric: "고객 만족도 99% 달성",
+      beforeDetails: [""],
+      afterDetails: [""],
     });
     setIsModalOpen(true);
   };
 
   const openEditModal = (item: BeforeAfterItem) => {
     setEditingItem(item);
+    const mode = item.displayMode || (Boolean(item.singleImage) || (!item.beforeImage && Boolean(item.afterImage)) ? "single" : "slider");
     setFormData({
       brandSlug: item.brandSlug,
       title: item.title,
       category: item.category,
       client: item.client || "",
       description: item.description,
+      displayMode: mode,
+      singleImage: item.singleImage || (mode === "single" ? (item.afterImage || item.beforeImage || "") : ""),
       beforeLabel: item.beforeLabel || "",
       afterLabel: item.afterLabel || "",
       beforeImage: item.beforeImage || "",
       afterImage: item.afterImage || "",
       metric: item.metric || "",
+      beforeDetails: Array.isArray(item.beforeDetails) && item.beforeDetails.length > 0 ? [...item.beforeDetails] : [""],
+      afterDetails: Array.isArray(item.afterDetails) && item.afterDetails.length > 0 ? [...item.afterDetails] : [""],
     });
     setIsModalOpen(true);
+  };
+
+  // Detail bullet points handlers
+  const handleAddBeforeDetail = (val = "") => {
+    setFormData((prev) => ({
+      ...prev,
+      beforeDetails: [...prev.beforeDetails, val],
+    }));
+  };
+
+  const handleUpdateBeforeDetail = (index: number, val: string) => {
+    setFormData((prev) => {
+      const next = [...prev.beforeDetails];
+      next[index] = val;
+      return { ...prev, beforeDetails: next };
+    });
+  };
+
+  const handleRemoveBeforeDetail = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      beforeDetails: prev.beforeDetails.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleAddAfterDetail = (val = "") => {
+    setFormData((prev) => ({
+      ...prev,
+      afterDetails: [...prev.afterDetails, val],
+    }));
+  };
+
+  const handleUpdateAfterDetail = (index: number, val: string) => {
+    setFormData((prev) => {
+      const next = [...prev.afterDetails];
+      next[index] = val;
+      return { ...prev, afterDetails: next };
+    });
+  };
+
+  const handleRemoveAfterDetail = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      afterDetails: prev.afterDetails.filter((_, i) => i !== index),
+    }));
   };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
@@ -107,29 +165,42 @@ export default function AdminBeforeAfterPage() {
     setSubmitting(true);
     setActionMessage(null);
 
+    const payload = {
+      ...formData,
+      displayMode: formData.displayMode,
+      singleImage: formData.displayMode === "single" ? formData.singleImage.trim() : "",
+      beforeImage: formData.displayMode === "slider" ? formData.beforeImage.trim() : "",
+      afterImage:
+        formData.displayMode === "slider"
+          ? formData.afterImage.trim()
+          : (formData.singleImage.trim() || formData.afterImage.trim()),
+      beforeDetails: formData.beforeDetails.map((d) => d.trim()).filter(Boolean),
+      afterDetails: formData.afterDetails.map((d) => d.trim()).filter(Boolean),
+    };
+
     try {
       if (editingItem) {
         // Update
         const res = await fetch(`/api/admin/before-after/${editingItem.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(payload),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "수정에 실패했습니다.");
 
-        setActionMessage({ type: "success", text: "시공 전후 사례가 성공적으로 수정되었습니다." });
+        setActionMessage({ type: "success", text: "시공 사례 정보가 성공적으로 수정되었습니다." });
       } else {
         // Create
         const res = await fetch("/api/admin/before-after", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(payload),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "등록에 실패했습니다.");
 
-        setActionMessage({ type: "success", text: "새 시공 전후 사례가 성공적으로 등록되었습니다." });
+        setActionMessage({ type: "success", text: "새 시공 사례가 성공적으로 등록되었습니다." });
       }
 
       setIsModalOpen(false);
@@ -256,21 +327,45 @@ export default function AdminBeforeAfterPage() {
 
                 {/* Thumbnails preview */}
                 <div className="flex items-center gap-2 my-2">
-                  <div className="w-12 h-8 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden shrink-0 relative">
-                    {c.beforeImage ? (
-                      <img src={c.beforeImage} alt="Before" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-[8px] text-gray-400">전</div>
-                    )}
-                  </div>
-                  <span className="text-[10px] text-gray-400 font-bold">→</span>
-                  <div className="w-12 h-8 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden shrink-0 relative">
-                    {c.afterImage ? (
-                      <img src={c.afterImage} alt="After" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-[8px] text-gray-400">후</div>
-                    )}
-                  </div>
+                  {c.displayMode === "single" || (!c.beforeImage && (c.singleImage || c.afterImage)) ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-16 h-8 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden shrink-0 relative">
+                        {c.singleImage || c.afterImage || c.beforeImage ? (
+                          <img
+                            src={c.singleImage || c.afterImage || c.beforeImage}
+                            alt="단일 사진"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-[8px] text-gray-400">사진</div>
+                        )}
+                      </div>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 font-bold border border-blue-200">
+                        단일 사진
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <div className="w-12 h-8 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden shrink-0 relative">
+                        {c.beforeImage ? (
+                          <img src={c.beforeImage} alt="Before" className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-[8px] text-gray-400">전</div>
+                        )}
+                      </div>
+                      <span className="text-[10px] text-gray-400 font-bold">→</span>
+                      <div className="w-12 h-8 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden shrink-0 relative">
+                        {c.afterImage ? (
+                          <img src={c.afterImage} alt="After" className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-[8px] text-gray-400">후</div>
+                        )}
+                      </div>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold border border-emerald-200">
+                        전후 비교
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="text-xs font-bold text-gray-900 line-clamp-1">{c.title}</div>
@@ -315,37 +410,67 @@ export default function AdminBeforeAfterPage() {
             <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 shadow-xs">
               <div className="flex items-center gap-2 text-xs font-bold text-gray-800 uppercase tracking-wider mb-3">
                 <ImageIcon className="w-4 h-4 text-[#173F30]" />
-                <span>현재 적용된 시공 사진 및 경로</span>
+                <span>
+                  {selectedCase.displayMode === "single" || (!selectedCase.beforeImage && (selectedCase.singleImage || selectedCase.afterImage))
+                    ? "현재 적용된 단일 대표 사진"
+                    : "현재 적용된 시공 전후 사진"}
+                </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 mb-3">
-                <div className="rounded-xl border border-gray-200 overflow-hidden bg-gray-100 aspect-16/10 relative shadow-2xs">
-                  {selectedCase.beforeImage ? (
-                    <img src={selectedCase.beforeImage} alt="Before" className="w-full h-full object-cover" />
+              {selectedCase.displayMode === "single" || (!selectedCase.beforeImage && (selectedCase.singleImage || selectedCase.afterImage)) ? (
+                <div className="rounded-xl border border-gray-200 overflow-hidden bg-gray-100 aspect-16/10 relative shadow-2xs mb-3">
+                  {selectedCase.singleImage || selectedCase.afterImage || selectedCase.beforeImage ? (
+                    <img
+                      src={selectedCase.singleImage || selectedCase.afterImage || selectedCase.beforeImage}
+                      alt="단일 사진"
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-[10px] text-gray-400">Before 없음</div>
+                    <div className="w-full h-full flex items-center justify-center text-[10px] text-gray-400">사진 없음</div>
                   )}
-                  <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-red-600/90 text-white text-[9px] font-bold">Before</span>
+                  <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-blue-600/90 text-white text-[9px] font-bold">
+                    단일 대표 사진
+                  </span>
                 </div>
-                <div className="rounded-xl border border-gray-200 overflow-hidden bg-gray-100 aspect-16/10 relative shadow-2xs">
-                  {selectedCase.afterImage ? (
-                    <img src={selectedCase.afterImage} alt="After" className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-[10px] text-gray-400">After 없음</div>
-                  )}
-                  <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-emerald-600/90 text-white text-[9px] font-bold">After</span>
+              ) : (
+                <div className="grid grid-cols-2 gap-2 mb-3">
+                  <div className="rounded-xl border border-gray-200 overflow-hidden bg-gray-100 aspect-16/10 relative shadow-2xs">
+                    {selectedCase.beforeImage ? (
+                      <img src={selectedCase.beforeImage} alt="Before" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-[10px] text-gray-400">Before 없음</div>
+                    )}
+                    <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-red-600/90 text-white text-[9px] font-bold">Before</span>
+                  </div>
+                  <div className="rounded-xl border border-gray-200 overflow-hidden bg-gray-100 aspect-16/10 relative shadow-2xs">
+                    {selectedCase.afterImage ? (
+                      <img src={selectedCase.afterImage} alt="After" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-[10px] text-gray-400">After 없음</div>
+                    )}
+                    <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-emerald-600/90 text-white text-[9px] font-bold">After</span>
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="p-3 rounded-xl bg-gray-50 text-[11px] font-mono text-gray-700 space-y-1.5 border border-gray-200 overflow-x-auto">
-                <div>
-                  <span className="text-gray-400 text-[10px] block">// Before 경로:</span>
-                  <code className="break-all text-[10px]">{selectedCase.beforeImage || "미등록"}</code>
-                </div>
-                <div>
-                  <span className="text-gray-400 text-[10px] block">// After 경로:</span>
-                  <code className="break-all text-[10px]">{selectedCase.afterImage || "미등록"}</code>
-                </div>
+                {selectedCase.displayMode === "single" || (!selectedCase.beforeImage && (selectedCase.singleImage || selectedCase.afterImage)) ? (
+                  <div>
+                    <span className="text-gray-400 text-[10px] block">// 대표 사진 경로:</span>
+                    <code className="break-all text-[10px]">{selectedCase.singleImage || selectedCase.afterImage || selectedCase.beforeImage || "미등록"}</code>
+                  </div>
+                ) : (
+                  <>
+                    <div>
+                      <span className="text-gray-400 text-[10px] block">// Before 경로:</span>
+                      <code className="break-all text-[10px]">{selectedCase.beforeImage || "미등록"}</code>
+                    </div>
+                    <div>
+                      <span className="text-gray-400 text-[10px] block">// After 경로:</span>
+                      <code className="break-all text-[10px]">{selectedCase.afterImage || "미등록"}</code>
+                    </div>
+                  </>
+                )}
               </div>
 
               <div className="mt-4 pt-4 border-t border-gray-100 space-y-2 text-xs text-gray-600">
@@ -355,11 +480,11 @@ export default function AdminBeforeAfterPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>동일 앵글 및 구도의 전후 촬영 권장</span>
+                  <span>Before & After 슬라이더 및 단일 사진 모드 지원</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>모바일 터치 및 마우스 드래그 자동 지원</span>
+                  <span>시공 전/후 상세 설명 항목 실시간 반영</span>
                 </div>
               </div>
             </div>
@@ -375,9 +500,14 @@ export default function AdminBeforeAfterPage() {
             className="w-full max-w-2xl bg-white rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] overflow-y-auto space-y-5"
           >
             <div className="flex items-center justify-between pb-4 border-b border-gray-100">
-              <h3 className="text-lg font-black text-gray-900">
-                {editingItem ? "시공 전후 사례 수정" : "새 시공 전후 사례 등록"}
-              </h3>
+              <div>
+                <h3 className="text-lg font-black text-gray-900">
+                  {editingItem ? "시공 사례 수정" : "새 시공 사례 등록"}
+                </h3>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  비교 슬라이더(2장) 또는 단일 대표 사진(1장) 모드를 선택하고 시공 전/후 상세 항목을 작성할 수 있습니다.
+                </p>
+              </div>
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="p-1 rounded-xl text-gray-400 hover:text-gray-700 cursor-pointer"
@@ -387,6 +517,34 @@ export default function AdminBeforeAfterPage() {
             </div>
 
             <form onSubmit={handleFormSubmit} className="space-y-4 text-xs">
+              {/* Display Mode Selection */}
+              <div className="p-1 rounded-2xl bg-gray-100 p-1.5 flex gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, displayMode: "slider" })}
+                  className={`flex-1 py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    formData.displayMode === "slider"
+                      ? "bg-white text-gray-900 shadow-sm"
+                      : "text-gray-500 hover:text-gray-900"
+                  }`}
+                >
+                  <MoveHorizontal className="w-4 h-4 text-[#173F30]" />
+                  <span>Before & After 슬라이더 (2장 비교)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, displayMode: "single" })}
+                  className={`flex-1 py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    formData.displayMode === "single"
+                      ? "bg-white text-gray-900 shadow-sm"
+                      : "text-gray-500 hover:text-gray-900"
+                  }`}
+                >
+                  <ImageIcon className="w-4 h-4 text-[#243A50]" />
+                  <span>단일 대표 사진 (1장 등록)</span>
+                </button>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-bold text-gray-700 mb-1">담당 브랜드 *</label>
@@ -438,56 +596,95 @@ export default function AdminBeforeAfterPage() {
                 />
               </div>
 
-              {/* CRITICAL: Before & After Image URLs */}
-              <div className="p-4 rounded-2xl bg-gray-50 border border-gray-200 space-y-3">
-                <div className="font-bold text-gray-900 text-xs flex items-center gap-1.5">
-                  <ImageIcon className="w-3.5 h-3.5 text-[#173F30]" />
-                  <span>비교 슬라이더 이미지 경로 설정</span>
-                </div>
+              {/* Dynamic Image Upload based on Mode */}
+              {formData.displayMode === "slider" ? (
+                <div className="p-4 sm:p-5 rounded-2xl bg-gray-50 border border-gray-200 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="font-bold text-gray-900 text-xs flex items-center gap-1.5">
+                      <MoveHorizontal className="w-3.5 h-3.5 text-[#173F30]" />
+                      <span>Before & After 비교 슬라이더 이미지 설정</span>
+                    </div>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">
+                      2장 전후 비교 모드
+                    </span>
+                  </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <ImageUploadPicker
-                    label="Before (시공 전) 사진"
-                    value={formData.beforeImage}
-                    onChange={(url) => setFormData({ ...formData, beforeImage: url })}
-                    category="project"
-                    required
-                    helpText="시공 전 상태 사진을 업로드하거나 선택하세요."
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <ImageUploadPicker
+                      label="Before (시공 전) 사진 *"
+                      value={formData.beforeImage}
+                      onChange={(url) => setFormData({ ...formData, beforeImage: url })}
+                      category="project"
+                      required={formData.displayMode === "slider"}
+                      helpText="시공 전 상태 사진을 업로드하거나 선택하세요."
+                    />
 
-                  <ImageUploadPicker
-                    label="After (시공 후) 사진"
-                    value={formData.afterImage}
-                    onChange={(url) => setFormData({ ...formData, afterImage: url })}
-                    category="project"
-                    required
-                    helpText="시공 후 복원 완료 사진을 업로드하거나 선택하세요."
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                  <div>
-                    <label className="block font-semibold text-gray-600 mb-1">시공 전 상태 라벨</label>
-                    <input
-                      type="text"
-                      placeholder="예: 오염 축적 및 광택도 35% 저하"
-                      value={formData.beforeLabel}
-                      onChange={(e) => setFormData({ ...formData, beforeLabel: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl border border-gray-300 bg-white text-xs"
+                    <ImageUploadPicker
+                      label="After (시공 후) 사진 *"
+                      value={formData.afterImage}
+                      onChange={(url) => setFormData({ ...formData, afterImage: url })}
+                      category="project"
+                      required={formData.displayMode === "slider"}
+                      helpText="시공 후 복원 완료 사진을 업로드하거나 선택하세요."
                     />
                   </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div>
+                      <label className="block font-semibold text-gray-600 mb-1">시공 전 상태 라벨</label>
+                      <input
+                        type="text"
+                        placeholder="예: 오염 축적 및 광택도 35% 저하"
+                        value={formData.beforeLabel}
+                        onChange={(e) => setFormData({ ...formData, beforeLabel: e.target.value })}
+                        className="w-full px-3 py-2 rounded-xl border border-gray-300 bg-white text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block font-semibold text-gray-600 mb-1">시공 후 복원 라벨</label>
+                      <input
+                        type="text"
+                        placeholder="예: 거울 같은 고광택도 94% 복원 완료"
+                        value={formData.afterLabel}
+                        onChange={(e) => setFormData({ ...formData, afterLabel: e.target.value })}
+                        className="w-full px-3 py-2 rounded-xl border border-gray-300 bg-white text-xs"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-4 sm:p-5 rounded-2xl bg-blue-50/60 border border-blue-200/80 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="font-bold text-blue-950 text-xs flex items-center gap-1.5">
+                      <ImageIcon className="w-3.5 h-3.5 text-blue-700" />
+                      <span>단일 대표 시공 사진 설정</span>
+                    </div>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 font-bold">
+                      1장 단독 사진 모드
+                    </span>
+                  </div>
+
+                  <ImageUploadPicker
+                    label="시공 대표 사진 *"
+                    value={formData.singleImage || formData.afterImage}
+                    onChange={(url) => setFormData({ ...formData, singleImage: url, afterImage: url })}
+                    category="project"
+                    required={formData.displayMode === "single"}
+                    helpText="단일 현장 사진을 업로드하거나 선택하세요."
+                  />
+
                   <div>
-                    <label className="block font-semibold text-gray-600 mb-1">시공 후 복원 라벨</label>
+                    <label className="block font-semibold text-gray-700 mb-1">사진 배지 라벨 (선택)</label>
                     <input
                       type="text"
-                      placeholder="예: 거울 같은 고광택도 94% 복원 완료"
+                      placeholder="예: 시공 완료 현장 (PHOTO), 4K AI CCTV 시공 완료"
                       value={formData.afterLabel}
                       onChange={(e) => setFormData({ ...formData, afterLabel: e.target.value })}
                       className="w-full px-3 py-2 rounded-xl border border-gray-300 bg-white text-xs"
                     />
                   </div>
                 </div>
-              </div>
+              )}
 
               <div>
                 <label className="block font-bold text-gray-700 mb-1">핵심 수행 성과 (Metric)</label>
@@ -503,12 +700,174 @@ export default function AdminBeforeAfterPage() {
               <div>
                 <label className="block font-bold text-gray-700 mb-1">시공 상세 설명</label>
                 <textarea
-                  rows={3}
+                  rows={2}
                   placeholder="작업 공정 및 투입된 전문 장비, 복원 효과 설명"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#173F30]"
                 />
+              </div>
+
+              {/* Before Details Section */}
+              <div className="p-4 sm:p-5 rounded-2xl bg-amber-50/70 border border-amber-200/90 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-bold text-amber-950 text-xs sm:text-sm flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-amber-500" />
+                      <span>시공 전 상태 세부 항목 (Before Details)</span>
+                      <span className="text-[11px] text-amber-800 font-normal">
+                        ({formData.beforeDetails.filter((d) => d.trim()).length}개)
+                      </span>
+                    </h4>
+                    <p className="text-[11px] text-amber-800/80 mt-0.5">
+                      카드 하단 노란색 상자에 표출되는 시공 전 문제점 및 오염 상태입니다.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleAddBeforeDetail("")}
+                    className="px-2.5 py-1.5 rounded-xl bg-white border border-amber-300 hover:border-amber-400 text-amber-900 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer shadow-xs"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-amber-600" />
+                    <span>Before 항목 추가</span>
+                  </button>
+                </div>
+
+                {/* Quick Presets for Before */}
+                <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                  <span className="text-[10px] text-amber-700/80 font-semibold">추천 프리셋:</span>
+                  {[
+                    "천장 및 바닥 미세 시멘트 분진 침착",
+                    "벽면 실리콘 잔여물 및 페인트 비산 얼룩",
+                    "지게차 타이어 스키드 마크 및 기름때 오염",
+                    "바닥 왁스층 산화 및 심각한 황변 오염",
+                    "노후 아날로그 카메라로 야간 식별 불가",
+                    "외곽 펜스 부식 및 지주 기초 흔들림",
+                  ].map((preset, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => handleAddBeforeDetail(preset)}
+                      className="px-2 py-0.5 rounded-md bg-white border border-amber-200 text-amber-900 hover:bg-amber-100 text-[10px] font-medium transition-colors cursor-pointer"
+                    >
+                      + {preset}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Before Details Inputs */}
+                <div className="space-y-2 pt-1">
+                  {formData.beforeDetails.length === 0 ? (
+                    <div className="p-3 rounded-xl bg-white/80 border border-dashed border-amber-300 text-center text-amber-800/70 text-xs">
+                      등록된 Before 항목이 없습니다. [+ Before 항목 추가] 또는 추천 프리셋을 클릭하세요.
+                    </div>
+                  ) : (
+                    formData.beforeDetails.map((det, idx) => (
+                      <div key={idx} className="flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-[11px] shrink-0">
+                          {idx + 1}
+                        </span>
+                        <input
+                          type="text"
+                          placeholder="예: 천장 텍스 및 공조 디퓨저 내 미세 시멘트 가루 침착"
+                          value={det}
+                          onChange={(e) => handleUpdateBeforeDetail(idx, e.target.value)}
+                          className="flex-1 px-3 py-2 rounded-xl border border-amber-200 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs text-gray-800"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveBeforeDetail(idx)}
+                          className="p-2 rounded-xl text-amber-700 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                          title="항목 삭제"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              {/* After Details Section */}
+              <div className="p-4 sm:p-5 rounded-2xl bg-emerald-50/70 border border-emerald-200/90 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-bold text-emerald-950 text-xs sm:text-sm flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                      <span>시공 후 복원 세부 항목 (After Details)</span>
+                      <span className="text-[11px] text-emerald-800 font-normal">
+                        ({formData.afterDetails.filter((d) => d.trim()).length}개)
+                      </span>
+                    </h4>
+                    <p className="text-[11px] text-emerald-800/80 mt-0.5">
+                      카드 하단 초록색 상자에 표출되는 시공 후 개선 효과 및 적용 장비입니다.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleAddAfterDetail("")}
+                    className="px-2.5 py-1.5 rounded-xl bg-white border border-emerald-300 hover:border-emerald-400 text-emerald-900 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer shadow-xs"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>After 항목 추가</span>
+                  </button>
+                </div>
+
+                {/* Quick Presets for After */}
+                <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                  <span className="text-[10px] text-emerald-700/80 font-semibold">추천 프리셋:</span>
+                  {[
+                    "산업용 HEPA 13등급 진공 집진 장비 전면 투입",
+                    "무독성 친환경 세정제를 통한 마감재 보호 세척",
+                    "피톤치드 초미립자 광촉매 공간 살균 훈증 소독",
+                    "이탈리아산 다이아몬드 연마 5단계 크리스탈 코팅",
+                    "4K AI 딥러닝 기반 이상 행동 실시간 감지 관제",
+                    "고내식 용융 아연도금 및 분체도장 메쉬 펜스 완공",
+                  ].map((preset, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => handleAddAfterDetail(preset)}
+                      className="px-2 py-0.5 rounded-md bg-white border border-emerald-200 text-emerald-900 hover:bg-emerald-100 text-[10px] font-medium transition-colors cursor-pointer"
+                    >
+                      + {preset}
+                    </button>
+                  ))}
+                </div>
+
+                {/* After Details Inputs */}
+                <div className="space-y-2 pt-1">
+                  {formData.afterDetails.length === 0 ? (
+                    <div className="p-3 rounded-xl bg-white/80 border border-dashed border-emerald-300 text-center text-emerald-800/70 text-xs">
+                      등록된 After 항목이 없습니다. [+ After 항목 추가] 또는 추천 프리셋을 클릭하세요.
+                    </div>
+                  ) : (
+                    formData.afterDetails.map((det, idx) => (
+                      <div key={idx} className="flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-[11px] shrink-0">
+                          {idx + 1}
+                        </span>
+                        <input
+                          type="text"
+                          placeholder="예: 산업용 HEPA 13등급 진공 집진 장비 전면 투입"
+                          value={det}
+                          onChange={(e) => handleUpdateAfterDetail(idx, e.target.value)}
+                          className="flex-1 px-3 py-2 rounded-xl border border-emerald-200 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs text-gray-800"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveAfterDetail(idx)}
+                          className="p-2 rounded-xl text-emerald-700 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                          title="항목 삭제"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
 
               <div className="pt-4 border-t border-gray-100 flex items-center justify-end gap-3">
