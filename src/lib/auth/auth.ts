@@ -22,8 +22,8 @@ export async function comparePassword(password: string, hash: string): Promise<b
   return bcrypt.compare(password, hash);
 }
 
-export function generateToken(payload: TokenPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
+export function generateToken(payload: TokenPayload, expiresIn: string | number = "7d"): string {
+  return jwt.sign(payload, JWT_SECRET, { expiresIn } as jwt.SignOptions);
 }
 
 export function verifyToken(token: string): TokenPayload | null {
@@ -45,7 +45,7 @@ export async function getSession(): Promise<TokenPayload | null> {
   }
 }
 
-export function getCookieOptions() {
+export function getCookieOptions(maxAgeSeconds?: number) {
   // Only enforce secure cookies if explicitly enabled or if running over HTTPS
   // This allows seamless login on direct IP addresses without SSL/domains in Coolify/Docker
   const cookieSecureEnv = process.env.COOKIE_SECURE;
@@ -63,7 +63,7 @@ export function getCookieOptions() {
     secure,
     sameSite: "lax" as const,
     path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+    maxAge: maxAgeSeconds !== undefined ? maxAgeSeconds : 60 * 60 * 24 * 7, // 7 days
   };
 }
 

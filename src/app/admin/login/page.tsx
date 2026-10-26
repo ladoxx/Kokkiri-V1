@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, Mail, Loader2, AlertCircle, ShieldCheck } from "lucide-react";
 
@@ -8,8 +8,21 @@ export default function AdminLoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const savedEmail = localStorage.getItem("kokkiri_admin_remember_email");
+      if (savedEmail) {
+        setEmail(savedEmail);
+        setRememberMe(true);
+      }
+    } catch {
+      // LocalStorage access fallback for restricted environments
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,10 +30,20 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
+      if (rememberMe) {
+        localStorage.setItem("kokkiri_admin_remember_email", email);
+      } else {
+        localStorage.removeItem("kokkiri_admin_remember_email");
+      }
+    } catch {
+      // ignore storage write errors
+    }
+
+    try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, rememberMe }),
       });
 
       const data = await res.json();
@@ -98,7 +121,20 @@ export default function AdminLoginPage() {
             </div>
           </div>
 
-          <div className="pt-2">
+          <div className="flex items-center justify-between text-xs py-1">
+            <label className="flex items-center gap-2 cursor-pointer select-none text-gray-700 hover:text-gray-900 transition-colors">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4 rounded border-gray-300 text-[#173F30] focus:ring-[#173F30] cursor-pointer accent-[#173F30]"
+              />
+              <span className="font-medium text-gray-700">로그인 상태 유지 (아이디 저장)</span>
+            </label>
+            <span className="text-[11px] text-gray-400">30일간 유지</span>
+          </div>
+
+          <div className="pt-1">
             <button
               type="submit"
               disabled={loading}

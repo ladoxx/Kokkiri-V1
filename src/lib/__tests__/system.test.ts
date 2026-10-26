@@ -54,12 +54,25 @@ describe("Validation Schemas", () => {
     expect(result.success).toBe(false);
   });
 
-  it("should validate admin login payload", () => {
+  it("should validate admin login payload with rememberMe", () => {
     const valid = adminLoginSchema.safeParse({
       email: "admin@kokkiri.com",
       password: "KokkiriAdmin2026!#",
+      rememberMe: true,
     });
     expect(valid.success).toBe(true);
+    if (valid.success) {
+      expect(valid.data.rememberMe).toBe(true);
+    }
+
+    const defaultRemember = adminLoginSchema.safeParse({
+      email: "admin@kokkiri.com",
+      password: "KokkiriAdmin2026!#",
+    });
+    expect(defaultRemember.success).toBe(true);
+    if (defaultRemember.success) {
+      expect(defaultRemember.data.rememberMe).toBe(false);
+    }
   });
 });
 

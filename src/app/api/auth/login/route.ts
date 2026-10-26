@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { email, password } = parsed.data;
+    const { email, password, rememberMe } = parsed.data;
 
     let user = null;
     let totalUsers = 0;
@@ -66,14 +66,20 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const token = generateToken({
-      userId: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role as RoleType,
-    });
+    const tokenExpiresIn = rememberMe ? "30d" : "1d";
+    const cookieMaxAge = rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 24 * 1;
 
-    const cookieOptions = getCookieOptions();
+    const token = generateToken(
+      {
+        userId: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role as RoleType,
+      },
+      tokenExpiresIn
+    );
+
+    const cookieOptions = getCookieOptions(cookieMaxAge);
     const response = NextResponse.json({
       success: true,
       user: {
